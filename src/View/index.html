@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Escolar - Início</title>
+</head>
+<link rel="stylesheet" href="/style.css">
+<body>
+
+    <!-- Navegação -->
+    <nav>
+        <div class="logo"><h2>SGE-TCC</h2></div>
+        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="/escolas/liberar-acesso-cadastro">Cadastre sua Escola</a></li>
+            <li><a href="#">Início</a></li>
+            <li><a href="#sobre">Sobre</a></li>
+            <li><a href="#contato">Contato</a></li>
+        </ul>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+        <h2 class="section-title">Gerenciamento Escolar</h2>
+        
+        <div class="cards-container" id="cards">
+            <!-- Card 1 -->
+            <div class="card">
+                <h3>Cadastro Escolas</h3>
+                <p>Gerencie todas as instituições vinculadas ao sistema.</p>
+            </div>
+            <!-- Card 2 -->
+            <div class="card">
+                <h3>Monitoramento</h3>
+                <p>Visualize os sensores de temperatura e umidade em tempo real.</p>
+            </div>
+            <!-- Card 3 -->
+            <div class="card">
+                <h3>Usuários</h3>
+                <p>Controle de acesso para diretores e coordenadores.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer id="sobre">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Sobre Nós</h4>
+                <p>Desenvolvido para facilitar o monitoramento tecnológico em escolas públicas e privadas.</p>
+            </div>
+            <div class="footer-section" id="contato">
+                <h4>Contato</h4>
+                <p>Email: suporte@tcc.com.br</p>
+                <p>Tel: (11) 9999-9999</p>
+            </div>
+            <div class="footer-section">
+                <h4>Navegação</h4>
+                <div class="footer-nav">
+                    <button class="footer-btn" onclick="window.scrollTo(0,0)">Início / Topo</button>
+                    <button class="footer-btn" onclick="document.getElementById('cards').scrollIntoView()">Principal (Cards)</button>
+                </div>
+            </div>
+        </div>
+       <div style="text-align: center; font-size: 0.8rem; opacity: 0.6; border-top: 1px solid #444; padding-top: 20px;">
+
+            &copy; 2023 Projeto TCC - Monitoramento Escolar.
+        </div>
+    </footer>
+
+    <script src="/script.js"></script>
+</body>
+</html>
