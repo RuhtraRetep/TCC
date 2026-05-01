@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Escolar - Início</title>
+    <style>
+        /* Configurações Gerais */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+       body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* 100% da altura da visão do navegador */
+            margin: 0;
+            background-color: #f4f7f6;
+       }
+
+       main.main-content {
+            flex: 1; /* Faz esta seção crescer e ocupar todo o espaço vazio disponível */
+        }
+
+        /* Navbar e Menu Hambúrguer */
+        nav { background: #2c3e50; color: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .nav-menu { display: flex; list-style: none; gap: 20px; }
+        .nav-menu a { color: white; text-decoration: none; font-weight: 500; }
+        .menu-toggle { display: none; cursor: pointer; font-size: 1.5rem; }
+
+        /* Cards Section */
+        .main-content { padding: 80px 5%; text-align: center; }
+        .section-title { margin-bottom: 40px; font-size: 2rem; }
+        
+        .cards-container { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-bottom: 150px; /* Espaço considerável até o rodapé */ }
+        
+        .card { 
+            background: white; 
+            width: 300px; 
+            padding: 30px; 
+            border-radius: 20px; /* Bordas redondas */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
+            transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-10px); }
+        .card h3 { color: #2c3e50; margin-bottom: 15px; }
+
+        /* Rodapé */
+        footer {
+            background-color: #2c3e50; /* Cor escura de fundo */
+            color: #ffffff;            /* Força os textos para branco */
+            padding: 50px 5% 30px;     /* Aumenta o espaço interno (cima, lados, baixo) */
+            width: 100%;
+            margin-top: auto;          /* Mantém o rodapé no fundo */
+        }
+        .footer-content { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 30px; margin-bottom: 30px; }
+        .footer-section { flex: 1; min-width: 200px; }
+        .footer-section h4 { border-bottom: 2px solid #3498db; display: inline-block; margin-bottom: 15px; }
+        
+        .footer-nav { display: flex; flex-direction: column; gap: 10px; }
+        .footer-btn { 
+            background: #3498db; color: white; border: none; padding: 10px; 
+            border-radius: 5px; cursor: pointer; transition: 0.3s; text-align: center;
+        }
+        .footer-btn:hover { background: #2980b9; }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-menu { 
+                display: none; flex-direction: column; position: absolute; 
+                top: 60px; right: 5%; background: #2c3e50; width: 200px; padding: 20px; border-radius: 10px;
+            }
+            .nav-menu.active { display: flex; }
+            .cards-container { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navegação -->
+    <nav>
+        <div class="logo"><h2>SGE-TCC</h2></div>
+        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="#">Início</a></li>
+            <li><a href="#cards">Escolas</a></li>
+            <li><a href="#sobre">Sobre</a></li>
+            <li><a href="#contato">Contato</a></li>
+        </ul>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+        <h2 class="section-title">Gerenciamento Escolar</h2>
+        
+        <div class="cards-container" id="cards">
+            <!-- Card 1 -->
+            <div class="card">
+                <h3>Cadastro Escolas</h3>
+                <p>Gerencie todas as instituições vinculadas ao sistema.</p>
+            </div>
+            <!-- Card 2 -->
+            <div class="card">
+                <h3>Monitoramento</h3>
+                <p>Visualize os sensores de temperatura e umidade em tempo real.</p>
+            </div>
+            <!-- Card 3 -->
+            <div class="card">
+                <h3>Usuários</h3>
+                <p>Controle de acesso para diretores e coordenadores.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer id="sobre">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Sobre Nós</h4>
+                <p>Desenvolvido para facilitar o monitoramento tecnológico em escolas públicas e privadas.</p>
+            </div>
+            <div class="footer-section" id="contato">
+                <h4>Contato</h4>
+                <p>Email: suporte@tcc.com.br</p>
+                <p>Tel: (11) 9999-9999</p>
+            </div>
+            <div class="footer-section">
+                <h4>Navegação</h4>
+                <div class="footer-nav">
+                    <button class="footer-btn" onclick="window.scrollTo(0,0)">Início / Topo</button>
+                    <button class="footer-btn" onclick="document.getElementById('cards').scrollIntoView()">Principal (Cards)</button>
+                </div>
+            </div>
+        </div>
+       <div style="text-align: center; font-size: 0.8rem; opacity: 0.6; border-top: 1px solid #444; padding-top: 20px;">
+
+            &copy; 2023 Projeto TCC - Monitoramento Escolar.
+        </div>
+    </footer>
+
+    <script>
+        // Função do Menu Hamburguer
+        function toggleMenu() {
+            const menu = document.getElementById('navMenu');
+            menu.classList.toggle('active');
+        }
+
+        // Fecha o menu ao clicar em um link (para mobile)
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('navMenu').classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
