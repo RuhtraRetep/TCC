@@ -36,3 +36,18 @@
   - Servir como núcleo da aplicação backend,
     garantindo a organização, integração e funcionamento correto de todos os componentes
 */
+
+const express = require('express');
+const path = require('path');
+const app = express();
+
+// 1. Libera a pasta public para o navegador baixar CSS e JS
+app.use(express.static(path.join(__dirname, 'public')));
+
+// 2. Rota que entrega o HTML da pasta view
+app.get('/', (req, res) => {
+    // Busca o arquivo dentro de src/view/index.html
+    res.sendFile(path.join(__dirname, 'src', 'view', 'index.html'));
+});
+
+app.listen(3000, () => console.log("Servidor rodando em http://localhost:3000"));
