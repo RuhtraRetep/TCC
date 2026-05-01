@@ -1,53 +1,30 @@
-/*
-  Arquivo principal responsável pela inicialização e configuração geral da aplicação backend.
-
-  Funcionalidades:
-  - Inicializa o servidor utilizando o framework Express
-  - Configura middlewares globais para tratamento de requisições (ex: parsing de JSON)
-  - Define e registra as rotas da aplicação (usuários, escolas e sensores)
-  - Integra os diferentes módulos do sistema (routes, controllers, models e services)
-  - Garante a inicialização da conexão com o banco de dados
-
-  Responsabilidades:
-  - Atuar como ponto de entrada da aplicação
-  - Centralizar todas as configurações principais do servidor
-  - Garantir que os módulos estejam corretamente conectados
-  - Definir a porta de execução do servidor
-
-  Rotas Integradas:
-  - /users → Rotas relacionadas aos usuários (cadastro, login)
-  - /escolas → Rotas relacionadas às escolas
-  - /sensores → Rotas relacionadas aos sensores e suas leituras
-
-  Fluxo da Aplicação:
-  - Cliente realiza uma requisição HTTP
-  - A requisição é recebida pelo servidor Express
-  - A rota correspondente é acionada
-  - O controller processa a requisição
-  - O controller pode utilizar services (regras de negócio) e models (acesso ao banco)
-  - Uma resposta é enviada ao cliente
-
-  Integração:
-  - Utiliza os módulos de rotas (userRoutes, escolaRoutes, sensorRoutes)
-  - Depende da configuração de banco de dados (db.js)
-  - Pode integrar serviços adicionais (ex: MQTT para simulação de sensores)
-
-  Objetivo:
-  - Servir como núcleo da aplicação backend,
-    garantindo a organização, integração e funcionamento correto de todos os componentes
-*/
-
 const express = require('express');
 const path = require('path');
 const app = express();
+const sessionToken  = require('express-session');
 
-// 1. Libera a pasta public para o navegador baixar CSS e JS
+// Importando suas rotas
+const escolaRoute = require('./src/routes/escolaRoute'); 
+const usuarioRoute = require('./src/routes/usuarioRoute');
+// const sensorRoute = require('./src/routes/sensorRoute');
+
+// Configurações e Middlewares
+app.use(sessionToken({
+    secret: 'token',
+    resave: false,
+    saveUninitialized: true
+}));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-// 2. Rota que entrega o HTML da pasta view
+// Rota da Home (pode ficar aqui)
 app.get('/', (req, res) => {
-    // Busca o arquivo dentro de src/view/index.html
     res.sendFile(path.join(__dirname, 'src', 'view', 'index.html'));
 });
 
-app.listen(3000, () => console.log("Servidor rodando em http://localhost:3000"));
+// Usando as rotas importadas
+// Todas as rotas dentro de escolaRoute agora começam com /escolas
+app.use('/escolas', escolaRoute); 
+
+app.listen(3000, () => console.log("Servidor rodando em http://localhost:3000")); //Não aparece pro usuário, serve apenas para teste

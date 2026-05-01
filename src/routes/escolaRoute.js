@@ -1,22 +1,31 @@
-/*
-  Módulo responsável por definir as rotas relacionadas às escolas no sistema.
+const express = require('express');
+const path = require('path');
+const router = express.Router();
 
-  Funcionalidades:
-  - Chama a rota do cadastro de escolas
-  - Chama a rota de atualização dos dados da escola
-  - Chama a rota de remoção da escola
+const verificarAcesso = (req, res, next) =>{
+    if (req.session.podeAcessarCadastro)
+    {
+        next();        
+    } 
+    else 
+    {
+        res.redirect('/');
+    }
+}
 
-  Rotas:
-  - POST /escolas → Cadastra uma nova escola
-  - PUT /escolas/:id → Atualiza os dados da escola
-  - DELETE /escolas/:id → Remove a escola do sistema
+//PERMITE ENTRAR NO CADASTRO, NO CASO EVITA QUALQUER ABOBADO LOGAR SEM PASSAR POR ONDE QUERO QUE PASSE, que é  apágina inicial
+router.get('/liberar-acesso-cadastro' , (req, res) =>{  
+    req.session.podeAcessarCadastro = true; //FECHA A PERMISSÃO ASSIM QUE ENTRA, MANTENDO A REAL SEGURANÇA DA PÁGINA
+    res.redirect('/escolas/cadastro-escola');
+});
 
-  Integração:
-  - As requisições são direcionadas para o escolaController,
-    responsável por processar a lógica e interagir com o banco de dados
-    e possíveis serviços (ex: cálculo de sensores e previsão de gastos).
+// Rota para a página de Cadastro (HTML)
+router.get('/cadastro-escola', verificarAcesso , (req, res) => {
+    // path.join(__dirname, '..', 'view', ...) serve para sair da pasta 'routes' e entrar na 'view'
 
-  Objetivo:
-  - Gerenciar as informações das escolas cadastradas no sistema,
-    permitindo o controle e organização dos ambientes monitorados
-*/
+    req.session.podeAcessarCadastro = false;
+    res.sendFile(path.join(__dirname, '..', 'view', 'cadastroEscola.html'));
+});
+
+
+module.exports = router;
