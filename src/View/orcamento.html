@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário</title>
+
+    <!-- CSS separado -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <h2>MeuSite</h2>
+        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="#">Início</a></li>
+            <li><a href="#">Serviços</a></li>
+            <li><a href="#">Contato</a></li>
+        </ul>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main-content">
+        <section class="form-container">
+            <div class="form-card">
+                <h2 class="form-title">Cadastro</h2>
+
+                <form>
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label>Nome</label>
+                            <input type="text">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Telefone</label>
+                            <input type="tel">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Gênero</label>
+                            <select>
+                                <option>Selecione</option>
+                                <option>Masculino</option>
+                                <option>Feminino</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="reset" class="btn-secondary">Cancelar</button>
+                        <button type="submit" class="btn-primary">Enviar</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- JS separado -->
+    <script src="script.js"></script>
+
+</body>
+</html>
