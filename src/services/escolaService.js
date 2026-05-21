@@ -2,7 +2,8 @@
 const db = require('../config/db'); 
 
 class EscolaService {
-    async cadastrarEscola(dadosEscola, idEndereco) {
+    // Alinhado o nome do parâmetro para fk_id_endereco
+    async cadastrarEscola(dadosEscola, fk_id_endereco) {
         const query = `
             INSERT INTO Escolas 
             (nome_fantasia, razao_social, cnpj, codigo_inep, tipo_gestao, email, telefone, fk_id_endereco) 
@@ -12,16 +13,16 @@ class EscolaService {
         const valores = [
             dadosEscola.nomeFantasia,
             dadosEscola.razaoSocial,
-            dadosEscola.cnpj,
+            dadosEscola.cnpj,   
             dadosEscola.codigoInep || null, 
             dadosEscola.tipoGestao,
             dadosEscola.email || null,
             dadosEscola.telefone || null,
-            idEndereco // FK vinda do cadastro de endereço
+            fk_id_endereco // Agora bate perfeitamente com o parâmetro lá de cima!
         ];
 
         try {
-            // Executa a query no banco de dados
+            // Executa a query de forma compatível
             const [resultado] = await db.execute(query, valores);
             return { id: resultado.insertId, ...dadosEscola };
         } catch (error) {
