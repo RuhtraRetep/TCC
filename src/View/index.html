@@ -41,6 +41,62 @@
                 <p>Controle de acesso para diretores e coordenadores.</p>
             </div>
         </div>
+
+        <!-- SISTEMA DE SENSORES (TCC) -->
+<section class="sensor-section">
+
+    <h2 class="section-title">Previsão de Sensores</h2>
+
+    <div class="sensor-form">
+
+        <!-- Nome do ambiente -->
+        <input 
+            id="nome" 
+            type="text"
+            placeholder="Nome do ambiente (ex: Sala 1)"
+        >
+
+        <!-- Tipo do ambiente -->
+        <select id="tipo">
+
+            <option value="">Selecione o ambiente</option>
+
+            <option value="SALA">SALA</option>
+
+            <option value="BANHEIRO">BANHEIRO</option>
+
+            <option value="PATIO">PÁTIO</option>
+
+            <option value="QUADRA">QUADRA</option>
+
+            <option value="LABORATORIO">LABORATÓRIO</option>
+
+            <option value="COZINHA">COZINHA</option>
+
+        </select>
+
+        <!-- Botões -->
+        <button onclick="adicionar()">
+            Adicionar Ambiente
+        </button>
+
+        <button onclick="processar()">
+            Gerar Sensores
+        </button>
+
+    </div>
+
+    <!-- Lista de ambientes -->
+    <h3>Ambientes cadastrados</h3>
+
+    <div id="listaAmbientes"></div>
+
+    <!-- Resultado -->
+    <h3>Resultado</h3>
+
+    <div id="resultadoSensores"></div>
+
+</section>
     </main>
 
     <!-- Rodapé -->
@@ -70,5 +126,6 @@
     </footer>
 
     <script src="/script.js"></script>
+    
 </body>
 </html>
