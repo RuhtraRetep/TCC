@@ -25,7 +25,7 @@ router.get('/cadastro-escola', verificarAcesso, (req, res) => {
 });
 
 // CORREÇÃO AQUI: Mudado de '/cadastrar-escola' para '/cadastro-escola' para bater com o fetch do seu script.js
-router.post('/cadastrar-escola', async (req, res) => {
+router.post('/cadastro-escola', async (req, res) => {
     const {
         nomeFantasia,
         razaoSocial,
