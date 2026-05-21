@@ -30,8 +30,50 @@ app.use('/escolas', escolaRoute);
 app.listen(3000, () => console.log("Servidor rodando em http://localhost:3000")); //Não aparece pro usuário, serve apenas para teste
 
 
-const sensorRoutes =
-    require("./src/routes/sensorRoutes");
 
-    app.use(express.json());
-app.use("/api", sensorRoutes);
+
+app.use(express.json());
+
+// IMPORT DO SERVICE
+const sensorService =
+    require("./src/services/sensorServices");
+
+/*
+=================================================
+ROTA ÚNICA (SEM CONTROLLER E SEM ROUTES)
+=================================================
+*/
+app.post("/prever-sensores", (req, res) => {
+
+    try {
+
+        const { ambientes } = req.body;
+
+        if (!ambientes || !Array.isArray(ambientes)) {
+            return res.status(400).json({
+                erro: "Envie uma lista de ambientes"
+            });
+        }
+
+        const resultado =
+            sensorService.preverSensores(ambientes);
+
+        return res.status(200).json(resultado);
+
+    } catch (error) {
+
+        return res.status(500).json({
+            erro: "Erro interno",
+            detalhes: error.message
+        });
+    }
+});
+
+/*
+=================================================
+SUBIR SERVIDOR
+=================================================
+*/
+app.listen(3000, () => {
+    console.log("Servidor rodando na porta 3000");
+});
