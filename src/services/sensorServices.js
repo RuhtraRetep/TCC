@@ -1,22 +1,53 @@
 /*
-  Serviço responsável por realizar a previsão da quantidade e dos tipos de sensores
-  necessários para uma escola, com base nos ambientes informados.
+=========================================================
+SERVIÇO DE PREVISÃO DE SENSORES PARA ESCOLAS
+============s=============================================
 
-  Entrada:
-  - Lista de ambientes da escola, contendo o tipo de cada ambiente
-    (ex: sala, banheiro, pátio, quadra)
+Objetivo:
+- Realizar a previsão da quantidade e dos tipos de sensores
+  necessários para ambientes escolares.
 
-  Processo:
-  - Analisa cada ambiente informado
-  - Define a quantidade de sensores necessária por ambiente
-  - Determina os tipos de sensores (água e/ou energia)
-  - Aplica regras específicas para cada tipo de ambiente
+Sensores disponíveis:
+- Água
+- Energia
 
-  Saída:
-  - Quantidade total de sensores
-  - Lista detalhada dos sensores recomendados (tipo e localização)
+Ambientes suportados:
+- Sala
+- Banheiro
+- Pátio
+- Quadra
+- Laboratório
+- Cozinha
 
-  Objetivo:
-  - Auxiliar no planejamento da infraestrutura de monitoramento
-    de água e energia em ambientes escolares
+=========================================================
 */
+function preverSensores(ambientes) {
+    const sensores = [];
+
+    const regras = {
+        SALA: ["ENERGIA"],
+        BANHEIRO: ["AGUA", "ENERGIA"],
+        PATIO: ["ENERGIA"],
+        QUADRA: ["AGUA", "ENERGIA"],
+        LABORATORIO: ["ENERGIA"],
+        COZINHA: ["AGUA", "ENERGIA"]
+    };
+
+    ambientes.forEach((ambiente) => {
+        const tiposSensores = regras[ambiente.tipo] || ["ENERGIA"];
+
+        tiposSensores.forEach((sensor) => {
+            sensores.push({
+                tipo: sensor,
+                localizacao: ambiente.nome
+            });
+        });
+    });
+
+    return {
+        totalSensores: sensores.length,
+        sensores
+    };
+}
+
+module.exports = { preverSensores };
