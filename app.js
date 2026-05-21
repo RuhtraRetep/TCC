@@ -28,3 +28,10 @@ app.get('/', (req, res) => {
 app.use('/escolas', escolaRoute); 
 
 app.listen(3000, () => console.log("Servidor rodando em http://localhost:3000")); //Não aparece pro usuário, serve apenas para teste
+
+
+const sensorRoutes =
+    require("./src/routes/sensorRoutes");
+
+    app.use(express.json());
+app.use("/api", sensorRoutes);

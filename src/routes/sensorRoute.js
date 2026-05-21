@@ -21,3 +21,22 @@
   - Gerenciar e monitorar os sensores responsáveis pela coleta de dados
     de consumo de água e energia nos ambientes escolares
 */
+
+const express = require("express");
+
+const router = express.Router();
+
+const sensorController =
+    require("../controllers/sensorController");
+
+/*
+========================================
+ROTA DE PREVISÃO DE SENSORES
+========================================
+*/
+router.post(
+    "/prever-sensores",
+    sensorController.prever
+);
+
+module.exports = router;
