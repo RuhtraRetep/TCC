@@ -1,5 +1,5 @@
 /* ============================================================
-   SGE-TCC — style.css  (corrigido)
+   SGE-TCC — style.css
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap');
@@ -15,6 +15,7 @@
   --border:     rgba(255,255,255,0.09);
   --radius:     14px;
   --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  --danger:     #ff6b6b;
 }
 
 /* ── RESET ── */
@@ -48,6 +49,10 @@ body::before {
 @keyframes pulse-dot {
   0%,100% { box-shadow:0 0 8px var(--teal); }
   50%     { box-shadow:0 0 20px var(--teal), 0 0 40px rgba(0,194,168,.3); }
+}
+@keyframes tel-slide-in {
+  from { opacity:0; transform:translateY(-8px); }
+  to   { opacity:1; transform:translateY(0); }
 }
 
 /* ══════════════════════════════════
@@ -84,12 +89,11 @@ nav .logo h2::before {
   display: inline-block; flex-shrink: 0;
 }
 
-/* links empurrados para a direita */
 .nav-menu {
   display: flex;
   align-items: center;
   gap: 28px;
-  margin-left: auto;   /* <-- isso empurra para a direita */
+  margin-left: auto;
 }
 .nav-menu li a {
   font-size: .88rem; font-weight: 500;
@@ -98,7 +102,6 @@ nav .logo h2::before {
 }
 .nav-menu li a:hover { color: var(--white); }
 
-/* último item → botão */
 .nav-menu li:last-child a {
   background: var(--teal); color: var(--navy);
   padding: 8px 20px; border-radius: 50px;
@@ -106,7 +109,6 @@ nav .logo h2::before {
 }
 .nav-menu li:last-child a:hover { background: var(--teal-light); }
 
-/* hamburguer — só no mobile */
 .menu-toggle {
   display: none;
   background: none; border: none;
@@ -115,7 +117,6 @@ nav .logo h2::before {
   margin-left: auto;
 }
 
-/* menu aberto no mobile */
 .nav-menu.active {
   display: flex; flex-direction: column;
   position: fixed;
@@ -127,16 +128,15 @@ nav .logo h2::before {
 }
 
 /* ══════════════════════════════════
-   MAIN  — espaço abaixo da nav
+   MAIN
 ══════════════════════════════════ */
 .main-content {
   position: relative; z-index: 1;
   max-width: 1100px;
   margin: 0 auto;
-  padding: 88px 32px 80px;   /* 88 = 64 nav + 24 respiro */
+  padding: 88px 32px 80px;
 }
 
-/* ── Título de seção ── */
 .section-title {
   font-family: 'DM Serif Display', serif;
   font-size: clamp(1.5rem, 2.5vw, 2rem);
@@ -205,10 +205,9 @@ h3 {
   background: linear-gradient(90deg,transparent,var(--teal),transparent);
 }
 
-/* formulário dos sensores */
 .sensor-form {
   display: flex;
-  flex-wrap: wrap;          /* quebra linha se necessário */
+  flex-wrap: wrap;
   gap: 12px;
   align-items: center;
   margin-bottom: 32px;
@@ -216,7 +215,7 @@ h3 {
 
 .sensor-form input,
 .sensor-form select {
-  flex: 1 1 200px;          /* cresce mas tem mínimo */
+  flex: 1 1 200px;
   background: rgba(255,255,255,0.05);
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -236,7 +235,6 @@ h3 {
 .sensor-form input::placeholder { color: rgba(143,163,187,.45); }
 .sensor-form select option { background: var(--navy); }
 
-/* botões do sensor-form */
 .sensor-form button {
   flex-shrink: 0;
   background: var(--teal); color: var(--navy);
@@ -248,7 +246,6 @@ h3 {
 }
 .sensor-form button:hover { background: var(--teal-light); transform: translateY(-2px); }
 
-/* segundo botão — outline */
 .sensor-form button + button {
   background: transparent; color: var(--teal);
   border: 1px solid rgba(0,194,168,.4);
@@ -257,7 +254,6 @@ h3 {
   background: rgba(0,194,168,.08); transform: translateY(-2px);
 }
 
-/* lista de ambientes */
 #listaAmbientes {
   display: flex; flex-direction: column; gap: 10px;
   margin-bottom: 28px;
@@ -268,7 +264,6 @@ h3 {
 }
 #listaAmbientes .card::before { display: none; }
 
-/* resultado sensores */
 #resultadoSensores {
   display: flex; flex-direction: column; gap: 10px;
 }
@@ -357,7 +352,7 @@ h3 {
 .form-group textarea::placeholder { color: rgba(143,163,187,.4); }
 .form-group select option { background: var(--navy); }
 
-/* sub-seção endereço */
+/* sub-seções */
 .form-section { margin-top: 28px; }
 .form-section .section-title {
   font-family: 'DM Sans', sans-serif;
@@ -370,7 +365,157 @@ h3 {
   margin-bottom: 20px;
 }
 
-/* botões do form */
+/* ══════════════════════════════════
+   SEÇÃO TELEFONES
+══════════════════════════════════ */
+#telefones-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+/* Card de cada telefone */
+.telefone-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px 18px;
+  position: relative;
+  animation: tel-slide-in .25s ease both;
+  transition: opacity .25s ease, transform .25s ease;
+}
+
+.telefone-item.tel-removing {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+.telefone-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.telefone-label {
+  font-size: .73rem;
+  font-weight: 700;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+/* Botão remover (X) */
+.btn-remove-tel {
+  background: transparent;
+  border: 1px solid rgba(255, 107, 107, 0.25);
+  color: var(--danger);
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  font-size: .8rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+  flex-shrink: 0;
+  opacity: .6;
+}
+.btn-remove-tel:hover {
+  background: rgba(255,107,107,.12);
+  border-color: rgba(255,107,107,.5);
+  opacity: 1;
+}
+
+/* Grid interno do telefone — 3 cols em desktop */
+.telefone-grid {
+  grid-template-columns: 80px 80px 1fr 120px 100px 100px;
+}
+
+/* Grupos com toggle (Principal/Ativo) */
+.tel-bool-group {
+  align-items: flex-start;
+}
+
+/* Botão adicionar telefone */
+.btn-add-tel {
+  background: transparent;
+  border: 1px dashed rgba(0,194,168,.35);
+  color: var(--teal);
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  width: 100%;
+}
+.btn-add-tel:hover {
+  background: rgba(0,194,168,.06);
+  border-color: rgba(0,194,168,.6);
+}
+
+/* ── Toggle Switch ── */
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0; height: 0;
+  position: absolute;
+}
+
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  transition: var(--transition);
+}
+
+.toggle input:checked ~ .toggle-track {
+  background: rgba(0,194,168,.25);
+  border-color: var(--teal);
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: var(--transition);
+}
+
+.toggle input:checked ~ .toggle-track .toggle-thumb {
+  background: var(--teal);
+  transform: translateX(18px);
+  box-shadow: 0 0 6px rgba(0,194,168,.5);
+}
+
+.toggle-caption {
+  font-size: .78rem;
+  color: var(--text-muted);
+  min-width: 22px;
+}
+
+/* ══════════════════════════════════
+   BOTÕES DO FORM
+══════════════════════════════════ */
 .form-actions {
   display: flex; justify-content: flex-end; gap: 12px;
   margin-top: 32px;
@@ -429,7 +574,7 @@ footer {
 .footer-nav { display: flex; flex-direction: column; gap: 6px; }
 .footer-btn {
   background: transparent; color: var(--text-muted);
-  border: 0.1 0vmax var(--border);
+  border: 0.1px solid var(--border);
   padding: 6px 12px; border-radius: 6px;
   font-family: 'DM Sans', sans-serif;
   font-size: .8rem; cursor: pointer;
@@ -448,29 +593,45 @@ footer {
 /* ══════════════════════════════════
    RESPONSIVO
 ══════════════════════════════════ */
+@media (max-width: 900px) {
+  .telefone-grid {
+    grid-template-columns: 80px 80px 1fr 120px;
+  }
+  .tel-bool-group {
+    grid-column: auto;
+  }
+}
+
 @media (max-width: 768px) {
   .main-content { padding: 80px 16px 60px; }
 
-  /* esconde menu, mostra hamburguer */
   .nav-menu   { display: none; }
   .menu-toggle { display: block; }
 
-  /* grid do form → 1 coluna */
   .form-grid { grid-template-columns: 1fr; }
   .form-group.full-width { grid-column: span 1; }
   .form-card { padding: 24px 16px; }
 
-  /* sensor form em coluna */
   .sensor-section { padding: 24px 16px; }
   .sensor-form { flex-direction: column; }
   .sensor-form input,
   .sensor-form select,
   .sensor-form button { width: 100%; flex: none; }
 
-  /* botões do form */
   .form-actions { flex-direction: column-reverse; }
   .btn-primary, .btn-secondary { width: 100%; text-align: center; }
 
-  /* cards em 1 coluna */
   .cards-container { grid-template-columns: 1fr; }
+
+  /* telefones em 1 coluna no mobile */
+  .telefone-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .telefone-item { padding: 16px; }
+}
+
+@media (max-width: 480px) {
+  .telefone-grid {
+    grid-template-columns: 1fr;
+  }
 }
