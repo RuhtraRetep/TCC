@@ -47,7 +47,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     numero: document.getElementById('numero').value || null,
                     bairro: document.getElementById('bairro').value,
                     cidade: document.getElementById('cidade').value,
-                    cep: document.getElementById('cep').value
+                    cep: document.getElementById('cep').value,
+
+                    //Telefone 
+                    pais: document.getElementById('telefone_pais').value,
+                    ddd: document.getElementById('telefone_ddd').value,
+                    numero: document.getElementById('telefone_numero').value,
+                    tipo: document.getElementById('telefone_tipo').value,
+                    principal: document.getElementById('telefone_principal').value,
+                    ativo: document.getElementById('telefone_ativo').value
                 };
 
                 // Requisição

@@ -82,6 +82,15 @@ router.post('/cadastro-escola', async (req, res) => {
                 bairro,
                 cidade,
                 cep
+            },
+
+            telefone: {
+                pais,
+                ddd,
+                numero,
+                tipo,
+                principal,
+                ativo
             }
         };
 
