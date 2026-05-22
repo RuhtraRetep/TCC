@@ -9,40 +9,48 @@ function toggleMenu() {
 // Executa os códigos assim que a página terminar de carregar
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Fecha o menu ao clicar em um link (para mobile)
+    // Fecha o menu ao clicar em um link (mobile)
     document.querySelectorAll('.nav-menu a').forEach(link => {
         link.addEventListener('click', () => {
             const menu = document.getElementById('navMenu');
+
             if (menu) {
                 menu.classList.remove('active');
             }
         });
     });
 
-    // 1. Captura o formulário correto usando o ID novo do TCC
-    const formEscola = document.getElementById('formCadastroEscola') || document.getElementById('meuFormulario');
+    // Captura formulário
+    const formEscola = document.getElementById('formCadastroEscola');
 
-    // Só roda o código se o formulário realmente existir nesta página atual
+    // Só executa se existir
     if (formEscola) {
+
         formEscola.addEventListener('submit', async (event) => {
-            
-            // 2. Para o comportamento padrão do botão (evita recarregar a tela)
-            event.preventDefault(); 
-            
-            // 3. Coleta os valores digitados de forma segura
+
+            event.preventDefault();
+
             try {
+
+                // Dados do formulário
                 const dados = {
-                    nomeFantasia: document.getElementById('nome_fantasia')?.value || document.getElementById('nomeFantasia')?.value,
-                    razaoSocial: document.getElementById('razao_social')?.value || "",
+                    nomeFantasia: document.getElementById('nome_fantasia').value,
+                    razaoSocial: document.getElementById('razao_social').value,
                     cnpj: document.getElementById('cnpj').value,
-                    codigoInep: document.getElementById('codigo_inep')?.value || null,
-                    tipoGestao: document.getElementById('tipo_gestao')?.value || "",
-                    email: document.getElementById('email')?.value || null,
-                    telefone: document.getElementById('telefone')?.value || null,
-                    fk_id_endereco: document.getElementById('cep')?.value || "1"
+                    codigoInep: document.getElementById('codigo_inep').value || null,
+                    tipoGestao: document.getElementById('tipo_gestao').value,
+                    email: document.getElementById('email').value || null,
+                    telefone: document.getElementById('telefone').value || null,
+
+                    // Endereço
+                    logradouro: document.getElementById('logradouro').value,
+                    numero: document.getElementById('numero').value || null,
+                    bairro: document.getElementById('bairro').value,
+                    cidade: document.getElementById('cidade').value,
+                    cep: document.getElementById('cep').value
                 };
 
-                // 4. Dispara a requisição direto para a sua rota unificada do Back-end
+                // Requisição
                 const resposta = await fetch('/escolas/cadastro-escola', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -51,15 +59,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const resultado = await resposta.json();
 
+                // Sucesso
                 if (resposta.ok) {
+
                     alert('Cadastrado com sucesso!');
-                    formEscola.reset(); // Limpa a tela após salvar
+                    formEscola.reset();
+
                 } else {
-                    alert('Erro: ' + (resultado.erro || resultado.mensagem || 'Falha no cadastro'));
+
+                    alert(
+                        'Erro: ' +
+                        (
+                            resultado.erro ||
+                            resultado.mensagem ||
+                            'Falha no cadastro'
+                        )
+                    );
                 }
 
             } catch (erro) {
-                console.error("Erro interno no envio:", erro);
+
+                console.error('Erro interno:', erro);
                 alert('Não foi possível conectar ao servidor.');
             }
         });

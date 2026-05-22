@@ -34,7 +34,7 @@ CREATE TABLE Usuarios (
     funcao ENUM('Diretor', 'Financeiro', 'Manuntencao'),
     senha VARCHAR(8) NOT NULL,
     data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
-    fk_id_escola INT NOT NULL UNIQUE,
+    fk_id_escola INT NOT NULL,
     FOREIGN KEY (fk_id_escola) REFERENCES Escolas(id_escola)
 );
 
