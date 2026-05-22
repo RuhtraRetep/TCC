@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SGE - Cadastrar Escola</title>
-    <link rel="stylesheet" href="../../public/style.css">
+    <link rel="stylesheet" href="../style.css">
+
 </head>
 
 <body>
@@ -17,7 +18,7 @@
         </div>
         <div class="menu-toggle" onclick="toggleMenu()">☰</div>
         <ul class="nav-menu" id="navMenu">
-            <li><a href="index.html">Início</a></li>
+            <li><a href="/index.html">Início</a></li>  <!-- Ta errado, corrigir -->
             <li><a href="cadastroEscola.html">Cadastre sua Escola</a></li>
             <li><a href="#contato">Contato</a></li>
         </ul>
@@ -129,13 +130,15 @@
                             <div class="telefone-item" id="telefone-1">
                                 <div class="telefone-header">
                                     <span class="telefone-label">Telefone #1</span>
-                                    <button type="button" class="btn-remove-tel" onclick="removeTelefone('telefone-1')" title="Remover">✕</button>
+                                    <button type="button" class="btn-remove-tel" onclick="removeTelefone('telefone-1')"
+                                        title="Remover">✕</button>
                                 </div>
                                 <div class="form-grid telefone-grid">
 
                                     <div class="form-group">
                                         <label>País (DDI)</label>
-                                        <input type="text" name="tel_pais[]" maxlength="4" placeholder="+55" value="+55">
+                                        <input type="text" name="tel_pais[]" maxlength="4" placeholder="+55"
+                                            value="+55">
                                     </div>
 
                                     <div class="form-group">
@@ -145,7 +148,8 @@
 
                                     <div class="form-group">
                                         <label>Número</label>
-                                        <input type="text" name="tel_numero[]" maxlength="9" placeholder="Ex: 999999999">
+                                        <input type="text" name="tel_numero[]" maxlength="9"
+                                            placeholder="Ex: 999999999">
                                     </div>
 
                                     <div class="form-group">
