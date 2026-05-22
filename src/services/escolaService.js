@@ -1,39 +1,93 @@
-// 1. Importa a conexão com o banco de dados primeiro
-const db = require('../config/db'); 
+const db = require('../config/db');
 
 class EscolaService {
-    // Alinhado o nome do parâmetro para fk_id_endereco
-    async cadastrarEscola(dadosEscola, fk_id_endereco) {
-        const query = `
-            INSERT INTO Escolas 
-            (nome_fantasia, razao_social, cnpj, codigo_inep, tipo_gestao, email, telefone, fk_id_endereco) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `;
 
-        const valores = [
-            dadosEscola.nomeFantasia,
-            dadosEscola.razaoSocial,
-            dadosEscola.cnpj,   
-            dadosEscola.codigoInep || null, 
-            dadosEscola.tipoGestao,
-            dadosEscola.email || null,
-            dadosEscola.telefone || null,
-            fk_id_endereco // Agora bate perfeitamente com o parâmetro lá de cima!
-        ];
+    async cadastroEscolaCompleto(dadosEscola) {
+
+        // Abre conexão
+        const connection = await db.getConnection();
 
         try {
-            // Executa a query de forma compatível
-            const [resultado] = await db.execute(query, valores);
-            return { id: resultado.insertId, ...dadosEscola };
+
+            // Inicia transação
+            await connection.beginTransaction();
+
+            // =========================
+            // CADASTRO DE ENDEREÇO
+            // =========================
+
+            const queryEndereco = "INSERT INTO Enderecos( logradouro, numero, bairro, cidade, cep)VALUES (?, ?, ?, ?, ?)";
+            const queryEscola = "INSERT INTO Escolas (nome_fantasia, razao_social, cnpj, codigo_inep, tipo_gestao, email, telefone, fk_id_endereco) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+            const [resultadoEndereco] =
+                await connection.execute(
+                    queryEndereco,
+                    [
+                        dadosEscola.endereco.logradouro,
+                        dadosEscola.endereco.numero,
+                        dadosEscola.endereco.bairro,
+                        dadosEscola.endereco.cidade,
+                        dadosEscola.endereco.cep
+                    ]
+                );
+
+            // Pega o ID do endereço criado
+            const fk_id_endereco =
+                resultadoEndereco.insertId;
+
+
+            // =========================
+            // CADASTRO DA ESCOLA
+            // =========================
+
+            const [resultadoEscola] =
+                await connection.execute(
+                    queryEscola,
+                    [
+                        dadosEscola.nomeFantasia,
+                        dadosEscola.razaoSocial,
+                        dadosEscola.cnpj,
+                        dadosEscola.codigoInep || null,
+                        dadosEscola.tipoGestao,
+                        dadosEscola.email || null,
+                        dadosEscola.telefone || null,
+                        fk_id_endereco
+                    ]
+                );
+
+            // Salva definitivamente
+            await connection.commit();
+
+            return {
+                sucesso: true,
+                mensagem: 'Escola cadastrada com sucesso.',
+                idEscola: resultadoEscola.insertId
+            };
+
         } catch (error) {
-            // Trata erros duplicados de CNPJ ou INEP (Erro 1062 no MySQL)
+
+            // Desfaz tudo se der erro
+            await connection.rollback();
+
+            // Erro de valor duplicado
             if (error.errno === 1062) {
-                throw new Error('CNPJ ou Código INEP já cadastrado.');
+
+                throw new Error(
+                    'CNPJ ou código INEP já cadastrado.'
+                );
             }
-            throw new Error('Erro ao cadastrar a escola no banco de dados: ' + error.message);
+
+            throw new Error(
+                'Erro ao cadastrar escola: ' +
+                error.message
+            );
+
+        } finally {
+
+            // Libera conexão
+            connection.release();
         }
     }
 }
 
-// Exporta o serviço para ser usado nas rotas
 module.exports = new EscolaService();
