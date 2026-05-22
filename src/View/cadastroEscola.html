@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SGE - Cadastrar Escola</title>
-    <link rel="stylesheet" href="../../public/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -79,20 +79,11 @@
                             <input type="email" id="email" name="email" placeholder="escola@contato.com.br">
                         </div>
 
-                        <!-- Telefone -->
-                        <div class="form-group">
-                            <label for="telefone">Telefone</label>
-                            <input type="tel" id="telefone" name="telefone" placeholder="Ex: 11999999999">
-                        </div>
-
                     </div>
 
                     <!-- ENDEREÇO -->
                     <div class="form-section">
-
-                        <h3 class="section-title">
-                            📍 Endereço da Instituição
-                        </h3>
+                        <h3 class="section-title">📍 Endereço da Instituição</h3>
 
                         <div class="form-grid">
 
@@ -129,14 +120,76 @@
                         </div>
                     </div>
 
+                    <!-- TELEFONES -->
+                    <div class="form-section">
+                        <h3 class="section-title">📞 Telefones da Instituição</h3>
 
-                    <!-- CRIE UMA SECTION PARA CADASTRAR TELEFONE, OU CRIE CAMPOS PARA CADASTRAR, NECESSITA TER OS CAMPOS
-                      Pais, DDD, Numero, Tipo, Principal, Ativo. Exemplos de preenchimento "+55, 28, 999999999, Fixo/Celular, boolean, boolean"
-                      lembrando que o campo tipo precisa ser limitado a duas escolhas, 'Fixo' ou 'Celular'-->
+                        <div id="telefones-container">
+                            <!-- Telefone 1 — padrão -->
+                            <div class="telefone-item" id="telefone-1">
+                                <div class="telefone-header">
+                                    <span class="telefone-label">Telefone #1</span>
+                                    <button type="button" class="btn-remove-tel" onclick="removeTelefone('telefone-1')" title="Remover">✕</button>
+                                </div>
+                                <div class="form-grid telefone-grid">
 
+                                    <div class="form-group">
+                                        <label>País (DDI)</label>
+                                        <input type="text" name="tel_pais[]" maxlength="4" placeholder="+55" value="+55">
+                                    </div>
 
+                                    <div class="form-group">
+                                        <label>DDD</label>
+                                        <input type="text" name="tel_ddd[]" maxlength="3" placeholder="Ex: 28">
+                                    </div>
 
+                                    <div class="form-group">
+                                        <label>Número</label>
+                                        <input type="text" name="tel_numero[]" maxlength="9" placeholder="Ex: 999999999">
+                                    </div>
 
+                                    <div class="form-group">
+                                        <label>Tipo</label>
+                                        <select name="tel_tipo[]">
+                                            <option value="Fixo">Fixo</option>
+                                            <option value="Celular">Celular</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group tel-bool-group">
+                                        <label>Principal</label>
+                                        <div class="toggle-wrapper">
+                                            <label class="toggle">
+                                                <input type="checkbox" name="tel_principal[]" value="1" checked>
+                                                <span class="toggle-track">
+                                                    <span class="toggle-thumb"></span>
+                                                </span>
+                                            </label>
+                                            <span class="toggle-caption">Sim</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group tel-bool-group">
+                                        <label>Ativo</label>
+                                        <div class="toggle-wrapper">
+                                            <label class="toggle">
+                                                <input type="checkbox" name="tel_ativo[]" value="1" checked>
+                                                <span class="toggle-track">
+                                                    <span class="toggle-thumb"></span>
+                                                </span>
+                                            </label>
+                                            <span class="toggle-caption">Sim</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-add-tel" onclick="adicionarTelefone()">
+                            + Adicionar outro telefone
+                        </button>
+                    </div>
 
                     <!-- BOTÕES -->
                     <div class="form-actions">
@@ -178,7 +231,91 @@
         </div>
     </footer>
 
-    <script src="/script.js"></script>
+    <script>
+        /* ── Hamburguer ── */
+        function toggleMenu() {
+            document.getElementById('navMenu').classList.toggle('active');
+        }
+
+        /* ── Toggle label dinâmico ── */
+        document.addEventListener('change', function (e) {
+            if (e.target.type === 'checkbox') {
+                const caption = e.target.closest('.toggle-wrapper')?.querySelector('.toggle-caption');
+                if (caption) caption.textContent = e.target.checked ? 'Sim' : 'Não';
+            }
+        });
+
+        /* ── Contador de telefones ── */
+        let telCount = 1;
+
+        function adicionarTelefone() {
+            telCount++;
+            const id = 'telefone-' + telCount;
+
+            const div = document.createElement('div');
+            div.className = 'telefone-item';
+            div.id = id;
+
+            div.innerHTML = `
+                <div class="telefone-header">
+                    <span class="telefone-label">Telefone #${telCount}</span>
+                    <button type="button" class="btn-remove-tel" onclick="removeTelefone('${id}')" title="Remover">✕</button>
+                </div>
+                <div class="form-grid telefone-grid">
+                    <div class="form-group">
+                        <label>País (DDI)</label>
+                        <input type="text" name="tel_pais[]" maxlength="4" placeholder="+55" value="+55">
+                    </div>
+                    <div class="form-group">
+                        <label>DDD</label>
+                        <input type="text" name="tel_ddd[]" maxlength="3" placeholder="Ex: 28">
+                    </div>
+                    <div class="form-group">
+                        <label>Número</label>
+                        <input type="text" name="tel_numero[]" maxlength="9" placeholder="Ex: 999999999">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo</label>
+                        <select name="tel_tipo[]">
+                            <option value="Fixo">Fixo</option>
+                            <option value="Celular">Celular</option>
+                        </select>
+                    </div>
+                    <div class="form-group tel-bool-group">
+                        <label>Principal</label>
+                        <div class="toggle-wrapper">
+                            <label class="toggle">
+                                <input type="checkbox" name="tel_principal[]" value="1">
+                                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                            </label>
+                            <span class="toggle-caption">Não</span>
+                        </div>
+                    </div>
+                    <div class="form-group tel-bool-group">
+                        <label>Ativo</label>
+                        <div class="toggle-wrapper">
+                            <label class="toggle">
+                                <input type="checkbox" name="tel_ativo[]" value="1" checked>
+                                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                            </label>
+                            <span class="toggle-caption">Sim</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('telefones-container').appendChild(div);
+            div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function removeTelefone(id) {
+            const el = document.getElementById(id);
+            if (el && document.querySelectorAll('.telefone-item').length > 1) {
+                el.classList.add('tel-removing');
+                setTimeout(() => el.remove(), 250);
+            }
+        }
+    </script>
 </body>
 
 </html>
