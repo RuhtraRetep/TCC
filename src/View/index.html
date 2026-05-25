@@ -3,130 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Escolar - Início</title>
+    <meta name="description" content="SGE-TCC — Sistema de Gerenciamento Escolar com monitoramento de sensores de temperatura e umidade em tempo real.">
+    <meta name="theme-color" content="#0b1f3a">
+
+    <title>SGE-TCC — Gerenciamento Escolar</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
-<link rel="stylesheet" href="/style.css">
+
 <body>
 
-    <!-- Navegação -->
+    <!-- ══ NAVEGAÇÃO ══ -->
     <nav>
-        <div class="logo"><h2>SGE-TCC</h2></div>
-        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+        <div class="logo">
+            <h2>SGE-TCC</h2>
+        </div>
+
+        <span class="nav-status">Online</span>
+
+        <button class="menu-toggle" onclick="toggleMenu()" aria-label="Abrir menu" aria-expanded="false">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+        </button>
+
         <ul class="nav-menu" id="navMenu">
-            <li><a href="/escolas/liberar-acesso-cadastro">Cadastre sua Escola</a></li>
             <li><a href="#">Início</a></li>
+            <li><a href="#sensores">Sensores</a></li>
             <li><a href="#sobre">Sobre</a></li>
             <li><a href="#contato">Contato</a></li>
+            <li><a href="/escolas/liberar-acesso-cadastro">Cadastre sua Escola</a></li>
         </ul>
     </nav>
 
-    <!-- Conteúdo Principal -->
+    <!-- ══ CONTEÚDO PRINCIPAL ══ -->
     <main class="main-content">
-        <h2 class="section-title">Gerenciamento Escolar</h2>
-        
-        <div class="cards-container" id="cards">
-            <!-- Card 1 -->
-            <div class="card">
-                <h3>Cadastro Escolas</h3>
-                <p>Gerencie todas as instituições vinculadas ao sistema.</p>
-            </div>
-            <!-- Card 2 -->
-            <div class="card">
-                <h3>Monitoramento</h3>
-                <p>Visualize os sensores de temperatura e umidade em tempo real.</p>
-            </div>
-            <!-- Card 3 -->
-            <div class="card">
-                <h3>Usuários</h3>
-                <p>Controle de acesso para diretores e coordenadores.</p>
+
+        <!-- Hero -->
+        <div class="hero">
+            <div class="hero-badge">Versão TCC 2024</div>
+
+            <h1>
+                Gerenciamento Escolar
+                <span>Inteligente</span>
+            </h1>
+
+            <p>
+                Monitore sensores de temperatura e umidade,
+                gerencie escolas e controle acessos —
+                tudo em um só lugar.
+            </p>
+
+            <div class="hero-actions">
+                <a href="/escolas/liberar-acesso-cadastro" class="btn-primary">
+                    Cadastrar Escola
+                </a>
+
+                <a href="#sensores" class="btn-secondary">
+                    Ver Sensores
+                </a>
             </div>
         </div>
 
-        <!-- SISTEMA DE SENSORES (TCC) -->
-<section class="sensor-section">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="#">Início</a>
+            <span>/</span>
+            <span style="color:var(--white)">Painel Principal</span>
+        </div>
 
-    <h2 class="section-title">Previsão de Sensores</h2>
+        <h2 class="section-title">Módulos do Sistema</h2>
 
-    <div class="sensor-form">
+        <!-- Cards -->
+        <div class="cards-container" id="cards">
 
-        <!-- Nome do ambiente -->
-        <input 
-            id="nome" 
-            type="text"
-            placeholder="Nome do ambiente (ex: Sala 1)"
-        >
+            <div class="card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 9.5L12 4l9 5.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
+                        <path d="M9 21V12h6v9"/>
+                    </svg>
+                </div>
 
-        <!-- Tipo do ambiente -->
-        <select id="tipo">
+                <h3>Cadastro de Escolas</h3>
 
-            <option value="">Selecione o ambiente</option>
+                <p>
+                    Gerencie todas as instituições vinculadas
+                    ao sistema, com dados de contato e localização.
+                </p>
 
-            <option value="SALA">SALA</option>
-
-            <option value="BANHEIRO">BANHEIRO</option>
-
-            <option value="PATIO">PÁTIO</option>
-
-            <option value="QUADRA">QUADRA</option>
-
-            <option value="LABORATORIO">LABORATÓRIO</option>
-
-            <option value="COZINHA">COZINHA</option>
-
-        </select>
-
-        <!-- Botões -->
-        <button onclick="adicionar()">
-            Adicionar Ambiente
-        </button>
-
-        <button onclick="processar()">
-            Gerar Sensores
-        </button>
-
-    </div>
-
-    <!-- Lista de ambientes -->
-    <h3>Ambientes cadastrados</h3>
-
-    <div id="listaAmbientes"></div>
-
-    <!-- Resultado -->
-    <h3>Resultado</h3>
-
-    <div id="resultadoSensores"></div>
-
-</section>
-    </main>
-
-    <!-- Rodapé -->
-    <footer id="sobre">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>Sobre Nós</h4>
-                <p>Desenvolvido para facilitar o monitoramento tecnológico em escolas públicas e privadas.</p>
+                <a href="/escolas/liberar-acesso-cadastro" class="card-link">
+                    Acessar
+                </a>
             </div>
-            <div class="footer-section" id="contato">
-                <h4>Contato</h4>
-                <p>Email: suporte@tcc.com.br</p>
-                <p>Tel: (11) 9999-9999</p>
+
+            <div class="card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
+                    </svg>
+                </div>
+
+                <h3>Monitoramento</h3>
+
+                <p>
+                    Visualize os sensores de temperatura
+                    e umidade de cada ambiente em tempo real.
+                </p>
+
+                <a href="#sensores" class="card-link">
+                    Ver sensores
+                </a>
             </div>
-            <div class="footer-section">
-                <h4>Navegação</h4>
-                <div class="footer-nav">
-                    <button class="footer-btn" onclick="window.scrollTo(0,0)">Início / Topo</button>
-                    <button class="footer-btn" onclick="document.getElementById('cards').scrollIntoView()">Principal (Cards)</button>
+
+        </div>
+
+        <!-- Sensores -->
+        <section class="sensor-section" id="sensores">
+
+            <h2 class="section-title">Previsão de Sensores</h2>
+
+            <div class="sensor-stats">
+                <div class="stat-pill">
+                    Ambientes:
+                    <strong id="totalAmbientes">0</strong>
+                </div>
+
+                <div class="stat-pill">
+                    Sensores estimados:
+                    <strong id="totalSensores">0</strong>
                 </div>
             </div>
-        </div>
-       <div style="text-align: center; font-size: 0.8rem; opacity: 0.6; border-top: 1px solid #444; padding-top: 20px;">
 
-            &copy; 2023 Projeto TCC - Monitoramento Escolar.
-        </div>
-    </footer>
+            <div class="sensor-form">
+                <input
+                    id="nome"
+                    type="text"
+                    placeholder="Nome do ambiente"
+                >
 
-    <script src="/script.js"></script>
-    
+                <select id="tipo">
+                    <option value="">Selecione o tipo</option>
+                    <option value="SALA">Sala</option>
+                    <option value="BANHEIRO">Banheiro</option>
+                    <option value="PATIO">Pátio</option>
+                </select>
+
+                <button onclick="adicionar()">
+                    + Adicionar
+                </button>
+
+                <button onclick="processar()">
+                    Gerar Sensores
+                </button>
+            </div>
+
+            <div id="listaAmbientes"></div>
+
+            <div id="resultadoSensores"></div>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
 </body>
-
 </html>
