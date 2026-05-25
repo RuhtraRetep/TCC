@@ -6,15 +6,15 @@ const escolaService = require('../services/escolaService');
 // Middleware de segurança das sessões
 const verificarAcesso = (req, res, next) => {
     if (req.session.podeAcessarCadastro) {
-        next();        
+        next();
     } else {
         res.redirect('/');
     }
 };
 
 // Permite entrar no cadastro a partir da página inicial
-router.get('/liberar-acesso-cadastro', (req, res) => {  
-    req.session.podeAcessarCadastro = true; 
+router.get('/liberar-acesso-cadastro', (req, res) => {
+    req.session.podeAcessarCadastro = true;
     res.redirect('/escolas/cadastro-escola');
 });
 
@@ -34,15 +34,21 @@ router.post('/cadastro-escola', async (req, res) => {
         codigoInep,
         tipoGestao,
         email,
-        telefone,
 
         // ENDEREÇO
         logradouro,
-        numero,
+        numero, // Este é o número do endereço
         bairro,
         cidade,
-        cep
+        cep,
 
+        // TELEFONE (CORRIGIDO: nomes idênticos ao objeto 'dados' do front-end)
+        pais,
+        ddd,
+        numeroTel, // Alterado de TelNumero para numeroTel para bater com o front-end
+        tipo,
+        principal,
+        ativo
     } = req.body;
 
     // VALIDAÇÃO
@@ -67,18 +73,16 @@ router.post('/cadastro-escola', async (req, res) => {
 
         // OBJETO COMPLETO
         const dadosEscola = {
-
             nomeFantasia,
             razaoSocial,
             cnpj,
             codigoInep,
             tipoGestao,
             email,
-            telefone,
 
             endereco: {
                 logradouro,
-                numero,
+                numero, // Número do endereço
                 bairro,
                 cidade,
                 cep
@@ -87,7 +91,7 @@ router.post('/cadastro-escola', async (req, res) => {
             telefone: {
                 pais,
                 ddd,
-                numero,
+                numero: numeroTel, // CORRIGIDO: Passando o número do telefone correto aqui
                 tipo,
                 principal,
                 ativo
@@ -114,5 +118,6 @@ router.post('/cadastro-escola', async (req, res) => {
         });
     }
 });
+
 
 module.exports = router;
