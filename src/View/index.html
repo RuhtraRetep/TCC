@@ -150,6 +150,9 @@
                     <option value="SALA">Sala</option>
                     <option value="BANHEIRO">Banheiro</option>
                     <option value="PATIO">Pátio</option>
+                    <option value="LABORATORIO">Laboratório</option>
+                    <option value="QUADRA">Quadra</option>
+                    <option value="COZINHA">Cozinha</option>
                 </select>
 
                 <button onclick="adicionar()">
@@ -164,6 +167,56 @@
             <div id="listaAmbientes"></div>
 
             <div id="resultadoSensores"></div>
+
+            <!-- DASHBOARD -->
+
+<section class="gastos-section">
+
+    <h2 class="section-title">
+        Dashboard de Gastos
+    </h2>
+
+    <div id="dashboardAmbientes">
+
+    </div>
+
+</section>
+
+<!-- Histórico -->
+
+<section class="historico-section">
+
+     <thead>
+
+            <tr>
+
+                <th>Ambiente</th>
+                <th>Água</th>
+                <th>Energia</th>
+                <th>Total</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="historicoTabela">
+
+        </tbody>
+
+    </table>
+
+
+</section>
+
+<div class="pdf-area">
+
+    <button onclick="gerarPDF()">
+
+        Gerar Relatório PDF
+
+    </button>
+
+</div>
 
         </section>
 

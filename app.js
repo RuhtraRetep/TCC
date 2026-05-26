@@ -58,5 +58,13 @@ app.post("/prever-sensores", (req, res) => {
     }
 });
 
+/*
+###################### INICIALIZAR GASTO DE SENSORES ###################*/
+const iniciarMonitoramento =
+require('./src/services/sensorMonitorService');
+
+iniciarMonitoramento();
+
+
 // Inicializa o servidor na porta 3000 (Apenas um único listener)
 app.listen(3000, () => console.log("Servidor rodando em http://localhost:3000"));
