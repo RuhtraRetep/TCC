@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Só executa se existir
     if (formEscola) {
 
-        //VERIFICAÇÃO INPUT NOME FANTASIA
+        /* //VERIFICAÇÃO INPUT NOME FANTASIA
         inputNomeFantasia = document.getElementById('nome_fantasia');
 
         inputNomeFantasia.addEventListener('blur', (evento) => {
@@ -160,10 +160,10 @@ document.addEventListener('DOMContentLoaded', () => {
         inputCep.addEventListener('blur', async (evento) => {
 
             // Pega o valor e limpa pontos/traços
-            const valorAtual = inputCep.value.trim().replace(/\D/g, '');
+            const valorDigitado = inputCep.value.trim();
 
             // SE O CAMPO ESTIVER VAZIO (O cara apagou o CEP)
-            if (valorAtual === "") {
+            if (valorDigitado === "") {
                 inputCep.style.borderColor = "";
 
                 // Libera os campos para digitação manual e limpa tudo
@@ -175,12 +175,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 inputBairro.value = "";
                 inputCidade.value = "";
 
-                limparCamposEndereco();
                 return; // Para a execução aqui
             }
+            const valorAtual = valorDigitado.replace(/\D/g, '');
 
             // SE O CEP FOR INVÁLIDO (Menos ou mais de 8 números)
-            if (!/^\d{8}$/.test(valorAtual)) {
+            if (!/^\d{8}$/.test(valorAtual) || valorDigitado.length !== valorAtual.length) {
                 inputCep.value = "";
                 inputCep.placeholder = "CEP Inválido (8 dígitos)";
                 inputCep.style.borderColor = "red";
@@ -193,56 +193,61 @@ document.addEventListener('DOMContentLoaded', () => {
                 inputLogradouro.value = "";
                 inputBairro.value = "";
                 inputCidade.value = "";
-
-                limparCamposEndereco();
+                return;
             }
 
-            // SE O CEP TEM 8 NÚMEROS (Vai buscar na API)
-            else {
+
+            try {
+                // SE O CEP TEM 8 NÚMEROS (Vai buscar na API)
                 inputCep.style.borderColor = "";
 
                 inputLogradouro.value = "Carregando...";
                 inputBairro.value = "Carregando...";
                 inputCidade.value = "Carregando...";
+                const resposta = await fetch(`https://viacep.com.br/ws/${valorAtual}/json/`);
+                const dados = await resposta.json();
 
-                try {
-                    const resposta = await fetch(`https://viacep.com.br/ws/${valorAtual}/json/`);
-                    const dados = await resposta.json();
+                if (!dados.erro) {
+                    inputLogradouro.value = dados.logradouro;
+                    inputBairro.value = dados.bairro;
+                    inputCidade.value = dados.localidade;
 
-                    if (!dados.erro) {
-                        inputLogradouro.value = dados.logradouro;
-                        inputBairro.value = dados.bairro;
-                        inputCidade.value = dados.localidade;
+                    // TRAVA pois a API achou o endereço certinho
+                    inputLogradouro.readOnly = true;
+                    inputBairro.readOnly = true;
+                    inputCidade.readOnly = true;
+                }
+                else {
 
-                        // TRAVA pois a API achou o endereço certinho
-                        inputLogradouro.readOnly = true;
-                        inputBairro.readOnly = true;
-                        inputCidade.readOnly = true;
-                    } else {
-                        // Formato certo, mas o CEP não existe
-                        inputCep.value = "";
-                        inputCep.placeholder = "CEP não encontrado";
-                        inputCep.style.borderColor = "red";
+                    // Formato certo, mas o CEP não existe
+                    inputCep.value = "";
+                    inputCep.placeholder = "CEP não encontrado";
+                    inputCep.style.borderColor = "red";
 
-                        // DESTRAVA pro cara não ficar preso
-                        inputLogradouro.readOnly = false;
-                        inputBairro.readOnly = false;
-                        inputCidade.readOnly = false;
-
-                        limparCamposEndereco();
-                    }
-                } catch (erro) {
-                    console.error("Erro na API de CEP:", erro);
-
-                    // DESTRAVA caso o serviço do ViaCEP caia
+                    // DESTRAVA pro cara não ficar preso
                     inputLogradouro.readOnly = false;
                     inputBairro.readOnly = false;
                     inputCidade.readOnly = false;
 
-                    limparCamposEndereco();
-                    alert("Erro ao conectar ao serviço de CEP. Digite o endereço manualmente.");
+                    inputLogradouro.value = "";
+                    inputBairro.value = "";
+                    inputCidade.value = "";
                 }
+            } catch (erro) {
+                console.error("Erro na API de CEP:", erro);
+
+                // DESTRAVA caso o serviço do ViaCEP caia
+                inputLogradouro.readOnly = false;
+                inputBairro.readOnly = false;
+                inputCidade.readOnly = false;
+
+                inputLogradouro.value = "";
+                inputBairro.value = "";
+                inputCidade.value = "";
+
+                alert("Erro ao conectar ao serviço de CEP. Digite o endereço manualmente.");
             }
+
         });
 
         const inputNumeroEscola = document.getElementById('numero');
@@ -316,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     inputTelefoneNumero.style.borderColor = "";
                 }
             }, 400); // Tempo de espera em milissegundos (800ms)
-        });
+        }); */
 
         formEscola.addEventListener('submit', async (event) => {
 
@@ -326,27 +331,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Dados do formulário
                 const dados = {
-                    nomeFantasia: document.getElementById('nome_fantasia').value.Trim(),
-                    razaoSocial: document.getElementById('razao_social').value.Trim(),
-                    cnpj: document.getElementById('cnpj').value.Trim(),
-                    codigoInep: document.getElementById('codigo_inep').value.Trim() || null,
-                    tipoGestao: document.getElementById('tipo_gestao').value.Trim(),
-                    email: document.getElementById('email').value.Trim() || null,
+                    nomeFantasia: document.getElementById('nome_fantasia').value.trim(),
+                    razaoSocial: document.getElementById('razao_social').value.trim(),
+                    cnpj: document.getElementById('cnpj').value.trim(),
+                    codigoInep: document.getElementById('codigo_inep').value.trim() || null,
+                    tipoGestao: document.getElementById('tipo_gestao').value.trim(),
+                    email: document.getElementById('email').value.trim() || null,
 
                     // Endereço
-                    logradouro: document.getElementById('logradouro').value.Trim(),
-                    numero: document.getElementById('numero').value.Trim() || null,
-                    bairro: document.getElementById('bairro').value.Trim(),
-                    cidade: document.getElementById('cidade').value.Trim(),
-                    cep: document.getElementById('cep').value.Trim(),
+                    logradouro: document.getElementById('logradouro').value.trim(),
+                    numero: document.getElementById('numero').value.trim() || null,
+                    bairro: document.getElementById('bairro').value.trim(),
+                    cidade: document.getElementById('cidade').value.trim(),
+                    cep: document.getElementById('cep').value.trim(),
 
                     //Telefone 
-                    pais: document.getElementById('telefone_pais').value.Trim(),
-                    ddd: document.getElementById('telefone_ddd').value.Trim(),
-                    numeroTel: document.getElementById('telefone_numero').value.Trim(),
-                    tipo: document.getElementById('telefone_tipo').value.Trim(),
-                    principal: document.getElementById('telefone_principal').value.Trim(),
-                    ativo: document.getElementById('telefone_ativo').value.Trim()
+                    pais: document.getElementById('telefone_pais').value.trim(),
+                    ddd: document.getElementById('telefone_ddd').value.trim(),
+                    numeroTel: document.getElementById('telefone_numero').value.trim(),
+                    tipo: document.getElementById('telefone_tipo').value.trim(),
+                    principal: document.getElementById('telefone_principal').value.trim(),
+                    ativo: document.getElementById('telefone_ativo').value.trim()
                 };
 
 
@@ -381,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (erro) {
 
                 console.error('Erro interno:', erro);
-                alert('Não foi possível conectar ao servidor.');
+                alert("Erro: " + erro.message);
             }
         });
     }
@@ -537,7 +542,7 @@ function processar() {
         document.getElementById('telefones-container').appendChild(div);
         div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-
+    
     function removeTelefone(id) {
         const el = document.getElementById(id);
         if (el && document.querySelectorAll('.telefone-item').length > 1) {

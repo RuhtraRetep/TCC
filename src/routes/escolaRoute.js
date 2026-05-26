@@ -24,85 +24,84 @@ router.get('/cadastro-escola', verificarAcesso, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'view', 'cadastroEscola.html'));
 });
 
+
 // CORREÇÃO AQUI: Mudado de '/cadastrar-escola' para '/cadastro-escola' para bater com o fetch do seu script.js
 router.post('/cadastro-escola', async (req, res) => {
 
-    const {
-        nomeFantasia,
-        razaoSocial,
-        cnpj,
-        codigoInep,
-        tipoGestao,
-        email,
-
-        // ENDEREÇO
-        logradouro,
-        numero, // Este é o número do endereço
-        bairro,
-        cidade,
-        cep,
-
-        // TELEFONE (CORRIGIDO: nomes idênticos ao objeto 'dados' do front-end)
-        pais,
-        ddd,
-        numeroTel, // Alterado de TelNumero para numeroTel para bater com o front-end
-        tipo,
-        principal,
-        ativo
-    } = req.body;
-
-    // VALIDAÇÃO
-    if (
-        !nomeFantasia ||
-        !razaoSocial ||
-        !cnpj ||
-        !tipoGestao ||
-        !logradouro ||
-        !bairro ||
-        !cidade ||
-        !cep
-    ) {
-
-        return res.status(400).json({
-            sucesso: false,
-            erro: 'Preencha todos os campos obrigatórios.'
-        });
-    }
-
+    console.log("DADOS QUE CHEGARAM NO BACK-END:", req.body);
     try {
-
-        // OBJETO COMPLETO
-        const dadosEscola = {
+        // 1. Pegamos os dados respeitando a estrutura de sub-objetos vinda do Front-end
+        const {
             nomeFantasia,
             razaoSocial,
             cnpj,
             codigoInep,
             tipoGestao,
             email,
+            logradouro,
+            numero,
+            bairro,
+            cidade,
+            cep,
 
+            // TELEFONE
+            pais,
+            ddd,
+            numeroTel,
+            tipo,
+            principal,
+            ativo
+        } = req.body;
+
+        // 2. VALIDAÇÃO DE CAMPOS OBRIGATÓRIOS (Antes de montar o objeto final)
+        if (
+            !nomeFantasia ||
+            !razaoSocial ||
+            !cnpj ||
+            !tipoGestao ||
+            !logradouro ||
+            !numero ||
+            !bairro ||
+            !cidade ||
+            !cep ||
+            !pais ||
+            !ddd ||
+            !numeroTel ||
+            !tipo
+        ) {
+            return res.status(400).json({
+                sucesso: false,
+                erro: 'Preencha todos os campos obrigatórios do formulário.'
+            });
+        }
+
+        // 3. ESTRUTURA DO OBJETO COMPLETO (Passando as variáveis diretas que vieram do req.body)
+        const dadosEscola = {
+            nomeFantasia,
+            razaoSocial,
+            cnpj,
+            codigoInep: codigoInep || null,
+            tipoGestao,
+            email: email || null,
             endereco: {
-                logradouro,
-                numero, // Número do endereço
+                logradouro, // Equivalente a logradouro: logradouro
+                numero: numero || null,
                 bairro,
                 cidade,
                 cep
             },
-
             telefone: {
-                pais,
-                ddd,
-                numero: numeroTel, // CORRIGIDO: Passando o número do telefone correto aqui
-                tipo,
+                pais: pais || null,
+                ddd: ddd || null,
+                numero: numeroTel || null, // Mapeia a variável numeroTel para a chave 'numero' que o Service espera
+                tipo: tipo || null,
                 principal,
                 ativo
             }
         };
 
-        // CHAMA O SERVICE
-        const novaEscola =
-            await escolaService.cadastroEscolaCompleto(
-                dadosEscola
-            );
+        // 4. CHAMA O SERVICE (Onde rodam as validações estritas de tamanho e formato)
+        const novaEscola = await escolaService.cadastroEscolaCompleto(dadosEscola);
 
         return res.status(201).json({
             sucesso: true,
@@ -111,7 +110,8 @@ router.post('/cadastro-escola', async (req, res) => {
         });
 
     } catch (error) {
-
+        // 5. CAPTURA O ERRO PERSONALIZADO DO SERVICE
+        // Enviamos na chave 'erro' para manter a consistência do seu back-end
         return res.status(400).json({
             sucesso: false,
             erro: error.message
