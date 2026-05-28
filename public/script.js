@@ -391,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // SISTEMA DE PREVISÃO DE SENSORES (Mantido da main)
 // =================================================
 
-const ambientes = [];
+
 
 // Adicionar ambiente
 function adicionar() {
@@ -548,3 +548,165 @@ function processar() {
 
 
 }
+
+/* ############### SENSORES ###############################*/
+
+const ambientes = [
+    {
+        nome: 'Cozinha 01',
+        tipo: 'COZINHA',
+        agua: 0,
+        energia: 0
+    },
+    {
+        nome: 'Banheiro 01',
+        tipo: 'BANHEIRO',
+        agua: 0,
+        energia: 0
+    },
+    {
+        nome: 'Sala 01',
+        tipo: 'SALA',
+        agua: 0,
+        energia: 0
+    }
+];
+
+const consumoPorTipo = {
+    SALA: { agua: 0, energia: 0.20 },
+    LABORATORIO: { agua: 0, energia: 0.30 },
+    PATIO: { agua: 0, energia: 0.08 },
+    BANHEIRO: { agua: 0.15, energia: 0.10 },
+    COZINHA: { agua: 0.20, energia: 0.25 },
+    QUADRA: { agua: 0.05, energia: 0.12 }
+};
+
+function adicionarAmbiente() {
+    const nome = document.getElementById('nome').value;
+    const tipo = document.getElementById('tipo').value;
+
+    if (!nome || !tipo) {
+        alert('Preencha os campos');
+        return;
+    }
+
+    ambientes.push({
+        nome,
+        tipo,
+        agua: 0,
+        energia: 0
+    });
+
+    document.getElementById('nome').value = '';
+    document.getElementById('tipo').value = '';
+
+    atualizarDashboard();
+    atualizarHistorico();
+}
+
+function atualizarDashboard() {
+    const dashboard = document.getElementById('dashboardAmbientes');
+
+    dashboard.innerHTML = '';
+
+    let totalAguaGeral = 0;
+    let totalEnergiaGeral = 0;
+    let totalGeral = 0;
+
+    ambientes.forEach((ambiente) => {
+        ambiente.agua = Number(ambiente.agua) || 0;
+        ambiente.energia = Number(ambiente.energia) || 0;
+
+        const regra = consumoPorTipo[ambiente.tipo] || {
+            agua: 0,
+            energia: 0.10
+        };
+
+        const consumoAgua = Math.random() * regra.agua;
+        const consumoEnergia = Math.random() * regra.energia;
+
+        ambiente.agua += consumoAgua;
+        ambiente.energia += consumoEnergia;
+
+        const total = ambiente.agua + ambiente.energia;
+
+        totalAguaGeral += ambiente.agua;
+        totalEnergiaGeral += ambiente.energia;
+        totalGeral += total;
+
+        dashboard.innerHTML += `
+            <div class="gasto-card">
+                <h3>${ambiente.nome}</h3>
+
+                <p>
+                    Água:
+                    <strong>R$ ${ambiente.agua.toFixed(2)}</strong>
+                </p>
+
+                <p>
+                    Energia:
+                    <strong>R$ ${ambiente.energia.toFixed(2)}</strong>
+                </p>
+
+                <p>
+                    Total:
+                    <strong>R$ ${total.toFixed(2)}</strong>
+                </p>
+            </div>
+        `;
+    });
+
+    dashboard.innerHTML += `
+        <div class="gasto-card total-geral">
+            <h2>TOTAL GERAL</h2>
+
+            <p>
+                Água:
+                <strong>R$ ${totalAguaGeral.toFixed(2)}</strong>
+            </p>
+
+            <p>
+                Energia:
+                <strong>R$ ${totalEnergiaGeral.toFixed(2)}</strong>
+            </p>
+
+            <p>
+                Total Final:
+                <strong>R$ ${totalGeral.toFixed(2)}</strong>
+            </p>
+        </div>
+    `;
+}
+
+function atualizarHistorico() {
+    const tabela = document.getElementById('historicoTabela');
+
+    tabela.innerHTML = '';
+
+    ambientes.forEach((ambiente) => {
+        const agua = Number(ambiente.agua) || 0;
+        const energia = Number(ambiente.energia) || 0;
+        const total = agua + energia;
+
+        tabela.innerHTML += `
+            <tr>
+                <td>${ambiente.nome}</td>
+                <td>R$ ${agua.toFixed(2)}</td>
+                <td>R$ ${energia.toFixed(2)}</td>
+                <td>R$ ${total.toFixed(2)}</td>
+            </tr>
+        `;
+    });
+}
+
+function gerarPDF() {
+    alert('Relatório PDF gerado!');
+}
+
+setInterval(() => {
+    atualizarDashboard();
+    atualizarHistorico();
+}, 15000);
+
+atualizarDashboard();
+atualizarHistorico();
