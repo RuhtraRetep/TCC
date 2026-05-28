@@ -29,7 +29,7 @@ CREATE TABLE Usuarios (
     sobrenome_usuario VARCHAR(100) NOT NULL,
     cpf CHAR(11) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE, -- Vai ser o login
-    funcao ENUM('Diretor', 'Financeiro', 'Manutencao'),
+    funcao ENUM('Diretor', 'Financeiro', 'Manutencao', 'Professor'),
     senha VARCHAR(8) NOT NULL,
     data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
     fk_id_escola INT NOT NULL,
