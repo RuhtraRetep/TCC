@@ -51,3 +51,4 @@ function preverSensores(ambientes) {
 }
 
 module.exports = { preverSensores };
+

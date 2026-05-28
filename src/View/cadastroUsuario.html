@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Usuário — SGE-TOC</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="sge_toc_cadastro.css">
+</head>
+<body>
+
+  <nav class="sge-nav">
+    <div class="sge-logo">
+      <div class="sge-logo-dot"></div>
+      <span class="sge-logo-text">SGE-TOC</span>
+      <span class="sge-logo-status">Online</span>
+    </div>
+    <div class="nav-links">
+      <a href="#">Início</a>
+      <a href="#">Sensores</a>
+      <a href="#">Sobre</a>
+      <a href="#">Contato</a>
+      <button class="nav-btn">Cadastre sua Escola</button>
+    </div>
+  </nav>
+
+  <div class="sge-body">
+    <p class="breadcrumb">Início / Cadastro de Usuário</p>
+    <h1 class="page-title">Cadastro de Usuário</h1>
+
+    <div class="steps-bar">
+      <div class="st active"><div class="st-dot">1</div> Dados pessoais</div>
+      <div class="st-line"></div>
+      <div class="st"><div class="st-dot">2</div> Acesso</div>
+      <div class="st-line"></div>
+      <div class="st"><div class="st-dot">3</div> Confirmação</div>
+    </div>
+
+    <div class="sge-card">
+
+      <!-- FOTO -->
+      <div class="sge-section">
+        <p class="sec-label"><i class="ti ti-user-circle"></i> Foto de perfil</p>
+        <div class="avatar-row">
+          <div class="avatar" id="av">US</div>
+          <div class="avatar-info">
+            <span class="avatar-name">Escolha uma foto de perfil</span>
+            <button class="upload-btn" onclick="document.getElementById('fi').click()">
+              <i class="ti ti-camera"></i> Enviar foto
+            </button>
+            <span class="avatar-hint">JPG, PNG ou WebP — máx. 2MB</span>
+            <input type="file" id="fi" accept="image/*" style="display:none" onchange="handleAv(this)">
+          </div>
+        </div>
+      </div>
+
+      <!-- DADOS PESSOAIS -->
+      <div class="sge-section">
+        <p class="sec-label"><i class="ti ti-id-badge"></i> Dados pessoais</p>
+        <div class="grid2 mb12">
+          <div class="field"><label>Nome *</label><input type="text" placeholder="João" id="fn" oninput="updateAv()"></div>
+          <div class="field"><label>Sobrenome *</label><input type="text" placeholder="Silva" id="ln" oninput="updateAv()"></div>
+        </div>
+        <div class="grid2 mb12">
+          <div class="field"><label>CPF</label><input type="text" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
+          <div class="field"><label>Data de nascimento</label><input type="date"></div>
+        </div>
+        <div class="grid2">
+          <div class="field">
+            <label>Gênero</label>
+            <select>
+              <option value="">Selecione</option>
+              <option>Masculino</option>
+              <option>Feminino</option>
+              <option>Não-binário</option>
+              <option>Prefiro não informar</option>
+            </select>
+          </div>
+          <div class="field"><label>Telefone</label><input type="tel" placeholder="(11) 9 0000-0000" oninput="maskPhone(this)"></div>
+        </div>
+      </div>
+
+      <!-- VÍNCULO ESCOLAR -->
+      <div class="sge-section">
+        <p class="sec-label"><i class="ti ti-building-school"></i> Vínculo escolar</p>
+        <div class="grid2 mb12">
+          <div class="field">
+            <label>Cargo / Função</label>
+            <select>
+              <option value="">Selecione</option>
+              <option>Diretor(a)</option>
+              <option>Coordenador(a)</option>
+              <option>Professor(a)</option>
+              <option>Técnico(a)</option>
+              <option>Administrador(a)</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="field"><label>Escola / Instituição</label><input type="text" placeholder="Nome da escola"></div>
+        </div>
+        <div class="field">
+          <label>Módulos de acesso</label>
+          <div class="tag-row">
+            <span class="tag" onclick="tog(this)">Cadastro de Escolas</span>
+            <span class="tag" onclick="tog(this)">Monitoramento</span>
+            <span class="tag" onclick="tog(this)">Sensores</span>
+            <span class="tag" onclick="tog(this)">Relatórios</span>
+            <span class="tag" onclick="tog(this)">Administração</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CREDENCIAIS -->
+      <div class="sge-section">
+        <p class="sec-label"><i class="ti ti-lock"></i> Credenciais de acesso</p>
+        <div class="grid1 mb12">
+          <div class="field"><label>E-mail *</label><input type="email" placeholder="seu@email.com"></div>
+        </div>
+        <div class="grid2 mb12">
+          <div class="field">
+            <label>Senha *</label>
+            <div class="pwd-wrap">
+              <input type="password" id="pwd" placeholder="Mínimo 8 caracteres" oninput="strength(this.value)">
+              <button class="eye-btn" onclick="togglePwd('pwd',this)" tabindex="-1" aria-label="Ver senha"><i class="ti ti-eye"></i></button>
+            </div>
+            <div class="strength">
+              <div class="seg" id="s1"></div>
+              <div class="seg" id="s2"></div>
+              <div class="seg" id="s3"></div>
+              <div class="seg" id="s4"></div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Confirmar senha *</label>
+            <div class="pwd-wrap">
+              <input type="password" id="pwd2" placeholder="Repita a senha">
+              <button class="eye-btn" onclick="togglePwd('pwd2',this)" tabindex="-1" aria-label="Ver senha"><i class="ti ti-eye"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="terms">
+          <span>Li e concordo com os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a> do SGE-TOC.</span>
+        </div>
+        <div class="check-row">
+          <input type="checkbox">
+          <span>Desejo receber notificações sobre alertas de sensores por e-mail.</span>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="sge-footer">
+        <span class="footer-note"><i class="ti ti-shield-check"></i> Dados protegidos com criptografia</span>
+        <button class="btn-submit" onclick="submit()">
+          <i class="ti ti-user-plus"></i> Cadastrar agora
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function updateAv() {
+      const f = document.getElementById('fn').value.trim();
+      const l = document.getElementById('ln').value.trim();
+      const av = document.getElementById('av');
+      if (!av.dataset.custom) av.textContent = ((f[0]||'')+(l[0]||'')).toUpperCase() || 'US';
+    }
+
+    function handleAv(inp) {
+      const r = new FileReader();
+      r.onload = e => {
+        const av = document.getElementById('av');
+        av.style.backgroundImage = `url(${e.target.result})`;
+        av.style.backgroundSize = 'cover';
+        av.style.backgroundPosition = 'center';
+        av.textContent = '';
+        av.dataset.custom = '1';
+      };
+      r.readAsDataURL(inp.files[0]);
+    }
+
+    function togglePwd(id, btn) {
+      const inp = document.getElementById(id);
+      const show = inp.type === 'text';
+      inp.type = show ? 'password' : 'text';
+      btn.querySelector('i').className = show ? 'ti ti-eye' : 'ti ti-eye-off';
+    }
+
+    function strength(v) {
+      let s = 0;
+      if (v.length >= 8) s++;
+      if (/[A-Z]/.test(v)) s++;
+      if (/[0-9]/.test(v)) s++;
+      if (/[^A-Za-z0-9]/.test(v)) s++;
+      const cls = s <= 1 ? 'weak' : s <= 2 ? 'med' : 'strong';
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById('s'+i).className = 'seg' + (i <= s ? ' '+cls : '');
+      }
+    }
+
+    function tog(el) { el.classList.toggle('on'); }
+
+    function maskCPF(el) {
+      let v = el.value.replace(/\D/g,'').slice(0,11);
+      v = v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1-$2');
+      el.value = v;
+    }
+
+    function maskPhone(el) {
+      let v = el.value.replace(/\D/g,'').slice(0,11);
+      if (v.length <= 10) v = v.replace(/(\d{2})(\d)/,'($1) $2').replace(/(\d{4})(\d)/,'$1-$2');
+      else v = v.replace(/(\d{2})(\d)/,'($1) $2').replace(/(\d{1})(\d{4})(\d)/,'$1 $2-$3');
+      el.value = v;
+    }
+
+    function submit() {
+      if (!document.getElementById('terms').checked) {
+        alert('Aceite os Termos de Uso para continuar.');
+        return;
+      }
+      const p1 = document.getElementById('pwd').value;
+      const p2 = document.getElementById('pwd2').value;
+      if (p1 && p2 && p1 !== p2) {
+        alert('As senhas não coincidem.');
+        return;
+      }
+      alert('Cadastro enviado com sucesso!');
+    }
+  </script>
+
+</body>
+</html>

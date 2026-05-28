@@ -24,10 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const formEscola = document.getElementById('formCadastroEscola');
 
 
-    // Só executa se existir
+        // Só executa se existir
     if (formEscola) {
 
-        /* //VERIFICAÇÃO INPUT NOME FANTASIA
+        //VERIFICAÇÃO INPUT NOME FANTASIA
         inputNomeFantasia = document.getElementById('nome_fantasia');
 
         inputNomeFantasia.addEventListener('blur', (evento) => {
@@ -160,10 +160,10 @@ document.addEventListener('DOMContentLoaded', () => {
         inputCep.addEventListener('blur', async (evento) => {
 
             // Pega o valor e limpa pontos/traços
-            const valorDigitado = inputCep.value.trim();
+            const valorAtual = inputCep.value.trim().replace(/\D/g, '');
 
             // SE O CAMPO ESTIVER VAZIO (O cara apagou o CEP)
-            if (valorDigitado === "") {
+            if (valorAtual === "") {
                 inputCep.style.borderColor = "";
 
                 // Libera os campos para digitação manual e limpa tudo
@@ -175,12 +175,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 inputBairro.value = "";
                 inputCidade.value = "";
 
+                limparCamposEndereco();
                 return; // Para a execução aqui
             }
-            const valorAtual = valorDigitado.replace(/\D/g, '');
 
             // SE O CEP FOR INVÁLIDO (Menos ou mais de 8 números)
-            if (!/^\d{8}$/.test(valorAtual) || valorDigitado.length !== valorAtual.length) {
+            if (!/^\d{8}$/.test(valorAtual)) {
                 inputCep.value = "";
                 inputCep.placeholder = "CEP Inválido (8 dígitos)";
                 inputCep.style.borderColor = "red";
@@ -193,63 +193,59 @@ document.addEventListener('DOMContentLoaded', () => {
                 inputLogradouro.value = "";
                 inputBairro.value = "";
                 inputCidade.value = "";
-                return;
+
+                limparCamposEndereco();
             }
 
-
-            try {
-                // SE O CEP TEM 8 NÚMEROS (Vai buscar na API)
+            // SE O CEP TEM 8 NÚMEROS (Vai buscar na API)
+            else {
                 inputCep.style.borderColor = "";
 
                 inputLogradouro.value = "Carregando...";
                 inputBairro.value = "Carregando...";
                 inputCidade.value = "Carregando...";
-                const resposta = await fetch(`https://viacep.com.br/ws/${valorAtual}/json/`);
-                const dados = await resposta.json();
 
-                if (!dados.erro) {
-                    inputLogradouro.value = dados.logradouro;
-                    inputBairro.value = dados.bairro;
-                    inputCidade.value = dados.localidade;
+                try {
+                    const resposta = await fetch(`https://viacep.com.br/ws/${valorAtual}/json/`);
+                    const dados = await resposta.json();
 
-                    // TRAVA pois a API achou o endereço certinho
-                    inputLogradouro.readOnly = true;
-                    inputBairro.readOnly = true;
-                    inputCidade.readOnly = true;
-                }
-                else {
+                    if (!dados.erro) {
+                        inputLogradouro.value = dados.logradouro;
+                        inputBairro.value = dados.bairro;
+                        inputCidade.value = dados.localidade;
 
-                    // Formato certo, mas o CEP não existe
-                    inputCep.value = "";
-                    inputCep.placeholder = "CEP não encontrado";
-                    inputCep.style.borderColor = "red";
+                        // TRAVA pois a API achou o endereço certinho
+                        inputLogradouro.readOnly = true;
+                        inputBairro.readOnly = true;
+                        inputCidade.readOnly = true;
+                    } else {
+                        // Formato certo, mas o CEP não existe
+                        inputCep.value = "";
+                        inputCep.placeholder = "CEP não encontrado";
+                        inputCep.style.borderColor = "red";
 
-                    // DESTRAVA pro cara não ficar preso
+                        // DESTRAVA pro cara não ficar preso
+                        inputLogradouro.readOnly = false;
+                        inputBairro.readOnly = false;
+                        inputCidade.readOnly = false;
+
+                        limparCamposEndereco();
+                    }
+                } catch (erro) {
+                    console.error("Erro na API de CEP:", erro);
+
+                    // DESTRAVA caso o serviço do ViaCEP caia
                     inputLogradouro.readOnly = false;
                     inputBairro.readOnly = false;
                     inputCidade.readOnly = false;
 
-                    inputLogradouro.value = "";
-                    inputBairro.value = "";
-                    inputCidade.value = "";
+                    limparCamposEndereco();
+                    alert("Erro ao conectar ao serviço de CEP. Digite o endereço manualmente.");
                 }
-            } catch (erro) {
-                console.error("Erro na API de CEP:", erro);
-
-                // DESTRAVA caso o serviço do ViaCEP caia
-                inputLogradouro.readOnly = false;
-                inputBairro.readOnly = false;
-                inputCidade.readOnly = false;
-
-                inputLogradouro.value = "";
-                inputBairro.value = "";
-                inputCidade.value = "";
-
-                alert("Erro ao conectar ao serviço de CEP. Digite o endereço manualmente.");
             }
-
         });
 
+        // VERIFICAÇÃO INPUT NÚMERO ENDEREÇO ESCOLA
         const inputNumeroEscola = document.getElementById('numero');
 
         inputNumeroEscola.addEventListener('blur', (evento) => {
@@ -265,6 +261,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+
+        // VERIFICAÇÃO INPUT DDI
+
         const inputTelefonePais = document.getElementById('telefone_pais');
 
         inputTelefonePais.addEventListener('blur', (evento) => {
@@ -279,6 +278,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 inputTelefonePais.style.borderColor = "";
             }
         });
+
+
+        // VERIFICAÇÃO INPUT DDD
 
         const inputTelefoneDDD = document.getElementById('telefone_ddd');
 
@@ -296,8 +298,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+
+        //VERIFICAÇÃO INPUT NÚMERO TELEFONE TIPO
+
+
+        // VERIFICAÇÃO INPUT NÚMERO TELEFONE ESCOLA
+
         const inputTelefoneNumero = document.getElementById('telefone_numero');
         const selectTelefoneTipo = document.getElementById('telefone_tipo');
+
+        selectTelefoneTipo.addEventListener('input', (evento) => {
+            const ehFixo = selectTelefoneTipo.value === 'Fixo';
+            inputTelefoneNumero.maxLength = ehFixo ? 8 : 9;
+        });
+
 
         let temporizador; // Variável para controlar o tempo fora do evento
 
@@ -308,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Limpa o temporizador antigo toda vez que o usuário aperta uma tecla
             clearTimeout(temporizador);
 
-            // Cria um novo temporizador de 400ms
+            // Cria um novo temporizador de 2000ms
             temporizador = setTimeout(() => {
                 const valorAtual = inputTelefoneNumero.value.trim();
                 const regexValidacao = ehFixo ? /^\d{8}$/ : /^\d{9}$/;
@@ -320,8 +334,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     inputTelefoneNumero.style.borderColor = "";
                 }
-            }, 400); // Tempo de espera em milissegundos (800ms)
-        }); */
+            }, 2000); // Tempo de espera em milissegundos (2000ms)
+        });
 
         formEscola.addEventListener('submit', async (event) => {
 
@@ -396,7 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // SISTEMA DE PREVISÃO DE SENSORES (Mantido da main)
 // =================================================
 
-const ambientes = [];
+
 
 // Adicionar ambiente
 function adicionar() {
@@ -553,3 +567,165 @@ function processar() {
 
 
 }
+
+/* ############### SENSORES ###############################*/
+
+const ambientes = [
+    {
+        nome: 'Cozinha 01',
+        tipo: 'COZINHA',
+        agua: 0,
+        energia: 0
+    },
+    {
+        nome: 'Banheiro 01',
+        tipo: 'BANHEIRO',
+        agua: 0,
+        energia: 0
+    },
+    {
+        nome: 'Sala 01',
+        tipo: 'SALA',
+        agua: 0,
+        energia: 0
+    }
+];
+
+const consumoPorTipo = {
+    SALA: { agua: 0, energia: 0.20 },
+    LABORATORIO: { agua: 0, energia: 0.30 },
+    PATIO: { agua: 0, energia: 0.08 },
+    BANHEIRO: { agua: 0.15, energia: 0.10 },
+    COZINHA: { agua: 0.20, energia: 0.25 },
+    QUADRA: { agua: 0.05, energia: 0.12 }
+};
+
+function adicionarAmbiente() {
+    const nome = document.getElementById('nome').value;
+    const tipo = document.getElementById('tipo').value;
+
+    if (!nome || !tipo) {
+        alert('Preencha os campos');
+        return;
+    }
+
+    ambientes.push({
+        nome,
+        tipo,
+        agua: 0,
+        energia: 0
+    });
+
+    document.getElementById('nome').value = '';
+    document.getElementById('tipo').value = '';
+
+    atualizarDashboard();
+    atualizarHistorico();
+}
+
+function atualizarDashboard() {
+    const dashboard = document.getElementById('dashboardAmbientes');
+
+    dashboard.innerHTML = '';
+
+    let totalAguaGeral = 0;
+    let totalEnergiaGeral = 0;
+    let totalGeral = 0;
+
+    ambientes.forEach((ambiente) => {
+        ambiente.agua = Number(ambiente.agua) || 0;
+        ambiente.energia = Number(ambiente.energia) || 0;
+
+        const regra = consumoPorTipo[ambiente.tipo] || {
+            agua: 0,
+            energia: 0.10
+        };
+
+        const consumoAgua = Math.random() * regra.agua;
+        const consumoEnergia = Math.random() * regra.energia;
+
+        ambiente.agua += consumoAgua;
+        ambiente.energia += consumoEnergia;
+
+        const total = ambiente.agua + ambiente.energia;
+
+        totalAguaGeral += ambiente.agua;
+        totalEnergiaGeral += ambiente.energia;
+        totalGeral += total;
+
+        dashboard.innerHTML += `
+            <div class="gasto-card">
+                <h3>${ambiente.nome}</h3>
+
+                <p>
+                    Água:
+                    <strong>R$ ${ambiente.agua.toFixed(2)}</strong>
+                </p>
+
+                <p>
+                    Energia:
+                    <strong>R$ ${ambiente.energia.toFixed(2)}</strong>
+                </p>
+
+                <p>
+                    Total:
+                    <strong>R$ ${total.toFixed(2)}</strong>
+                </p>
+            </div>
+        `;
+    });
+
+    dashboard.innerHTML += `
+        <div class="gasto-card total-geral">
+            <h2>TOTAL GERAL</h2>
+
+            <p>
+                Água:
+                <strong>R$ ${totalAguaGeral.toFixed(2)}</strong>
+            </p>
+
+            <p>
+                Energia:
+                <strong>R$ ${totalEnergiaGeral.toFixed(2)}</strong>
+            </p>
+
+            <p>
+                Total Final:
+                <strong>R$ ${totalGeral.toFixed(2)}</strong>
+            </p>
+        </div>
+    `;
+}
+
+function atualizarHistorico() {
+    const tabela = document.getElementById('historicoTabela');
+
+    tabela.innerHTML = '';
+
+    ambientes.forEach((ambiente) => {
+        const agua = Number(ambiente.agua) || 0;
+        const energia = Number(ambiente.energia) || 0;
+        const total = agua + energia;
+
+        tabela.innerHTML += `
+            <tr>
+                <td>${ambiente.nome}</td>
+                <td>R$ ${agua.toFixed(2)}</td>
+                <td>R$ ${energia.toFixed(2)}</td>
+                <td>R$ ${total.toFixed(2)}</td>
+            </tr>
+        `;
+    });
+}
+
+function gerarPDF() {
+    alert('Relatório PDF gerado!');
+}
+
+setInterval(() => {
+    atualizarDashboard();
+    atualizarHistorico();
+}, 15000);
+
+atualizarDashboard();
+atualizarHistorico();
