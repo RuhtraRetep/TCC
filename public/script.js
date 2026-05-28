@@ -245,6 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // VERIFICAÇÃO INPUT NÚMERO ENDEREÇO ESCOLA
         const inputNumeroEscola = document.getElementById('numero');
 
         inputNumeroEscola.addEventListener('blur', (evento) => {
@@ -260,6 +261,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+
+        // VERIFICAÇÃO INPUT DDI
+
         const inputTelefonePais = document.getElementById('telefone_pais');
 
         inputTelefonePais.addEventListener('blur', (evento) => {
@@ -274,6 +278,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 inputTelefonePais.style.borderColor = "";
             }
         });
+
+
+        // VERIFICAÇÃO INPUT DDD
 
         const inputTelefoneDDD = document.getElementById('telefone_ddd');
 
@@ -291,8 +298,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+
+        //VERIFICAÇÃO INPUT NÚMERO TELEFONE TIPO
+
+
+        // VERIFICAÇÃO INPUT NÚMERO TELEFONE ESCOLA
+
         const inputTelefoneNumero = document.getElementById('telefone_numero');
         const selectTelefoneTipo = document.getElementById('telefone_tipo');
+
+        selectTelefoneTipo.addEventListener('input', (evento) => {
+            const ehFixo = selectTelefoneTipo.value === 'Fixo';
+            inputTelefoneNumero.maxLength = ehFixo ? 8 : 9;
+        });
+
 
         let temporizador; // Variável para controlar o tempo fora do evento
 
@@ -303,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Limpa o temporizador antigo toda vez que o usuário aperta uma tecla
             clearTimeout(temporizador);
 
-            // Cria um novo temporizador de 400ms
+            // Cria um novo temporizador de 2000ms
             temporizador = setTimeout(() => {
                 const valorAtual = inputTelefoneNumero.value.trim();
                 const regexValidacao = ehFixo ? /^\d{8}$/ : /^\d{9}$/;
@@ -315,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     inputTelefoneNumero.style.borderColor = "";
                 }
-            }, 400); // Tempo de espera em milissegundos (800ms)
+            }, 2000); // Tempo de espera em milissegundos (2000ms)
         });
 
         formEscola.addEventListener('submit', async (event) => {
