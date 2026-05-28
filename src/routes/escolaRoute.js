@@ -28,7 +28,6 @@ router.get('/cadastro-escola', verificarAcesso, (req, res) => {
 // CORREÇÃO AQUI: Mudado de '/cadastrar-escola' para '/cadastro-escola' para bater com o fetch do seu script.js
 router.post('/cadastro-escola', async (req, res) => {
 
-    console.log("DADOS QUE CHEGARAM NO BACK-END:", req.body);
     try {
         // 1. Pegamos os dados respeitando a estrutura de sub-objetos vinda do Front-end
         const {

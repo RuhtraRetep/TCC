@@ -5,11 +5,8 @@ class EscolaService {
 
     async cadastroEscolaCompleto(dadosEscola) {
 
-        console.log("CHEGOU NO SERVICE:", dadosEscola);
-        // Abre conexão
-        console.log("Tentando conectar ao banco...");
         const connection = await db.getConnection();
-        console.log("Conexão aberta com sucesso!");
+
 
 
         try {
@@ -17,81 +14,88 @@ class EscolaService {
             // VALIDAÇÕES DOS DADOS (PRINCIPAIS VERIFICAÇÕES)
             // ==========================================
 
-            // 1. Validações da Escola
-            console.log("1 - validando nomeFantasia");
+            //  VERIFICAÇÃO NOME FANTASIA
             if (!dadosEscola.nomeFantasia || dadosEscola.nomeFantasia.trim().length <= 2 || dadosEscola.nomeFantasia.trim().length > 100) {
                 throw new Error('O Nome Fantasia deve ter entre 3 e 100 caracteres.');
             }
 
-            console.log("2 - validando razaoSocial");
+            //  VERIFICAÇÃO RAZÃO SOCIAL
             if (!dadosEscola.razaoSocial || dadosEscola.razaoSocial.trim().length < 1 || dadosEscola.razaoSocial.trim().length > 60) {
                 throw new Error('A Razão Social deve ter entre 1 e 60 caracteres.');
             }
 
-            console.log("3 - validando cnpj");
+            //  VERIFICAÇÃO CNPJ
             if (!dadosEscola.cnpj || !/^\d{14}$/.test(dadosEscola.cnpj.replace(/\D/g, ''))) {
                 throw new Error('CNPJ inválido. Deve conter exatamente 14 dígitos.');
             }
 
-            console.log("4 - validando codigoInep");
+            //  VERIFICAÇÃO CODIGO INEP
             if (!dadosEscola.codigoInep || !/^\d{8}$/.test(dadosEscola.codigoInep.replace(/\D/g, ''))) {
                 throw new Error('Código INEP inválido. Deve conter exatamente 8 dígitos.');
             }
 
-            console.log("5 - validando email");
+            //  VERIFICAÇÃO EMAIL
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!dadosEscola.email || !emailRegex.test(dadosEscola.email)) {
                 throw new Error('Por favor, insira um e-mail válido.');
             }
 
-            console.log("6 - validando tipoGestao");
+            //  VERIFICAÇÃO TIPO GESTÃO
             if (!dadosEscola.tipoGestao) {
                 throw new Error('O tipo de gestão é obrigatório.');
             }
 
-            console.log("7 - validando endereco");
+            //  VERIFICAÇÃO ENDEREÇO COMPLETO
             if (!dadosEscola.endereco) {
                 throw new Error('Os dados de endereço são obrigatórios.');
             }
 
-            console.log("8 - validando cep");
+            //  VERIFICAÇÃO CEP
             if (!dadosEscola.endereco.cep || !/^\d{8}$/.test(dadosEscola.endereco.cep.replace(/\D/g, ''))) {
                 throw new Error('CEP inválido. Deve conter exatamente 8 dígitos.');
             }
+            else{
+                const resposta = await fetch (`https://viacep.com.br/ws/${dadosEscola.endereco.cep}/json/`);
+                const dados = await resposta.json();
 
-            console.log("9 - validando logradouro/bairro/cidade");
+                if(dados.erro)
+                {
+                    throw new Error('CEP inválido.');
+                }
+            }
+
+            //  VERIFICAÇÃO LOGRADOURO
             if (!dadosEscola.endereco.logradouro || !dadosEscola.endereco.bairro || !dadosEscola.endereco.cidade) {
                 throw new Error('Logradouro, Bairro e Cidade são campos obrigatórios.');
             }
 
-            console.log("10 - validando numero");
+            //  VERIFICAÇÃO NÚMERO ENDEREÇO
             if (!dadosEscola.endereco.numero || !/^\d{1,5}$/.test(dadosEscola.endereco.numero)) {
                 throw new Error('Número do endereço inválido. Deve conter de 1 a 5 números.');
             }
 
-            console.log("11 - validando telefone");
+            //  VERIFICAÇÃO TELEFONE COMPLETO
             if (!dadosEscola.telefone) {
                 throw new Error('Os dados de telefone são obrigatórios.');
             }
 
-            console.log("12 - validando pais");
+            //  VERIFICAÇÃO DDI
             if (!dadosEscola.telefone.pais || !/^\d{2,3}$/.test(dadosEscola.telefone.pais)) {
                 throw new Error('Código do país inválido. Deve ter 2 ou 3 dígitos.');
             }
 
-            console.log("13 - validando ddd");
+            //  VERIFICAÇÃO DDD
             if (!dadosEscola.telefone.ddd || !/^\d{2}$/.test(dadosEscola.telefone.ddd)) {
                 throw new Error('DDD inválido. Deve conter exatamente 2 dígitos.');
             }
 
-            console.log("14 - validando numero telefone");
+            //  VERIFICAÇÃO NÚMERO E TIPO TELEFONE
             const ehFixo = dadosEscola.telefone.tipo === 'Fixo';
             const numTelefoneLimpo = (dadosEscola.telefone.numero || '').replace(/\D/g, '');
             const regexTelefone = ehFixo ? /^\d{8}$/ : /^\d{9}$/;
 
             if (!regexTelefone.test(numTelefoneLimpo)) {
                 const msg = ehFixo ? 'Telefone fixo inválido (deve ter 8 dígitos).' : 'Telefone celular inválido (deve ter 9 dígitos).';
-                console.log("ERRO TELEFONE:", msg);
                 throw new Error(msg);
             }
 
@@ -184,9 +188,6 @@ class EscolaService {
             if (error.errno === 1062) {
                 throw new Error('CNPJ ou código INEP já cadastrado.');
             }
-
-            // Adiciona um console.error para sempre ver o erro real no terminal
-            console.error('Erro no service:', error);
 
             throw new Error(error.message || 'Erro desconhecido no servidor');
         } finally {
