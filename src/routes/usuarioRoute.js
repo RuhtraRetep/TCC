@@ -1,23 +1,3 @@
-/*
-  Módulo responsável por definir as rotas relacionadas aos usuários do sistema.
-
-  Funcionalidades:
-  - Chama a rota do cadastro de novos usuários
-  - Chama a rota da autenticação (login)
-  - Chama a rota do possível gerenciamento de dados do usuário (perfil, atualização, etc.)
-
-  Rotas:
-  - POST /register → Realiza o cadastro de um novo usuário
-  - POST /login → Autentica o usuário e permite acesso ao sistema
-
-  Integração:
-  - As requisições são direcionadas para o userController,
-    responsável por processar a lógica e interagir com o banco de dados.
-
-  Objetivo:
-  - Gerenciar o acesso ao sistema de forma segura e organizada
-*/
-
 const express = require('express');
 const path = require('path');
 const router = express.Router();
@@ -30,22 +10,30 @@ router.get('/login', (req, res) => {
 
 // Rota POST de autenticação
 router.post('/login', async (req, res) => {
-    const { email, senha } = req.body;
+    const { emailEscola, codigoInep, emailUsuario, senha } = req.body;
 
-    if (!email || !senha) {
-        return res.status(400).json({ erro: 'Preencha e-mail e senha.' });
+    if (!emailEscola || !codigoInep || !emailUsuario || !senha) {
+        return res.status(400).json({ 
+            erro: 'Preencha todos os campos: e-mail da escola, código INEP, e-mail do usuário e senha.' 
+        });
     }
 
     try {
-        const usuario = await usuarioService.autenticar(email, senha);
+        const usuario = await usuarioService.autenticar(
+            emailEscola,
+            codigoInep,
+            emailUsuario,
+            senha
+        );
 
         // Salva o usuário na sessão
         req.session.usuario = {
-            id:    usuario.id_usuario,
-            nome:  usuario.nome_usuario,
-            email: usuario.email,
-            funcao: usuario.funcao,
-            escolaId: usuario.fk_id_escola
+            id:           usuario.id_usuario,
+            nome:         usuario.nome_usuario,
+            email:        usuario.email,
+            funcao:       usuario.funcao,
+            escolaId:     usuario.fk_id_escola,
+            nomeEscola:   usuario.nome_fantasia
         };
 
         return res.status(200).json({
