@@ -54,4 +54,11 @@ router.get('/logout', (req, res) => {
     });
 });
 
+router.get('/me', (req, res) => {
+    if (!req.session.usuario) {
+        return res.status(401).json({ erro: 'Não autenticado.' });
+    }
+    return res.status(200).json(req.session.usuario);
+});
+
 module.exports = router;

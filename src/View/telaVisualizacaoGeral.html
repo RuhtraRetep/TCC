@@ -1,70 +1,404 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Escolar - Início</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel — SGE Escolar</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #0d1117;
+      --navy-card:  #111820;
+      --navy-hover: #151d27;
+      --teal:       #00d4aa;
+      --teal-dim:   rgba(0,212,170,0.12);
+      --teal-border:rgba(0,212,170,0.25);
+      --border:     rgba(255,255,255,0.07);
+      --text:       #f0f4f8;
+      --muted:      rgba(255,255,255,0.45);
+      --radius:     16px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── fundo decorativo ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 80% 10%, rgba(0,212,170,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 10% 80%, rgba(0,212,170,0.04) 0%, transparent 60%);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 2rem; height: 58px;
+      background: rgba(13,17,23,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-size: 16px; font-weight: 700; color: var(--text);
+      letter-spacing: 0.3px; text-decoration: none;
+    }
+    .nav-logo span { color: var(--teal); font-weight: 300; }
+    .nav-badge {
+      font-size: 10px; font-weight: 600; color: var(--teal);
+      background: var(--teal-dim); border: 1px solid var(--teal-border);
+      padding: 2px 9px; border-radius: 20px; letter-spacing: 0.8px;
+    }
+    .nav-right {
+      margin-left: auto; display: flex; align-items: center; gap: 16px;
+    }
+    .nav-user {
+      display: flex; align-items: center; gap: 9px;
+      font-size: 13px; color: var(--muted);
+    }
+    .nav-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--teal-dim); border: 1px solid var(--teal-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: var(--teal);
+    }
+    .nav-cadastro {
+      font-size: 12px; font-weight: 600; color: var(--navy);
+      background: var(--teal); text-decoration: none;
+      padding: 6px 14px; border-radius: 8px;
+      display: flex; align-items: center; gap: 5px;
+      transition: background .2s;
+    }
+    .nav-cadastro:hover { background: #00b894; }
+    .nav-logout {
+      font-size: 12px; color: var(--muted); text-decoration: none;
+      padding: 5px 12px; border-radius: 8px; border: 1px solid var(--border);
+      transition: all .2s;
+    }
+    .nav-logout:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+
+    /* ── WRAPPER ── */
+    .wrapper {
+      position: relative; z-index: 1;
+      max-width: 1100px; margin: 0 auto;
+      padding: 52px 24px 80px;
+    }
+
+    /* ── HEADER ── */
+    .page-header { margin-bottom: 52px; }
+    .page-eyebrow {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 600; color: var(--teal);
+      text-transform: uppercase; letter-spacing: 1.4px;
+      margin-bottom: 14px;
+    }
+    .page-eyebrow-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--teal);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.4; transform: scale(0.7); }
+    }
+    .page-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400; line-height: 1.15;
+      margin-bottom: 10px;
+    }
+    .page-title em { color: var(--teal); font-style: italic; }
+    .page-sub { font-size: .92rem; color: var(--muted); line-height: 1.7; max-width: 480px; }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: flex; gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      margin-bottom: 52px;
+      animation: fade-up .5s .1s ease both;
+    }
+    .stat {
+      flex: 1; background: var(--navy-card);
+      padding: 18px 24px;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .stat-val {
+      font-size: 1.6rem; font-weight: 700; color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-val span { color: var(--teal); font-size: 1rem; }
+    .stat-label { font-size: .75rem; color: var(--muted); letter-spacing: .4px; }
+
+    /* ── GRID DE CARDS ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    /* card grande ocupa linha inteira */
+    .card-full { grid-column: 1 / -1; }
+
+    .card {
+      position: relative;
+      background: var(--navy-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; gap: 0;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+      animation: fade-up .5s ease both;
+    }
+    .card:nth-child(1) { animation-delay: .15s; }
+    .card:nth-child(2) { animation-delay: .22s; }
+    .card:nth-child(3) { animation-delay: .29s; }
+    .card:nth-child(4) { animation-delay: .36s; }
+
+    .card::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(135deg, rgba(0,212,170,0.06) 0%, transparent 55%);
+      opacity: 0; transition: opacity .3s;
+    }
+    .card:hover { transform: translateY(-4px); border-color: var(--teal-border); box-shadow: 0 20px 48px rgba(0,0,0,.4); }
+    .card:hover::before { opacity: 1; }
+
+    /* card de destaque (sensores) */
+    .card-sensors { border-color: rgba(0,212,170,0.2); }
+
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+
+    .card-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: var(--teal-dim); border: 1px solid var(--teal-border);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .card-icon i { font-size: 24px; color: var(--teal); }
+
+    .card-tag {
+      font-size: 10px; font-weight: 700; color: var(--teal);
+      text-transform: uppercase; letter-spacing: 1.2px;
+      background: var(--teal-dim); border: 1px solid var(--teal-border);
+      padding: 3px 10px; border-radius: 20px;
+    }
+
+    .card-label {
+      font-size: .7rem; font-weight: 600; color: var(--teal);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+    }
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem; font-weight: 400; line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .card-desc { font-size: .84rem; color: var(--muted); line-height: 1.7; flex: 1; }
+
+    .card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 28px; padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .card-action {
+      font-size: .8rem; font-weight: 600; color: var(--teal);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .card-arrow {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: var(--teal-dim); border: 1px solid var(--teal-border);
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .card:hover .card-arrow { background: var(--teal); }
+    .card-arrow i { font-size: 15px; color: var(--teal); transition: color .2s; }
+    .card:hover .card-arrow i { color: var(--navy); }
+
+    /* card em breve */
+    .card-soon { opacity: .55; cursor: default; }
+    .card-soon:hover { transform: none; border-color: var(--border); box-shadow: none; }
+    .card-soon::before { display: none; }
+    .soon-badge {
+      font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.4);
+      text-transform: uppercase; letter-spacing: 1px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      padding: 3px 10px; border-radius: 20px;
+    }
+
+    /* ── ANIMAÇÃO ── */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 680px) {
+      .cards-grid { grid-template-columns: 1fr; }
+      .card-full  { grid-column: 1; }
+      .stats-bar  { flex-direction: column; gap: 0; }
+      .stat + .stat { border-top: 1px solid var(--border); }
+      nav { padding: 0 1rem; }
+      .wrapper { padding: 32px 16px 60px; }
+    }
+  </style>
 </head>
-<link rel="stylesheet" href="../../public/style.css">
 <body>
-     
-<!-- SISTEMA DE SENSORES (TCC) -->
-<section class="sensor-section">
 
-    <h2 class="section-title">Previsão de Sensores</h2>
+<nav>
+  <a class="nav-logo" href="/">SGE <span>Escolar</span></a>
+  <span class="nav-badge">Painel</span>
+  <div class="nav-right">
+    <div class="nav-user">
+      <div class="nav-avatar" id="navAvatar">--</div>
+      <div style="display:flex;flex-direction:column;gap:1px;line-height:1.2;">
+        <span id="navNome" style="font-size:13px;color:#f0f4f8;font-weight:500;">Carregando...</span>
+        <span id="navEscola" style="font-size:11px;color:#00d4aa;"></span>
+      </div>
+    </div>
+    <a class="nav-cadastro" href="/src/View/cadastroUsuario.html">
+      <i class="ti ti-user-plus"></i> Cadastrar Usuário
+    </a>
+    <a class="nav-logout" href="/usuarios/logout">
+      <i class="ti ti-logout"></i> Sair
+    </a>
+  </div>
+</nav>
 
-    <div class="sensor-form">
+<div class="wrapper">
 
-        <!-- Nome do ambiente -->
-        <input 
-            id="nome" 
-            type="text"
-            placeholder="Nome do ambiente (ex: Sala 1)"
-        >
+  <!-- HEADER -->
+  <div class="page-header" style="animation: fade-up .5s ease both;">
+    <div class="page-eyebrow">
+      <div class="page-eyebrow-dot"></div>
+      Sistema de Gerenciamento Escolar
+    </div>
+    <h1 class="page-title">Bem-vindo ao<br><em>painel de controle</em></h1>
+    <p class="page-sub">Gerencie sensores, visualize dados e gere relatórios da sua instituição em um só lugar.</p>
+  </div>
 
-        <!-- Tipo do ambiente -->
-        <select id="tipo">
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-val">0 <span>sensores</span></div>
+      <div class="stat-label">Ativos no momento</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">0 <span>m³</span></div>
+      <div class="stat-label">Consumo de água hoje</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">0 <span>kWh</span></div>
+      <div class="stat-label">Consumo de energia hoje</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">R$ 0</div>
+      <div class="stat-label">Gasto estimado hoje</div>
+    </div>
+  </div>
 
-            <option value="">Selecione o ambiente</option>
+  <!-- CARDS -->
+  <div class="cards-grid">
 
-            <option value="SALA">SALA</option>
-
-            <option value="BANHEIRO">BANHEIRO</option>
-
-            <option value="PATIO">PÁTIO</option>
-
-            <option value="QUADRA">QUADRA</option>
-
-            <option value="LABORATORIO">LABORATÓRIO</option>
-
-            <option value="COZINHA">COZINHA</option>
-
-        </select>
-
-        <!-- Botões -->
-        <button onclick="adicionar()">
-            Adicionar Ambiente
-        </button>
-
-        <button onclick="processar()">
-            Gerar Sensores
-        </button>
-
+    <!-- Sensores — card destaque (full width) -->
+    <div class="card card-full card-sensors" onclick="window.location.href='/sensores'">
+      <div class="card-top">
+        <div class="card-icon"><i class="ti ti-radar"></i></div>
+        <span class="card-tag">Principal</span>
+      </div>
+      <div class="card-label">Monitoramento</div>
+      <div class="card-title">Adicionar & Gerenciar Sensores</div>
+      <div class="card-desc">
+        Cadastre novos sensores de água e energia por ambiente, visualize o status em tempo real
+        e gerencie os dispositivos instalados na sua instituição.
+      </div>
+      <div class="card-footer">
+        <span class="card-action"><i class="ti ti-plug"></i> Acessar sensores</span>
+        <div class="card-arrow"><i class="ti ti-arrow-right"></i></div>
+      </div>
     </div>
 
-    <!-- Lista de ambientes -->
-    <h3>Ambientes cadastrados</h3>
+    <!-- Dashboard -->
+    <div class="card" onclick="window.location.href='#'">
+      <div class="card-top">
+        <div class="card-icon"><i class="ti ti-chart-bar"></i></div>
+      </div>
+      <div class="card-label">Análise</div>
+      <div class="card-title">Visualizar Dashboard</div>
+      <div class="card-desc">
+        Acompanhe gráficos de consumo de água e energia, histórico de gastos e tendências da sua escola.
+      </div>
+      <div class="card-footer">
+        <span class="card-action"><i class="ti ti-chart-line"></i> Ver dashboard</span>
+        <div class="card-arrow"><i class="ti ti-arrow-right"></i></div>
+      </div>
+    </div>
 
-    <div id="listaAmbientes"></div>
+    <!-- Relatório PDF -->
+    <div class="card" onclick="window.location.href='#'">
+      <div class="card-top">
+        <div class="card-icon"><i class="ti ti-file-type-pdf"></i></div>
+      </div>
+      <div class="card-label">Exportar</div>
+      <div class="card-title">Gerar Relatório em PDF</div>
+      <div class="card-desc">
+        Exporte relatórios completos de consumo e gastos por período para compartilhar com a gestão escolar.
+      </div>
+      <div class="card-footer">
+        <span class="card-action"><i class="ti ti-download"></i> Gerar PDF</span>
+        <div class="card-arrow"><i class="ti ti-arrow-right"></i></div>
+      </div>
+    </div>
 
-    <!-- Resultado -->
-    <h3>Resultado</h3>
+    <!-- Alunos + QR Code -->
+    <div class="card card-full card-soon">
+      <div class="card-top">
+        <div class="card-icon"><i class="ti ti-qrcode"></i></div>
+        <span class="soon-badge">Em breve</span>
+      </div>
+      <div class="card-label">QR Code Público</div>
+      <div class="card-title">Visualização de Alunos</div>
+      <div class="card-desc">
+        Gere QR Codes com link público para cada aluno — qualquer pessoa pode escanear e visualizar as informações sem precisar de login.
+      </div>
+      <div class="card-footer">
+        <span class="card-action" style="color:var(--muted)"><i class="ti ti-clock"></i> Em desenvolvimento</span>
+      </div>
+    </div>
 
-    <div id="resultadoSensores"></div>
+  </div>
+</div>
 
-</section>
+<script>
+  // Pega nome do usuário e escola da sessão
+  (async () => {
+    try {
+      const res  = await fetch("/usuarios/me");
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      const nome = data.nome || "Usuário";
+      const escola = data.nomeEscola || "";
+      document.getElementById("navNome").textContent = nome;
+      document.getElementById("navEscola").textContent = escola;
+      document.getElementById("navAvatar").textContent =
+        nome.split(" ").map(n => n[0]).slice(0,2).join("").toUpperCase();
+    } catch {
+      document.getElementById("navNome").textContent = "Usuário";
+      document.getElementById("navEscola").textContent = "";
+      document.getElementById("navAvatar").textContent = "US";
+    }
+  })();
+</script>
 
-       <script src="/script.js"></script>
-    
 </body>
 </html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sensores — SGE Escolar</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:        #0d1117;
+      --navy-card:   #111820;
+      --navy-deep:   #0a0f14;
+      --teal:        #00d4aa;
+      --teal-dim:    rgba(0,212,170,0.10);
+      --teal-border: rgba(0,212,170,0.22);
+      --blue:        #4a9eff;
+      --blue-dim:    rgba(74,158,255,0.10);
+      --blue-border: rgba(74,158,255,0.22);
+      --border:      rgba(255,255,255,0.07);
+      --text:        #f0f4f8;
+      --muted:       rgba(255,255,255,0.42);
+      --danger:      #ff5f5f;
+      --danger-dim:  rgba(255,95,95,0.10);
+      --radius:      14px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse 50% 35% at 90% 5%,  rgba(0,212,170,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 5%  90%, rgba(74,158,255,0.04) 0%, transparent 60%);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 2rem; height: 56px;
+      background: rgba(13,17,23,0.9);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-back {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--muted); text-decoration: none;
+      padding: 5px 10px; border-radius: 8px; border: 1px solid var(--border);
+      transition: all .2s;
+    }
+    .nav-back:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+    .nav-logo { font-size: 15px; font-weight: 700; color: var(--text); }
+    .nav-logo span { color: var(--teal); font-weight: 300; }
+    .nav-badge {
+      font-size: 10px; font-weight: 600; color: var(--teal);
+      background: var(--teal-dim); border: 1px solid var(--teal-border);
+      padding: 2px 9px; border-radius: 20px; letter-spacing: 0.8px;
+    }
+    .nav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .nav-timer {
+      font-size: 11px; color: var(--muted);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .timer-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--teal);
+      animation: blink 1.5s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+    /* ── LAYOUT ── */
+    .wrapper {
+      position: relative; z-index: 1;
+      max-width: 1200px; margin: 0 auto;
+      padding: 40px 24px 80px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      grid-template-rows: auto auto 1fr;
+      gap: 24px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      grid-column: 1 / -1;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      animation: fade-up .4s ease both;
+    }
+    .page-eyebrow {
+      font-size: 10px; font-weight: 700; color: var(--teal);
+      text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--teal); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(.7)} }
+    .page-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      font-weight: 400; line-height: 1.15;
+    }
+    .page-title em { color: var(--teal); font-style: italic; }
+    .page-sub { font-size: .84rem; color: var(--muted); line-height: 1.7; margin-top: 6px; }
+
+    /* ── TOTAIS BAR ── */
+    .totais-bar {
+      grid-column: 1 / -1;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+      animation: fade-up .4s .08s ease both;
+    }
+    .total-item {
+      background: var(--navy-card);
+      padding: 16px 20px;
+      display: flex; flex-direction: column; gap: 3px;
+    }
+    .total-val {
+      font-size: 1.4rem; font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .total-val.agua  { color: var(--blue); }
+    .total-val.energia { color: var(--teal); }
+    .total-val.geral { color: var(--text); }
+    .total-val.count { color: var(--teal); }
+    .total-label { font-size: .72rem; color: var(--muted); letter-spacing: .3px; }
+
+    /* ── PAINEL ESQUERDO: ADICIONAR ── */
+    .panel-add {
+      grid-column: 1;
+      grid-row: 3;
+      animation: fade-up .4s .12s ease both;
+    }
+    .panel-title {
+      font-size: .7rem; font-weight: 700; color: var(--teal);
+      text-transform: uppercase; letter-spacing: 1.2px;
+      margin-bottom: 14px; display: flex; align-items: center; gap: 7px;
+    }
+    .panel-title i { font-size: 14px; }
+
+    .add-card {
+      background: var(--navy-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    .field { margin-bottom: 14px; }
+    .field label {
+      display: block; font-size: 10px; font-weight: 600;
+      color: var(--muted); text-transform: uppercase; letter-spacing: .8px;
+      margin-bottom: 6px;
+    }
+    .field input, .field select {
+      width: 100%; padding: 9px 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-size: 13px; font-family: inherit; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .field input::placeholder { color: rgba(255,255,255,0.2); }
+    .field input:focus, .field select:focus {
+      border-color: var(--teal-border);
+      box-shadow: 0 0 0 3px rgba(0,212,170,0.08);
+    }
+    .field select option { background: #1a2332; }
+
+    .btn-add {
+      width: 100%; padding: 10px;
+      background: var(--teal); border: none; border-radius: 8px;
+      color: var(--navy); font-size: 13px; font-weight: 700;
+      cursor: pointer; font-family: inherit;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: background .2s, transform .15s;
+    }
+    .btn-add:hover { background: #00b894; transform: translateY(-1px); }
+    .btn-add:active { transform: translateY(0); }
+
+    /* lista de ambientes cadastrados */
+    .ambientes-lista { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
+    .ambiente-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border); border-radius: 8px;
+      font-size: 12px;
+      animation: fade-up .25s ease both;
+    }
+    .ambiente-info { display: flex; flex-direction: column; gap: 2px; }
+    .ambiente-nome { font-weight: 600; color: var(--text); }
+    .ambiente-tipo {
+      font-size: 10px; font-weight: 700; color: var(--teal);
+      text-transform: uppercase; letter-spacing: .8px;
+    }
+    .btn-remove {
+      width: 26px; height: 26px; border-radius: 6px;
+      background: var(--danger-dim); border: 1px solid rgba(255,95,95,0.2);
+      color: var(--danger); font-size: 13px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all .2s; flex-shrink: 0;
+    }
+    .btn-remove:hover { background: var(--danger); color: #fff; }
+
+    /* ── PAINEL DIREITO: DASHBOARD ── */
+    .panel-dashboard {
+      grid-column: 2;
+      grid-row: 3;
+      animation: fade-up .4s .16s ease both;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+    }
+
+    .sensor-card {
+      background: var(--navy-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      position: relative; overflow: hidden;
+      transition: border-color .2s, transform .2s;
+      animation: fade-up .3s ease both;
+    }
+    .sensor-card:hover { border-color: var(--teal-border); transform: translateY(-2px); }
+    .sensor-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--teal), transparent);
+    }
+
+    .sc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .sc-nome { font-size: .82rem; font-weight: 600; color: var(--text); }
+    .sc-tipo {
+      font-size: 9px; font-weight: 700; color: var(--teal);
+      text-transform: uppercase; letter-spacing: .8px;
+      background: var(--teal-dim); border: 1px solid var(--teal-border);
+      padding: 2px 7px; border-radius: 10px;
+    }
+
+    .sc-row {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 8px; font-size: 12px;
+    }
+    .sc-row:last-child { margin-bottom: 0; }
+    .sc-icon { font-size: 15px; width: 20px; text-align: center; }
+    .sc-icon.agua { color: var(--blue); }
+    .sc-icon.energia { color: var(--teal); }
+    .sc-label { color: var(--muted); flex: 1; }
+    .sc-val { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 13px; }
+    .sc-val.agua { color: var(--blue); }
+    .sc-val.energia { color: var(--teal); }
+
+    .sc-total {
+      margin-top: 12px; padding-top: 12px;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .sc-total-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; }
+    .sc-total-val { font-size: 1rem; font-weight: 700; color: var(--text); }
+
+    /* barra de progresso */
+    .sc-bar-wrap { margin-top: 10px; }
+    .sc-bar-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+    .sc-bar { height: 4px; border-radius: 2px; background: rgba(255,255,255,0.06); overflow: hidden; }
+    .sc-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+    .sc-bar-fill.agua    { background: var(--blue); }
+    .sc-bar-fill.energia { background: var(--teal); }
+
+    /* vazio */
+    .empty-state {
+      grid-column: 1 / -1;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 60px 24px; text-align: center;
+      background: var(--navy-card); border: 1px dashed var(--border);
+      border-radius: var(--radius); color: var(--muted);
+    }
+    .empty-state i { font-size: 40px; margin-bottom: 12px; opacity: .3; }
+    .empty-state p { font-size: .84rem; }
+
+    /* ── ANIMAÇÕES ── */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      .wrapper { grid-template-columns: 1fr; }
+      .panel-add, .panel-dashboard { grid-column: 1; grid-row: auto; }
+      .totais-bar { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 480px) {
+      .totais-bar { grid-template-columns: 1fr 1fr; }
+      nav { padding: 0 1rem; }
+      .wrapper { padding: 24px 14px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-back" href="/painel"><i class="ti ti-arrow-left"></i> Painel</a>
+  <span class="nav-logo">SGE <span>Escolar</span></span>
+  <span class="nav-badge">Sensores</span>
+  <div class="nav-right">
+    <div class="nav-timer">
+      <div class="timer-dot"></div>
+      <span id="timerLabel">Atualizando em 15s</span>
+    </div>
+  </div>
+</nav>
+
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="page-eyebrow"><div class="eyebrow-dot"></div> Monitoramento</div>
+      <h1 class="page-title">Sensores de <em>água & energia</em></h1>
+      <p class="page-sub">Adicione ambientes e acompanhe o consumo simulado em tempo real.</p>
+    </div>
+  </div>
+
+  <!-- TOTAIS -->
+  <div class="totais-bar">
+    <div class="total-item">
+      <div class="total-val count" id="totalAmbientes">0</div>
+      <div class="total-label">Ambientes ativos</div>
+    </div>
+    <div class="total-item">
+      <div class="total-val agua" id="totalAgua">R$ 0,00</div>
+      <div class="total-label">Consumo água (total)</div>
+    </div>
+    <div class="total-item">
+      <div class="total-val energia" id="totalEnergia">R$ 0,00</div>
+      <div class="total-label">Consumo energia (total)</div>
+    </div>
+    <div class="total-item">
+      <div class="total-val geral" id="totalGeral">R$ 0,00</div>
+      <div class="total-label">Gasto total estimado</div>
+    </div>
+  </div>
+
+  <!-- PAINEL ESQUERDO -->
+  <div class="panel-add">
+    <div class="panel-title"><i class="ti ti-plus"></i> Adicionar Ambiente</div>
+    <div class="add-card">
+      <div class="field">
+        <label>Nome do ambiente</label>
+        <input type="text" id="inputNome" placeholder="Ex: Sala 01, Banheiro A..."/>
+      </div>
+      <div class="field">
+        <label>Tipo</label>
+        <select id="inputTipo">
+          <option value="">Selecione o tipo</option>
+          <option value="SALA">Sala</option>
+          <option value="BANHEIRO">Banheiro</option>
+          <option value="PATIO">Pátio</option>
+          <option value="QUADRA">Quadra</option>
+          <option value="LABORATORIO">Laboratório</option>
+          <option value="COZINHA">Cozinha</option>
+        </select>
+      </div>
+      <button class="btn-add" onclick="adicionarAmbiente()">
+        <i class="ti ti-plus"></i> Adicionar
+      </button>
+
+      <div class="ambientes-lista" id="listaAmbientes"></div>
+    </div>
+  </div>
+
+  <!-- PAINEL DIREITO: DASHBOARD -->
+  <div class="panel-dashboard">
+    <div class="panel-title"><i class="ti ti-chart-bar"></i> Consumo por Ambiente</div>
+    <div class="dashboard-grid" id="dashboardGrid"></div>
+  </div>
+
+</div>
+
+<script>
+  // ── DADOS ──
+  const consumoPorTipo = {
+    SALA:        { agua: 0,    energia: 0.20 },
+    LABORATORIO: { agua: 0,    energia: 0.30 },
+    PATIO:       { agua: 0,    energia: 0.08 },
+    BANHEIRO:    { agua: 0.15, energia: 0.10 },
+    COZINHA:     { agua: 0.20, energia: 0.25 },
+    QUADRA:      { agua: 0.05, energia: 0.12 }
+  };
+
+  let ambientes = [
+    { id: 1, nome: 'Cozinha 01',  tipo: 'COZINHA',  agua: 0, energia: 0 },
+    { id: 2, nome: 'Banheiro 01', tipo: 'BANHEIRO', agua: 0, energia: 0 },
+    { id: 3, nome: 'Sala 01',     tipo: 'SALA',     agua: 0, energia: 0 }
+  ];
+  let nextId = 4;
+
+  // ── ADICIONAR ──
+  function adicionarAmbiente() {
+    const nome = document.getElementById('inputNome').value.trim();
+    const tipo = document.getElementById('inputTipo').value;
+
+    if (!nome || !tipo) {
+      document.getElementById('inputNome').focus();
+      return;
+    }
+
+    ambientes.push({ id: nextId++, nome, tipo, agua: 0, energia: 0 });
+    document.getElementById('inputNome').value = '';
+    document.getElementById('inputTipo').value = '';
+
+    renderLista();
+    renderDashboard();
+  }
+
+  // ── REMOVER ──
+  function removerAmbiente(id) {
+    ambientes = ambientes.filter(a => a.id !== id);
+    renderLista();
+    renderDashboard();
+  }
+
+  // ── RENDER LISTA ──
+  function renderLista() {
+    const lista = document.getElementById('listaAmbientes');
+    if (ambientes.length === 0) {
+      lista.innerHTML = '';
+      return;
+    }
+    lista.innerHTML = ambientes.map(a => `
+      <div class="ambiente-item">
+        <div class="ambiente-info">
+          <span class="ambiente-nome">${a.nome}</span>
+          <span class="ambiente-tipo">${a.tipo}</span>
+        </div>
+        <button class="btn-remove" onclick="removerAmbiente(${a.id})" title="Remover">
+          <i class="ti ti-trash"></i>
+        </button>
+      </div>
+    `).join('');
+  }
+
+  // ── SIMULAÇÃO ──
+  function simular() {
+    ambientes.forEach(a => {
+      const regra = consumoPorTipo[a.tipo] || { agua: 0, energia: 0.10 };
+      a.agua    += Math.random() * regra.agua;
+      a.energia += Math.random() * regra.energia;
+    });
+  }
+
+  // ── RENDER DASHBOARD ──
+  function renderDashboard() {
+    const grid = document.getElementById('dashboardGrid');
+
+    if (ambientes.length === 0) {
+      grid.innerHTML = `
+        <div class="empty-state">
+          <i class="ti ti-radar-off"></i>
+          <p>Nenhum ambiente cadastrado.<br>Adicione um ambiente ao lado para começar.</p>
+        </div>`;
+      atualizarTotais();
+      return;
+    }
+
+    grid.innerHTML = ambientes.map((a, idx) => {
+      const totalA = a.agua.toFixed(2);
+      const totalE = a.energia.toFixed(2);
+      const totalT = (a.agua + a.energia).toFixed(2);
+      const maxA = 5, maxE = 10;
+      const pctA = Math.min((a.agua / maxA) * 100, 100).toFixed(1);
+      const pctE = Math.min((a.energia / maxE) * 100, 100).toFixed(1);
+
+      const temAgua    = consumoPorTipo[a.tipo]?.agua > 0;
+      const temEnergia = consumoPorTipo[a.tipo]?.energia > 0;
+
+      return `
+        <div class="sensor-card" style="animation-delay:${idx * 0.05}s">
+          <div class="sc-header">
+            <span class="sc-nome">${a.nome}</span>
+            <span class="sc-tipo">${a.tipo}</span>
+          </div>
+
+          ${temAgua ? `
+          <div class="sc-row">
+            <i class="ti ti-droplet sc-icon agua"></i>
+            <span class="sc-label">Água</span>
+            <span class="sc-val agua">R$ ${totalA}</span>
+          </div>
+          <div class="sc-bar-wrap">
+            <div class="sc-bar"><div class="sc-bar-fill agua" style="width:${pctA}%"></div></div>
+          </div>` : ''}
+
+          ${temEnergia ? `
+          <div class="sc-row" style="margin-top:${temAgua?'8px':'0'}">
+            <i class="ti ti-bolt sc-icon energia"></i>
+            <span class="sc-label">Energia</span>
+            <span class="sc-val energia">R$ ${totalE}</span>
+          </div>
+          <div class="sc-bar-wrap">
+            <div class="sc-bar"><div class="sc-bar-fill energia" style="width:${pctE}%"></div></div>
+          </div>` : ''}
+
+          <div class="sc-total">
+            <span class="sc-total-label">Total acumulado</span>
+            <span class="sc-total-val">R$ ${totalT}</span>
+          </div>
+        </div>`;
+    }).join('');
+
+    atualizarTotais();
+  }
+
+  // ── TOTAIS ──
+  function atualizarTotais() {
+    const tAgua    = ambientes.reduce((s, a) => s + a.agua,    0);
+    const tEnergia = ambientes.reduce((s, a) => s + a.energia, 0);
+    const tGeral   = tAgua + tEnergia;
+
+    document.getElementById('totalAmbientes').textContent = ambientes.length;
+    document.getElementById('totalAgua').textContent      = 'R$ ' + tAgua.toFixed(2).replace('.', ',');
+    document.getElementById('totalEnergia').textContent   = 'R$ ' + tEnergia.toFixed(2).replace('.', ',');
+    document.getElementById('totalGeral').textContent     = 'R$ ' + tGeral.toFixed(2).replace('.', ',');
+  }
+
+  // ── TIMER ──
+  let countdown = 15;
+  function tickTimer() {
+    countdown--;
+    document.getElementById('timerLabel').textContent =
+      countdown > 0 ? `Atualizando em ${countdown}s` : 'Atualizando...';
+    if (countdown <= 0) {
+      simular();
+      renderDashboard();
+      countdown = 15;
+    }
+  }
+
+  // Enter para adicionar
+  document.getElementById('inputNome').addEventListener('keydown', e => {
+    if (e.key === 'Enter') adicionarAmbiente();
+  });
+
+  // ── INICIAR ──
+  simular(); // primeira leitura
+  renderLista();
+  renderDashboard();
+  setInterval(tickTimer, 1000);
+</script>
+
+</body>
+</html>

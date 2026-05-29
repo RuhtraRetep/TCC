@@ -162,7 +162,7 @@
       const data = await res.json();
 
       if (res.ok) {
-        window.location.href = '/src/View/telaVisualizacaoGeral.html';
+        window.location.href = '/painel';
       } else {
         mostrarErro(data.erro || 'Dados incorretos. Verifique e tente novamente.');
       }

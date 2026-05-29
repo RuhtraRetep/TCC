@@ -58,12 +58,22 @@ app.post("/prever-sensores", (req, res) => {
     }
 });
 
+app.get('/painel', (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'view', 'telaVisualizacaoGeral.html'));
+});
+
+app.get('/sensores', (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'view', 'telaSensores.html'));
+});
+
 /*
 ###################### INICIALIZAR GASTO DE SENSORES ###################*/
 const iniciarMonitoramento =
 require('./src/services/sensorMonitorService');
 
 iniciarMonitoramento();
+
+
 
 
 // Inicializa o servidor na porta 3000 (Apenas um único listener)
