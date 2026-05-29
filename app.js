@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 
 // VINCULANDO AS ROTAS NO EXPRESS:
 app.use('/escolas', escoLaroute); 
-//app.use('/usuarios', usuarioRoute);
+app.use('/usuarios', usuarioRoute);
 //app.use('/sensores', sensorRoute);
 
 /*

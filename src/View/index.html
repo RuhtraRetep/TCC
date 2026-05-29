@@ -3,227 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SGE-TCC — Sistema de Gerenciamento Escolar com monitoramento de sensores de temperatura e umidade em tempo real.">
-    <meta name="theme-color" content="#0b1f3a">
-
-    <title>SGE-TCC — Gerenciamento Escolar</title>
-
-    <link rel="stylesheet" href="style.css">
+    <title>SGE-TCC — Sistema de Gerenciamento Escolar</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="landing.css">
 </head>
-
 <body>
 
-    <!-- ══ NAVEGAÇÃO ══ -->
-    <nav>
-        <div class="logo">
-            <h2>SGE-TCC</h2>
-        </div>
+<nav>
+    <div class="logo"><h2>SGE <span style="color:var(--teal);font-weight:300;">Escolar</span></h2></div>
+    <span class="nav-status">Online</span>
+    <div class="nav-actions">
+        <a href="loginUsuario.html" class="btn-secondary">Entrar</a>
+        <a href="/escolas/liberar-acesso-cadastro" class="btn-primary">Cadastrar Escola</a>
+    </div>
+</nav>
 
-        <span class="nav-status">Online</span>
+<div class="hero-wrap">
 
-        <button class="menu-toggle" onclick="toggleMenu()" aria-label="Abrir menu" aria-expanded="false">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <line x1="3" y1="12" x2="21" y2="12"/>
-                <line x1="3" y1="18" x2="21" y2="18"/>
-            </svg>
-        </button>
-
-        <ul class="nav-menu" id="navMenu">
-            <li><a href="#">Início</a></li>
-            <li><a href="#sensores">Sensores</a></li>
-            <li><a href="#sobre">Sobre</a></li>
-            <li><a href="#contato">Contato</a></li>
-            <li><a href="/escolas/liberar-acesso-cadastro">Cadastre sua Escola</a></li>
-            <li><a href="loginUsuario.html">Login</a></li>
-        </ul>
-    </nav>
-
-    <!-- ══ CONTEÚDO PRINCIPAL ══ -->
-    <main class="main-content">
-
-        <!-- Hero -->
-        <div class="hero">
-            <div class="hero-badge">Versão TCC 2024</div>
-
-            <h1>
-                Gerenciamento Escolar
-                <span>Inteligente</span>
-            </h1>
-
-            <p>
-                Monitore sensores de temperatura e umidade,
-                gerencie escolas e controle acessos —
-                tudo em um só lugar.
-            </p>
-
-            <div class="hero-actions">
-                <a href="/escolas/liberar-acesso-cadastro" class="btn-primary">
-                    Cadastrar Escola
-                </a>
-
-                <a href="#sensores" class="btn-secondary">
-                    Ver Sensores
-                </a>
-            </div>
-        </div>
-
-        <!-- Breadcrumb -->
-        <div class="breadcrumb">
-            <a href="#">Início</a>
-            <span>/</span>
-            <span style="color:var(--white)">Painel Principal</span>
-        </div>
-
-        <h2 class="section-title">Módulos do Sistema</h2>
-
-        <!-- Cards -->
-        <div class="cards-container" id="cards">
-
-            <div class="card">
-                <div class="card-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M3 9.5L12 4l9 5.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
-                        <path d="M9 21V12h6v9"/>
-                    </svg>
-                </div>
-
-                <h3>Cadastro de Escolas</h3>
-
-                <p>
-                    Gerencie todas as instituições vinculadas
-                    ao sistema, com dados de contato e localização.
-                </p>
-
-                <a href="/escolas/liberar-acesso-cadastro" class="card-link">
-                    Acessar
-                </a>
-            </div>
-
-            <div class="card">
-                <div class="card-icon">
-                    <svg viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="3"/>
-                        <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
-                    </svg>
-                </div>
-
-                <h3>Monitoramento</h3>
-
-                <p>
-                    Visualize os sensores de temperatura
-                    e umidade de cada ambiente em tempo real.
-                </p>
-
-                <a href="#sensores" class="card-link">
-                    Ver sensores
-                </a>
-            </div>
-
-        </div>
-
-        <!-- Sensores -->
-        <section class="sensor-section" id="sensores">
-
-            <h2 class="section-title">Previsão de Sensores</h2>
-
-            <div class="sensor-stats">
-                <div class="stat-pill">
-                    Ambientes:
-                    <strong id="totalAmbientes">0</strong>
-                </div>
-
-                <div class="stat-pill">
-                    Sensores estimados:
-                    <strong id="totalSensores">0</strong>
-                </div>
-            </div>
-
-            <div class="sensor-form">
-                <input
-                    id="nome"
-                    type="text"
-                    placeholder="Nome do ambiente"
-                >
-
-                <select id="tipo">
-                    <option value="">Selecione o tipo</option>
-                    <option value="SALA">Sala</option>
-                    <option value="BANHEIRO">Banheiro</option>
-                    <option value="PATIO">Pátio</option>
-                    <option value="LABORATORIO">Laboratório</option>
-                    <option value="QUADRA">Quadra</option>
-                    <option value="COZINHA">Cozinha</option>
-                </select>
-
-                <button onclick="adicionar()">
-                    + Adicionar
-                </button>
-
-                <button onclick="processar()">
-                    Gerar Sensores
-                </button>
-            </div>
-
-            <div id="listaAmbientes"></div>
-
-            <div id="resultadoSensores"></div>
-
-            <!-- DASHBOARD -->
-
-<section class="gastos-section">
-
-    <h2 class="section-title">
-        Dashboard de Gastos
-    </h2>
-
-    <div id="dashboardAmbientes">
-
+    <div class="hero-tag">
+        <div class="hero-tag-dot"></div>
+        Sistema de Gerenciamento Escolar
     </div>
 
-</section>
+    <h1>Monitore sua escola<br>de forma <em>inteligente</em></h1>
 
-<!-- Histórico -->
+    <p class="hero-sub">
+        Controle sensores, gerencie ambientes e acompanhe o consumo
+        de água e energia da sua instituição — tudo em um só lugar.
+    </p>
 
-<section class="historico-section">
+    <div class="cta-row">
+        <a href="loginUsuario.html" class="cta-card primary">
+            <div class="cta-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            </div>
+            <div class="cta-label">Já tenho conta</div>
+            <div class="cta-title">Fazer Login</div>
+            <div class="cta-desc">Acesse o painel da sua escola com e-mail e senha.</div>
+            <div class="cta-arrow">
+                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+        </a>
+        <a href="/escolas/liberar-acesso-cadastro" class="cta-card">
+            <div class="cta-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 4l9 5.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+            </div>
+            <div class="cta-label">Primeira vez?</div>
+            <div class="cta-title">Cadastrar Escola</div>
+            <div class="cta-desc">Registre sua instituição e comece o monitoramento.</div>
+            <div class="cta-arrow">
+                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+        </a>
+    </div>
 
-     <thead>
-
-            <tr>
-
-                <th>Ambiente</th>
-                <th>Água</th>
-                <th>Energia</th>
-                <th>Total</th>
-
-            </tr>
-
-        </thead>
-
-        <tbody id="historicoTabela">
-
-        </tbody>
-
-    </table>
-
-
-</section>
-
-<div class="pdf-area">
-
-    <button onclick="gerarPDF()">
-
-        Gerar Relatório PDF
-
-    </button>
+    <div class="features">
+        <div class="feat">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Acesso seguro
+        </div>
+        <div class="feat">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3"/></svg>
+            Sensores em tempo real
+        </div>
+        <div class="feat">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            Dashboard completo
+        </div>
+        <div class="feat">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Relatórios em PDF
+        </div>
+    </div>
 
 </div>
 
-        </section>
-
-    </main>
-
-    <script src="script.js"></script>
+<footer id="sobre">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h4>Sobre o SGE-TCC</h4>
+            <p>Desenvolvido para facilitar o monitoramento tecnológico em escolas públicas e privadas.</p>
+        </div>
+        <div class="footer-section" id="contato">
+            <h4>Contato</h4>
+            <p>Email: suporte@tcc.com.br</p>
+            <p>Tel: (28) 9999-9999</p>
+        </div>
+        <div class="footer-section">
+            <h4>Acesso</h4>
+            <div class="footer-nav">
+                <a href="loginUsuario.html" class="footer-btn">Fazer Login</a>
+                <a href="/escolas/liberar-acesso-cadastro" class="footer-btn">Cadastrar Escola</a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">&copy; 2024 SGE-TCC — Projeto de Conclusão de Curso</div>
+</footer>
 
 </body>
 </html>

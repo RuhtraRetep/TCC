@@ -1,0 +1,163 @@
+/* =============================================
+   landing.css — estilos exclusivos do index.html
+   Fica em: src/View/landing.css
+   ============================================= */
+
+.nav-status {
+    font-size: 11px; font-weight: 600;
+    color: var(--teal);
+    background: rgba(0,194,168,.1);
+    border: 1px solid rgba(0,194,168,.22);
+    padding: 2px 10px; border-radius: 20px;
+    letter-spacing: .6px; margin-left: 12px;
+}
+.nav-actions {
+    margin-left: auto;
+    display: flex; gap: 10px; align-items: center;
+}
+.nav-actions .btn-secondary,
+.nav-actions .btn-primary {
+    padding: 8px 20px; border-radius: 50px;
+    font-size: .84rem; text-decoration: none;
+}
+
+.hero-wrap {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    margin-top: 0;
+}
+
+.hero-tag {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: .75rem; font-weight: 600;
+    color: var(--teal); letter-spacing: 1.2px; text-transform: uppercase;
+    background: rgba(0,194,168,.1);
+    border: 1px solid rgba(0,194,168,.2);
+    padding: 5px 14px; border-radius: 20px;
+    margin-bottom: 28px;
+    animation: fade-up .6s ease both;
+}
+.hero-tag-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--teal);
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.hero-wrap h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 400; line-height: 1.1;
+    margin-bottom: 20px;
+    animation: fade-up .7s .08s ease both;
+}
+.hero-wrap h1 em { color: var(--teal); font-style: italic; }
+
+.hero-sub {
+    font-size: clamp(.92rem, 1.5vw, 1.05rem);
+    color: var(--text-muted); line-height: 1.75;
+    max-width: 480px; margin-bottom: 48px;
+    animation: fade-up .7s .16s ease both;
+}
+
+.cta-row {
+    display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+    animation: fade-up .7s .24s ease both;
+    margin-bottom: 56px;
+}
+
+.cta-card {
+    position: relative; width: 240px;
+    background: var(--navy-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px 52px;
+    text-align: left;
+    text-decoration: none; color: inherit;
+    transition: var(--transition); overflow: hidden;
+}
+.cta-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(0,194,168,.07) 0%, transparent 60%);
+    opacity: 0; transition: opacity .3s;
+}
+.cta-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(0,194,168,.35);
+    box-shadow: 0 16px 40px rgba(0,0,0,.35);
+}
+.cta-card:hover::before { opacity: 1; }
+.cta-card.primary { border-color: rgba(0,194,168,.28); }
+
+.cta-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(0,194,168,.1);
+    border: 1px solid rgba(0,194,168,.18);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+}
+.cta-icon svg {
+    width: 22px; height: 22px; stroke: var(--teal);
+    fill: none; stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+}
+
+.cta-label {
+    font-size: .68rem; font-weight: 600;
+    color: var(--teal); text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 6px;
+}
+.cta-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem; margin-bottom: 8px;
+}
+.cta-desc { font-size: .8rem; color: var(--text-muted); line-height: 1.6; }
+
+.cta-arrow {
+    position: absolute; bottom: 20px; right: 20px;
+    width: 28px; height: 28px; border-radius: 8px;
+    background: rgba(0,194,168,.1);
+    display: flex; align-items: center; justify-content: center;
+    transition: var(--transition);
+}
+.cta-card:hover .cta-arrow { background: var(--teal); }
+.cta-arrow svg {
+    width: 14px; height: 14px; stroke: var(--teal);
+    transition: stroke .3s; stroke-width: 2.5;
+    fill: none; stroke-linecap: round; stroke-linejoin: round;
+}
+.cta-card:hover .cta-arrow svg { stroke: var(--navy); }
+
+.features {
+    position: relative; z-index: 1;
+    display: flex; justify-content: center; flex-wrap: wrap;
+    border-top: 1px solid var(--border);
+    width: 100%; max-width: 700px;
+    animation: fade-up .7s .32s ease both;
+}
+.feat {
+    display: flex; align-items: center; gap: 9px;
+    padding: 16px 24px; font-size: .79rem; color: var(--text-muted);
+    border-right: 1px solid var(--border);
+}
+.feat:last-child { border-right: none; }
+.feat svg {
+    width: 15px; height: 15px; stroke: var(--teal);
+    fill: none; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+}
+
+@keyframes fade-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    .nav-status { display: none; }
+    .cta-row { flex-direction: column; align-items: center; }
+    .cta-card { width: 100%; max-width: 320px; }
+    .feat { padding: 12px 16px; font-size: .74rem; }
+}
