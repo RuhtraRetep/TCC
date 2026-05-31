@@ -147,7 +147,6 @@
       gap: 20px;
     }
 
-    /* card grande ocupa linha inteira */
     .card-full { grid-column: 1 / -1; }
 
     .card {
@@ -167,6 +166,7 @@
     .card:nth-child(2) { animation-delay: .22s; }
     .card:nth-child(3) { animation-delay: .29s; }
     .card:nth-child(4) { animation-delay: .36s; }
+    .card:nth-child(5) { animation-delay: .43s; }
 
     .card::before {
       content: ''; position: absolute; inset: 0; pointer-events: none;
@@ -176,8 +176,8 @@
     .card:hover { transform: translateY(-4px); border-color: var(--teal-border); box-shadow: 0 20px 48px rgba(0,0,0,.4); }
     .card:hover::before { opacity: 1; }
 
-    /* card de destaque (sensores) */
     .card-sensors { border-color: rgba(0,212,170,0.2); }
+
 
     .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
 
@@ -236,6 +236,126 @@
       padding: 3px 10px; border-radius: 20px;
     }
 
+    /* ── MODAL ORÇAMENTO ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s;
+    }
+    .modal-overlay.open {
+      opacity: 1; pointer-events: all;
+    }
+    .modal {
+      background: #111820;
+      border: 1px solid var(--teal-border);
+      border-radius: 20px;
+      width: 100%; max-width: 560px;
+      padding: 36px;
+      transform: translateY(24px);
+      transition: transform .3s;
+      position: relative;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+
+    .modal-close {
+      position: absolute; top: 18px; right: 18px;
+      width: 32px; height: 32px; border-radius: 8px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      color: var(--muted); font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all .2s;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+
+    .modal-eyebrow {
+      font-size: 10px; font-weight: 700; color: var(--teal);
+      text-transform: uppercase; letter-spacing: 1.4px; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .modal-eyebrow i { font-size: 13px; }
+    .modal-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.6rem; font-weight: 400; margin-bottom: 6px;
+    }
+    .modal-title em { color: var(--teal); font-style: italic; }
+    .modal-sub { font-size: .83rem; color: var(--muted); line-height: 1.6; margin-bottom: 28px; }
+
+    /* campos do modal */
+    .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+    .modal-field { display: flex; flex-direction: column; gap: 6px; }
+    .modal-field.full { grid-column: 1 / -1; }
+    .modal-field label {
+      font-size: 10px; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .8px;
+    }
+    .modal-field input, .modal-field select {
+      padding: 9px 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-size: 13px; font-family: inherit; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .modal-field input:focus, .modal-field select:focus {
+      border-color: var(--teal-border);
+      box-shadow: 0 0 0 3px rgba(0,212,170,0.08);
+    }
+    .modal-field input::placeholder { color: rgba(255,255,255,0.2); }
+    .modal-field select option { background: #1a2332; }
+
+    .modal-hint {
+      font-size: 11px; color: var(--muted);
+      background: rgba(0,212,170,0.06);
+      border: 1px solid rgba(0,212,170,0.15);
+      border-radius: 8px; padding: 10px 14px;
+      margin-bottom: 20px; line-height: 1.6;
+    }
+    .modal-hint i { color: var(--teal); margin-right: 4px; }
+
+    .btn-simular {
+      width: 100%; padding: 12px;
+      background: var(--teal); border: none; border-radius: 10px;
+      color: #0d1117; font-size: 14px; font-weight: 700;
+      cursor: pointer; font-family: inherit;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background .2s, transform .15s;
+    }
+    .btn-simular:hover { background: #00b894; transform: translateY(-1px); }
+    .btn-simular:active { transform: translateY(0); }
+
+    /* resultado */
+    .resultado {
+      margin-top: 24px; padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: none;
+    }
+    .resultado.show { display: block; }
+    .resultado-title {
+      font-size: 11px; font-weight: 700; color: var(--teal);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .resultado-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .res-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .res-item.destaque {
+      grid-column: 1 / -1;
+      background: rgba(0,212,170,0.06);
+      border-color: var(--teal-border);
+    }
+    .res-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .7px; margin-bottom: 4px; }
+    .res-val { font-size: 1.3rem; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+    .res-val.agua    { color: #4a9eff; }
+    .res-val.energia { color: var(--teal); }
+    .res-val.total   { color: var(--teal); font-size: 1.6rem; }
+    .res-mensal { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
     /* ── ANIMAÇÃO ── */
     @keyframes fade-up {
       from { opacity: 0; transform: translateY(22px); }
@@ -250,6 +370,10 @@
       .stat + .stat { border-top: 1px solid var(--border); }
       nav { padding: 0 1rem; }
       .wrapper { padding: 32px 16px 60px; }
+      .modal { padding: 24px; }
+      .modal-grid { grid-template-columns: 1fr; }
+      .resultado-grid { grid-template-columns: 1fr; }
+      .res-item.destaque { grid-column: 1; }
     }
   </style>
 </head>
@@ -287,30 +411,11 @@
     <p class="page-sub">Gerencie sensores, visualize dados e gere relatórios da sua instituição em um só lugar.</p>
   </div>
 
-  <!-- STATS -->
-  <div class="stats-bar">
-    <div class="stat">
-      <div class="stat-val">0 <span>sensores</span></div>
-      <div class="stat-label">Ativos no momento</div>
-    </div>
-    <div class="stat">
-      <div class="stat-val">0 <span>m³</span></div>
-      <div class="stat-label">Consumo de água hoje</div>
-    </div>
-    <div class="stat">
-      <div class="stat-val">0 <span>kWh</span></div>
-      <div class="stat-label">Consumo de energia hoje</div>
-    </div>
-    <div class="stat">
-      <div class="stat-val">R$ 0</div>
-      <div class="stat-label">Gasto estimado hoje</div>
-    </div>
-  </div>
 
   <!-- CARDS -->
   <div class="cards-grid">
 
-    <!-- Sensores — card destaque (full width) -->
+    <!-- Sensores -->
     <div class="card card-full card-sensors" onclick="window.location.href='/sensores'">
       <div class="card-top">
         <div class="card-icon"><i class="ti ti-radar"></i></div>
@@ -329,7 +434,7 @@
     </div>
 
     <!-- Dashboard -->
-    <div class="card" onclick="window.location.href='#'">
+    <div class="card" onclick="window.location.href='/dashboard'">
       <div class="card-top">
         <div class="card-icon"><i class="ti ti-chart-bar"></i></div>
       </div>
@@ -360,11 +465,27 @@
       </div>
     </div>
 
-    <!-- Alunos + QR Code -->
-    <div class="card card-full card-soon">
+    <!-- Simular Orçamento -->
+    <div class="card card-full" onclick="abrirModal()">
+      <div class="card-top">
+        <div class="card-icon"><i class="ti ti-calculator"></i></div>
+      </div>
+      <div class="card-label">Planejamento</div>
+      <div class="card-title">Simular Orçamento</div>
+      <div class="card-desc">
+        Estime o custo mensal com água e energia da sua escola com base no número de ambientes,
+        alunos e dias letivos. Ideal para planejamento financeiro e apresentação à gestão.
+      </div>
+      <div class="card-footer">
+        <span class="card-action"><i class="ti ti-calculator"></i> Abrir simulador</span>
+        <div class="card-arrow"><i class="ti ti-arrow-right"></i></div>
+      </div>
+    </div>
+
+    <!-- QR Code -->
+    <div class="card card-full" onclick="window.location.href='#'">
       <div class="card-top">
         <div class="card-icon"><i class="ti ti-qrcode"></i></div>
-        <span class="soon-badge">Em breve</span>
       </div>
       <div class="card-label">QR Code Público</div>
       <div class="card-title">Visualização de Alunos</div>
@@ -372,15 +493,91 @@
         Gere QR Codes com link público para cada aluno — qualquer pessoa pode escanear e visualizar as informações sem precisar de login.
       </div>
       <div class="card-footer">
-        <span class="card-action" style="color:var(--muted)"><i class="ti ti-clock"></i> Em desenvolvimento</span>
+        <span class="card-action"><i class="ti ti-qrcode"></i> Gerar QR Code</span>
+        <div class="card-arrow"><i class="ti ti-arrow-right"></i></div>
       </div>
     </div>
 
   </div>
 </div>
 
+<!-- ── MODAL SIMULADOR DE ORÇAMENTO ── -->
+<div class="modal-overlay" id="modalOverlay" onclick="fecharModalFora(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="fecharModal()"><i class="ti ti-x"></i></button>
+
+    <div class="modal-eyebrow"><i class="ti ti-calculator"></i> Simulador</div>
+    <div class="modal-title">Simular <em>Orçamento</em></div>
+    <p class="modal-sub">Preencha os dados da sua escola para estimar o custo mensal com água e energia.</p>
+
+    <div class="modal-grid">
+      <div class="modal-field">
+        <label>Nº de salas de aula</label>
+        <input type="number" id="qSalas" placeholder="Ex: 10" min="0" value="10">
+      </div>
+      <div class="modal-field">
+        <label>Nº de banheiros</label>
+        <input type="number" id="qBanheiros" placeholder="Ex: 4" min="0" value="4">
+      </div>
+      <div class="modal-field">
+        <label>Nº de laboratórios</label>
+        <input type="number" id="qLabs" placeholder="Ex: 2" min="0" value="2">
+      </div>
+      <div class="modal-field">
+        <label>Nº de cozinhas</label>
+        <input type="number" id="qCozinhas" placeholder="Ex: 1" min="0" value="1">
+      </div>
+      <div class="modal-field">
+        <label>Nº de pátios / quadras</label>
+        <input type="number" id="qPatios" placeholder="Ex: 1" min="0" value="1">
+      </div>
+      <div class="modal-field">
+        <label>Dias letivos por mês</label>
+        <input type="number" id="qDias" placeholder="Ex: 20" min="1" max="31" value="20">
+      </div>
+      <div class="modal-field full">
+        <label>Horas de funcionamento por dia</label>
+        <input type="number" id="qHoras" placeholder="Ex: 8" min="1" max="24" value="8">
+      </div>
+    </div>
+
+    <div class="modal-hint">
+      <i class="ti ti-info-circle"></i>
+      Os valores são estimativas baseadas nas tarifas médias:
+      <strong style="color:var(--teal)">R$ 5,50/m³</strong> (água) e
+      <strong style="color:var(--teal)">R$ 0,92/kWh</strong> (energia).
+    </div>
+
+    <button class="btn-simular" onclick="simularOrcamento()">
+      <i class="ti ti-calculator"></i> Calcular estimativa
+    </button>
+
+    <!-- Resultado -->
+    <div class="resultado" id="resultado">
+      <div class="resultado-title"><i class="ti ti-chart-pie"></i> Resultado da simulação</div>
+      <div class="resultado-grid">
+        <div class="res-item">
+          <div class="res-label">💧 Custo com água</div>
+          <div class="res-val agua" id="resAgua">—</div>
+          <div class="res-mensal" id="resAguaM"></div>
+        </div>
+        <div class="res-item">
+          <div class="res-label">⚡ Custo com energia</div>
+          <div class="res-val energia" id="resEnergia">—</div>
+          <div class="res-mensal" id="resEnergiaM"></div>
+        </div>
+        <div class="res-item destaque">
+          <div class="res-label">💰 Gasto total estimado / mês</div>
+          <div class="res-val total" id="resTotal">—</div>
+          <div class="res-mensal" id="resTotalDia"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-  // Pega nome do usuário e escola da sessão
+  // ── NAV: dados do usuário ──
   (async () => {
     try {
       const res  = await fetch("/usuarios/me");
@@ -398,6 +595,76 @@
       document.getElementById("navAvatar").textContent = "US";
     }
   })();
+
+  // ── MODAL ──
+  function abrirModal() {
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function fecharModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function fecharModalFora(e) {
+    if (e.target === document.getElementById('modalOverlay')) fecharModal();
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharModal(); });
+
+  // ── SIMULADOR ──
+  function simularOrcamento() {
+    const salas    = Math.max(0, parseInt(document.getElementById('qSalas').value)    || 0);
+    const banheiros= Math.max(0, parseInt(document.getElementById('qBanheiros').value)|| 0);
+    const labs     = Math.max(0, parseInt(document.getElementById('qLabs').value)     || 0);
+    const cozinhas = Math.max(0, parseInt(document.getElementById('qCozinhas').value) || 0);
+    const patios   = Math.max(0, parseInt(document.getElementById('qPatios').value)   || 0);
+    const dias     = Math.max(1, parseInt(document.getElementById('qDias').value)     || 20);
+    const horas    = Math.max(1, parseInt(document.getElementById('qHoras').value)    || 8);
+
+    // Consumo por ambiente por hora (m³/h e kWh) — médias estimadas
+    const tabela = {
+      sala:     { agua: 0,      energia: 0.30  },  // iluminação + ventilador
+      banheiro: { agua: 0.25,   energia: 0.08  },  // descarga + pia
+      lab:      { agua: 0,      energia: 0.45  },  // computadores + ar
+      cozinha:  { agua: 0.35,   energia: 0.40  },  // fogão + pia + geladeira
+      patio:    { agua: 0.05,   energia: 0.10  },  // limpeza + iluminação
+    };
+
+    const totalAguaM3 =
+      (salas    * tabela.sala.agua     +
+       banheiros* tabela.banheiro.agua +
+       labs     * tabela.lab.agua      +
+       cozinhas * tabela.cozinha.agua  +
+       patios   * tabela.patio.agua)
+      * horas * dias;
+
+    const totalEnergiaKwh =
+      (salas    * tabela.sala.energia     +
+       banheiros* tabela.banheiro.energia +
+       labs     * tabela.lab.energia      +
+       cozinhas * tabela.cozinha.energia  +
+       patios   * tabela.patio.energia)
+      * horas * dias;
+
+    const tarifaAgua    = 5.50;
+    const tarifaEnergia = 0.92;
+
+    const custoAgua    = totalAguaM3    * tarifaAgua;
+    const custoEnergia = totalEnergiaKwh* tarifaEnergia;
+    const custoTotal   = custoAgua + custoEnergia;
+    const custoDia     = custoTotal / dias;
+
+    const fmt = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+    document.getElementById('resAgua').textContent    = fmt(custoAgua);
+    document.getElementById('resAguaM').textContent   = `${totalAguaM3.toFixed(1)} m³ no mês`;
+    document.getElementById('resEnergia').textContent = fmt(custoEnergia);
+    document.getElementById('resEnergiaM').textContent= `${totalEnergiaKwh.toFixed(1)} kWh no mês`;
+    document.getElementById('resTotal').textContent   = fmt(custoTotal);
+    document.getElementById('resTotalDia').textContent= `≈ ${fmt(custoDia)} por dia letivo`;
+
+    document.getElementById('resultado').classList.add('show');
+    document.getElementById('resultado').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 </script>
 
 </body>

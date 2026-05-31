@@ -387,7 +387,6 @@
 </div>
 
 <script>
-  // ── DADOS ──
   const consumoPorTipo = {
     SALA:        { agua: 0,    energia: 0.20 },
     LABORATORIO: { agua: 0,    energia: 0.30 },
@@ -397,45 +396,94 @@
     QUADRA:      { agua: 0.05, energia: 0.12 }
   };
 
-  let ambientes = [
-    { id: 1, nome: 'Cozinha 01',  tipo: 'COZINHA',  agua: 0, energia: 0 },
-    { id: 2, nome: 'Banheiro 01', tipo: 'BANHEIRO', agua: 0, energia: 0 },
-    { id: 3, nome: 'Sala 01',     tipo: 'SALA',     agua: 0, energia: 0 }
-  ];
-  let nextId = 4;
+  let ambientes = []; // agora vem do banco
+
+  // ── CARREGAR DO BANCO ──
+  async function carregarAmbientes() {
+    try {
+      const res  = await fetch('/sensores/ambientes');
+      const data = await res.json();
+      if (data.sucesso) {
+        // Mantém os valores de simulação que já existiam em memória (por id)
+        ambientes = data.ambientes.map(a => {
+          const existente = ambientes.find(e => e.id === a.id);
+          return {
+            ...a,
+            agua:    existente?.agua    || 0,
+            energia: existente?.energia || 0
+          };
+        });
+        renderLista();
+        renderDashboard();
+      }
+    } catch (err) {
+      console.error('Erro ao carregar ambientes:', err);
+    }
+  }
 
   // ── ADICIONAR ──
-  function adicionarAmbiente() {
+  async function adicionarAmbiente() {
     const nome = document.getElementById('inputNome').value.trim();
     const tipo = document.getElementById('inputTipo').value;
+    const btn  = document.querySelector('.btn-add');
 
     if (!nome || !tipo) {
       document.getElementById('inputNome').focus();
       return;
     }
 
-    ambientes.push({ id: nextId++, nome, tipo, agua: 0, energia: 0 });
-    document.getElementById('inputNome').value = '';
-    document.getElementById('inputTipo').value = '';
+    // Feedback visual
+    btn.disabled = true;
+    btn.innerHTML = '<i class="ti ti-loader-2"></i> Salvando...';
 
-    renderLista();
-    renderDashboard();
+    try {
+      const res  = await fetch('/sensores/ambientes', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ nome, tipo })
+      });
+      const data = await res.json();
+
+      if (data.sucesso) {
+        // Adiciona localmente com simulação zerada
+        ambientes.push({ ...data.ambiente, agua: 0, energia: 0 });
+        document.getElementById('inputNome').value = '';
+        document.getElementById('inputTipo').value = '';
+        renderLista();
+        renderDashboard();
+      } else {
+        alert('Erro ao salvar: ' + data.erro);
+      }
+    } catch (err) {
+      alert('Erro de conexão com o servidor.');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ti ti-plus"></i> Adicionar';
+    }
   }
 
   // ── REMOVER ──
-  function removerAmbiente(id) {
-    ambientes = ambientes.filter(a => a.id !== id);
-    renderLista();
-    renderDashboard();
+  async function removerAmbiente(id) {
+    try {
+      const res  = await fetch(`/sensores/ambientes/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+
+      if (data.sucesso) {
+        ambientes = ambientes.filter(a => a.id !== id);
+        renderLista();
+        renderDashboard();
+      } else {
+        alert('Erro ao remover: ' + data.erro);
+      }
+    } catch (err) {
+      alert('Erro de conexão com o servidor.');
+    }
   }
 
   // ── RENDER LISTA ──
   function renderLista() {
     const lista = document.getElementById('listaAmbientes');
-    if (ambientes.length === 0) {
-      lista.innerHTML = '';
-      return;
-    }
+    if (ambientes.length === 0) { lista.innerHTML = ''; return; }
     lista.innerHTML = ambientes.map(a => `
       <div class="ambiente-item">
         <div class="ambiente-info">
@@ -479,7 +527,6 @@
       const maxA = 5, maxE = 10;
       const pctA = Math.min((a.agua / maxA) * 100, 100).toFixed(1);
       const pctE = Math.min((a.energia / maxE) * 100, 100).toFixed(1);
-
       const temAgua    = consumoPorTipo[a.tipo]?.agua > 0;
       const temEnergia = consumoPorTipo[a.tipo]?.energia > 0;
 
@@ -489,7 +536,6 @@
             <span class="sc-nome">${a.nome}</span>
             <span class="sc-tipo">${a.tipo}</span>
           </div>
-
           ${temAgua ? `
           <div class="sc-row">
             <i class="ti ti-droplet sc-icon agua"></i>
@@ -499,9 +545,8 @@
           <div class="sc-bar-wrap">
             <div class="sc-bar"><div class="sc-bar-fill agua" style="width:${pctA}%"></div></div>
           </div>` : ''}
-
           ${temEnergia ? `
-          <div class="sc-row" style="margin-top:${temAgua?'8px':'0'}">
+          <div class="sc-row" style="margin-top:${temAgua ? '8px' : '0'}">
             <i class="ti ti-bolt sc-icon energia"></i>
             <span class="sc-label">Energia</span>
             <span class="sc-val energia">R$ ${totalE}</span>
@@ -509,7 +554,6 @@
           <div class="sc-bar-wrap">
             <div class="sc-bar"><div class="sc-bar-fill energia" style="width:${pctE}%"></div></div>
           </div>` : ''}
-
           <div class="sc-total">
             <span class="sc-total-label">Total acumulado</span>
             <span class="sc-total-val">R$ ${totalT}</span>
@@ -525,7 +569,6 @@
     const tAgua    = ambientes.reduce((s, a) => s + a.agua,    0);
     const tEnergia = ambientes.reduce((s, a) => s + a.energia, 0);
     const tGeral   = tAgua + tEnergia;
-
     document.getElementById('totalAmbientes').textContent = ambientes.length;
     document.getElementById('totalAgua').textContent      = 'R$ ' + tAgua.toFixed(2).replace('.', ',');
     document.getElementById('totalEnergia').textContent   = 'R$ ' + tEnergia.toFixed(2).replace('.', ',');
@@ -545,15 +588,12 @@
     }
   }
 
-  // Enter para adicionar
   document.getElementById('inputNome').addEventListener('keydown', e => {
     if (e.key === 'Enter') adicionarAmbiente();
   });
 
   // ── INICIAR ──
-  simular(); // primeira leitura
-  renderLista();
-  renderDashboard();
+  carregarAmbientes(); // carrega do banco
   setInterval(tickTimer, 1000);
 </script>
 

@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 // VINCULANDO AS ROTAS NO EXPRESS:
 app.use('/escolas', escoLaroute); 
 app.use('/usuarios', usuarioRoute);
-//app.use('/sensores', sensorRoute);
+app.use('/sensores', sensorRoute);
 
 /*
 =================================================
@@ -58,6 +58,10 @@ app.post("/prever-sensores", (req, res) => {
     }
 });
 
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'view', 'dashboard.html'));
+});
+
 app.get('/painel', (req, res) => {
     res.sendFile(path.join(__dirname, 'src', 'view', 'telaVisualizacaoGeral.html'));
 });
@@ -72,6 +76,33 @@ const iniciarMonitoramento =
 require('./src/services/sensorMonitorService');
 
 iniciarMonitoramento();
+
+
+
+
+
+
+// Middleware: só passa quem está logado
+function autenticado(req, res, next) {
+    if (req.session.usuario) {
+        next();
+    } else {
+        res.redirect('/usuarios/login');
+    }
+}
+
+// Troca as rotas de /painel e /sensores para usar o middleware:
+app.get('/painel', autenticado, (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'view', 'telaVisualizacaoGeral.html'));
+});
+
+app.get('/sensores', autenticado, (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'view', 'telaSensores.html'));
+});
+
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'view', 'dashboard.html'));
+});
 
 
 

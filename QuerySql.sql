@@ -21,7 +21,7 @@ CREATE TABLE Escolas (
     codigo_inep CHAR(8) UNIQUE,
     tipo_gestao ENUM('Pública', 'Privada') NOT NULL,
     email VARCHAR(100),
-    fk_id_endereco INT NOT NULL UNIQUE, 
+    fk_id_endereco INT NOT NULL UNIQUE,
     data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (fk_id_endereco) REFERENCES Enderecos(id_endereco)
 );
@@ -32,9 +32,9 @@ CREATE TABLE Usuarios (
     nome_usuario VARCHAR(30) NOT NULL,
     sobrenome_usuario VARCHAR(100) NOT NULL,
     cpf CHAR(11) NOT NULL UNIQUE,
-    email VARCHAR(100) NOT NULL UNIQUE, -- Login
+    email VARCHAR(100) NOT NULL UNIQUE,
     funcao ENUM('Diretor', 'Financeiro', 'Manutencao', 'Professor'),
-    senha VARCHAR(255) NOT NULL, -- Aumentado para suportar criptografia (bcrypt)
+    senha VARCHAR(255) NOT NULL,
     data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
     fk_id_escola INT NOT NULL,
     FOREIGN KEY (fk_id_escola) REFERENCES Escolas(id_escola)
@@ -54,35 +54,37 @@ CREATE TABLE Telefones (
     FOREIGN KEY (fk_id_escola) REFERENCES Escolas(id_escola)
 );
 
--- 6. Tabela de Ambientes (Para os sensores)
-CREATE TABLE ambientes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    tipo VARCHAR(50) NOT NULL,
-    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- 7. Tabela de Tipos de Sensores
+-- 6. Tabela de Tipos de Sensores
 CREATE TABLE tipos_sensores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50) NOT NULL
 );
 
+-- 7. Tabela de Ambientes (Depende de Escolas) ← ATUALIZADA
+CREATE TABLE ambientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    tipo VARCHAR(50) NOT NULL,
+    fk_id_escola INT NOT NULL,
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (fk_id_escola) REFERENCES Escolas(id_escola) ON DELETE CASCADE
+);
+
 -- 8. Tabela de Sensores por Ambiente (Depende de ambientes e tipos_sensores)
 CREATE TABLE sensores_ambientes (
-    id INT AUTO_INCREMENT PRIMARY KEY, 
+    id INT AUTO_INCREMENT PRIMARY KEY,
     ambiente_id INT NOT NULL,
     tipo_sensor_id INT NOT NULL,
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (ambiente_id) REFERENCES ambientes(id),
+    FOREIGN KEY (ambiente_id) REFERENCES ambientes(id) ON DELETE CASCADE,
     FOREIGN KEY (tipo_sensor_id) REFERENCES tipos_sensores(id)
 );
 
--- 9. Tabela de Histórico de Gastos (Corrigida com a Chave Estrangeira de ambientes)
+-- 9. Tabela de Histórico de Gastos (Depende de ambientes)
 CREATE TABLE historico_gastos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    ambiente_id INT NOT NULL, -- Alterado para NOT NULL para garantir consistência
-    consumo_agua DECIMAL(10,4), -- Ajustado para 4 casas decimais para precisão do sensor
+    ambiente_id INT NOT NULL,
+    consumo_agua DECIMAL(10,4),
     consumo_energia DECIMAL(10,4),
     valor_agua DECIMAL(10,2),
     valor_energia DECIMAL(10,2),
