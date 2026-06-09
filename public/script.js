@@ -345,27 +345,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Dados do formulário
                 const dados = {
-                    nomeFantasia: document.getElementById('nome_fantasia').value.Trim(),
-                    razaoSocial: document.getElementById('razao_social').value.Trim(),
-                    cnpj: document.getElementById('cnpj').value.Trim(),
-                    codigoInep: document.getElementById('codigo_inep').value.Trim() || null,
-                    tipoGestao: document.getElementById('tipo_gestao').value.Trim(),
-                    email: document.getElementById('email').value.Trim() || null,
+                    nomeFantasia: document.getElementById('nome_fantasia').value.trim(),
+                    razaoSocial: document.getElementById('razao_social').value.trim(),
+                    cnpj: document.getElementById('cnpj').value.trim(),
+                    codigoInep: document.getElementById('codigo_inep').value.trim() || null,
+                    tipoGestao: document.getElementById('tipo_gestao').value.trim(),
+                    email: document.getElementById('email').value.trim() || null,
 
                     // Endereço
-                    logradouro: document.getElementById('logradouro').value.Trim(),
-                    numero: document.getElementById('numero').value.Trim() || null,
-                    bairro: document.getElementById('bairro').value.Trim(),
-                    cidade: document.getElementById('cidade').value.Trim(),
-                    cep: document.getElementById('cep').value.Trim(),
+                    logradouro: document.getElementById('logradouro').value.trim(),
+                    numero: document.getElementById('numero').value.trim() || null,
+                    bairro: document.getElementById('bairro').value.trim(),
+                    cidade: document.getElementById('cidade').value.trim(),
+                    cep: document.getElementById('cep').value.trim(),
 
                     //Telefone 
-                    pais: document.getElementById('telefone_pais').value.Trim(),
-                    ddd: document.getElementById('telefone_ddd').value.Trim(),
-                    numeroTel: document.getElementById('telefone_numero').value.Trim(),
-                    tipo: document.getElementById('telefone_tipo').value.Trim(),
-                    principal: document.getElementById('telefone_principal').value.Trim(),
-                    ativo: document.getElementById('telefone_ativo').value.Trim()
+                    pais: document.getElementById('telefone_pais').value.trim(),
+                    ddd: document.getElementById('telefone_ddd').value.trim(),
+                    numeroTel: document.getElementById('telefone_numero').value.trim(),
+                    tipo: document.getElementById('telefone_tipo').value.trim(),
+                    principal: document.getElementById('telefone_principal').value.trim(),
+                    ativo: document.getElementById('telefone_ativo').value.trim()
                 };
 
 
