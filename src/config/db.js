@@ -5,7 +5,7 @@ const pool = mysql.createPool({
     host: 'acela.proxy.rlwy.net',
     user: 'root',
     password: 'pGFnAuIxojQbsoIHXjUfyVHWRmMWXdYU',
-    database: 'railway',
+    database: 'tcc',
     port: 37397,
     waitForConnections: true,
     connectionLimit: 100,
