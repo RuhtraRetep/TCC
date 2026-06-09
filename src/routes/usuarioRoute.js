@@ -1,7 +1,32 @@
 const express = require('express');
 const path = require('path');
 const router = express.Router();
-const usuarioService = require('../services/usuarioService');
+
+
+// 🛠️ FUNÇÃO DE VERIFICAÇÃO (Adicionada diretamente para corrigir o ReferenceError)
+function verificarAcesso(req, res, next) {
+    if (req.session && req.session.podeAcessarCadastro) {
+        return next(); // Permite o acesso se a sessão for válida
+    }
+    // Se tentar entrar direto sem passar pelo botão, manda para a tela inicial
+    res.redirect('/'); 
+}
+
+// Permite entrar no cadastro a partir da página inicial
+router.get('/liberar-acesso-cadastro-usuario', (req, res) => {
+    req.session.podeAcessarCadastro = true;
+    res.redirect('/usuarios/cadastro-usuario'); 
+});
+
+// Rota para a página de Cadastro de Usuário (HTML)
+router.get('/cadastro-usuario', verificarAcesso, (req, res) => {
+    req.session.podeAcessarCadastro = false; // Bloqueia reentradas diretas pela URL
+    
+    // Caminho ajustado para 'View' (V maiúsculo) e arquivo 'cadastroUsuario.html'
+    res.sendFile(path.join(__dirname, '..', 'View', 'cadastroUsuario.html'));
+});
+
+
 
 // Rota para servir a página de login
 router.get('/login', (req, res) => {

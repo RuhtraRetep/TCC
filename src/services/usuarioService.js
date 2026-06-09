@@ -1,5 +1,8 @@
 const db = require('../config/db');
 
+
+
+
 class UsuarioService {
 
     async autenticar(emailEscola, codigoInep, emailUsuario, senha) {

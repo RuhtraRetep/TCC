@@ -4,7 +4,10 @@ function toggleMenu() {
     if (menu) {
         menu.classList.toggle('active');
     }
+
 }
+
+
 
 // Executa os códigos assim que a página terminar de carregar
 document.addEventListener('DOMContentLoaded', () => {
@@ -384,6 +387,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     alert('Cadastrado com sucesso!');
                     formEscola.reset();
+                    window.location.href = '/usuarios/liberar-acesso-cadastro-usuario';
+
+
 
                 } else {
 
@@ -406,11 +412,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+
+
 // =================================================
 // SISTEMA DE PREVISÃO DE SENSORES (Mantido da main)
 // =================================================
-
-
 
 // Adicionar ambiente
 function adicionar() {
@@ -492,78 +498,6 @@ function processar() {
             </div>
         `;
     });
-
-
-    let telCount = 1;
-
-    function adicionarTelefone() {
-
-        telCount++;
-        const id = 'telefone-' + telCount;
-
-        const div = document.createElement('div');
-        div.className = 'telefone-item';
-        div.id = id;
-
-        div.innerHTML = `
-                <div class="telefone-header">
-                    <span class="telefone-label">Telefone #${telCount}</span>
-                    <button type="button" class="btn-remove-tel" onclick="removeTelefone('${id}')" title="Remover">✕</button>
-                </div>
-                <div class="form-grid telefone-grid">
-                    <div class="form-group">
-                        <label>País (DDI)</label>
-                        <input type="text" name="tel_pais[]" maxlength="4" placeholder="+55" value="+55">
-                    </div>
-                    <div class="form-group">
-                        <label>DDD</label>
-                        <input type="text" name="tel_ddd[]" maxlength="3" placeholder="Ex: 28">
-                    </div>
-                    <div class="form-group">
-                        <label>Número</label>
-                        <input type="text" name="tel_numero[]" maxlength="9" placeholder="Ex: 999999999">
-                    </div>
-                    <div class="form-group">
-                        <label>Tipo</label>
-                        <select name="tel_tipo[]">
-                            <option value="Fixo">Fixo</option>
-                            <option value="Celular">Celular</option>
-                        </select>
-                    </div>
-                    <div class="form-group tel-bool-group">
-                        <label>Principal</label>
-                        <div class="toggle-wrapper">
-                            <label class="toggle">
-                                <input type="checkbox" name="tel_principal[]" value="1">
-                                <span class="toggle-track"><span class="toggle-thumb"></span></span>
-                            </label>
-                            <span class="toggle-caption">Não</span>
-                        </div>
-                    </div>
-                    <div class="form-group tel-bool-group">
-                        <label>Ativo</label>
-                        <div class="toggle-wrapper">
-                            <label class="toggle">
-                                <input type="checkbox" name="tel_ativo[]" value="1" checked>
-                                <span class="toggle-track"><span class="toggle-thumb"></span></span>
-                            </label>
-                            <span class="toggle-caption">Sim</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-        document.getElementById('telefones-container').appendChild(div);
-        div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-
-    function removeTelefone(id) {
-        const el = document.getElementById(id);
-        if (el && document.querySelectorAll('.telefone-item').length > 1) {
-            el.classList.add('tel-removing');
-            setTimeout(() => el.remove(), 250);
-        }
-    }
 
 
 }

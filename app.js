@@ -22,9 +22,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Rota da Home
+// Middleware: só passa quem está logado
+function autenticado(req, res, next) {
+    if (req.session && req.session.usuario) {
+        return next();
+    } else {
+        res.redirect('/usuarios/login');
+    }
+}
+
+// Rota da Home (Corrigido para 'View' maiúsculo)
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src', 'view', 'index.html'));
+    res.sendFile(path.join(__dirname, 'src', 'View', 'index.html'));
 });
 
 // VINCULANDO AS ROTAS NO EXPRESS:
@@ -58,54 +67,23 @@ app.post("/prever-sensores", (req, res) => {
     }
 });
 
-app.get('/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src', 'view', 'dashboard.html'));
+// Rotas protegidas (Corrigido caminhos para 'View' maiúsculo e removido duplicadas)
+app.get('/dashboard', autenticado, (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'View', 'dashboard.html'));
 });
 
-app.get('/painel', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src', 'view', 'telaVisualizacaoGeral.html'));
+app.get('/painel', autenticado, (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'View', 'telaVisualizacaoGeral.html'));
 });
 
-app.get('/sensores', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src', 'view', 'telaSensores.html'));
+app.get('/sensores', autenticado, (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'View', 'telaSensores.html'));
 });
 
 /*
 ###################### INICIALIZAR GASTO DE SENSORES ###################*/
-const iniciarMonitoramento =
-require('./src/services/sensorMonitorService');
-
+const iniciarMonitoramento = require('./src/services/sensorMonitorService');
 iniciarMonitoramento();
-
-
-
-
-
-
-// Middleware: só passa quem está logado
-function autenticado(req, res, next) {
-    if (req.session.usuario) {
-        next();
-    } else {
-        res.redirect('/usuarios/login');
-    }
-}
-
-// Troca as rotas de /painel e /sensores para usar o middleware:
-app.get('/painel', autenticado, (req, res) => {
-    res.sendFile(path.join(__dirname, 'src', 'view', 'telaVisualizacaoGeral.html'));
-});
-
-app.get('/sensores', autenticado, (req, res) => {
-    res.sendFile(path.join(__dirname, 'src', 'view', 'telaSensores.html'));
-});
-
-app.get('/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src', 'view', 'dashboard.html'));
-});
-
-
-
 
 // Inicializa o servidor na porta 3000 (Apenas um único listener)
 app.listen(3000, () => console.log("Servidor rodando em http://localhost:3000"));
