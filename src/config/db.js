@@ -2,12 +2,13 @@ const mysql = require('mysql2');
 
 // Cria o pool de conexões normalmente
 const pool = mysql.createPool({
-    host: 'localhost',
+    host: 'acela.proxy.rlwy.net',
     user: 'root',
-    password:"209740",
-    database: 'tcc',
+    password: 'pGFnAuIxojQbsoIHXjUfyVHWRmMWXdYU',
+    database: 'railway',
+    port: 37397,
     waitForConnections: true,
-    connectionLimit: 10,
+    connectionLimit: 100,
     queueLimit: 0
 });
 
