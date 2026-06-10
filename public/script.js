@@ -25,8 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Captura formulário
     const formEscola = document.getElementById('formCadastroEscola');
-
-
     // Só executa se existir
     if (formEscola) {
 
@@ -340,6 +338,127 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 2000); // Tempo de espera em milissegundos (2000ms)
         });
 
+        // ================================
+        // VERIFICAÇÕES DO PRIMEIRO USUÁRIO
+        // ================================
+
+        // TRAVA O CAMPO FUNÇÃO — sempre Diretor, não pode trocar
+        const selectUsuarioFuncao = document.getElementById('usuario_funcao');
+        selectUsuarioFuncao.value = 'Diretor';
+        selectUsuarioFuncao.disabled = true;
+
+        // VERIFICAÇÃO INPUT NOME DO USUÁRIO
+        const inputUsuarioNome = document.getElementById('usuario_nome');
+
+        inputUsuarioNome.addEventListener('blur', () => {
+            const valorAtual = inputUsuarioNome.value.trim();
+            const tamanho = valorAtual.length;
+
+            if (tamanho > 30) {
+                inputUsuarioNome.value = "";
+                inputUsuarioNome.placeholder = "Nome muito grande";
+                inputUsuarioNome.style.borderColor = "red";
+            } else if (tamanho < 2) {
+                inputUsuarioNome.value = "";
+                inputUsuarioNome.placeholder = "Nome muito pequeno";
+                inputUsuarioNome.style.borderColor = "red";
+            } else {
+                inputUsuarioNome.style.borderColor = "";
+            }
+        });
+
+        // VERIFICAÇÃO INPUT SOBRENOME DO USUÁRIO
+        const inputUsuarioSobrenome = document.getElementById('usuario_sobrenome');
+
+        inputUsuarioSobrenome.addEventListener('blur', () => {
+            const valorAtual = inputUsuarioSobrenome.value.trim();
+            const tamanho = valorAtual.length;
+
+            if (tamanho > 100) {
+                inputUsuarioSobrenome.value = "";
+                inputUsuarioSobrenome.placeholder = "Sobrenome muito grande";
+                inputUsuarioSobrenome.style.borderColor = "red";
+            } else if (tamanho < 2) {
+                inputUsuarioSobrenome.value = "";
+                inputUsuarioSobrenome.placeholder = "Sobrenome muito pequeno";
+                inputUsuarioSobrenome.style.borderColor = "red";
+            } else {
+                inputUsuarioSobrenome.style.borderColor = "";
+            }
+        });
+
+        // VERIFICAÇÃO INPUT CPF DO USUÁRIO
+        const inputUsuarioCpf = document.getElementById('usuario_cpf');
+
+        inputUsuarioCpf.addEventListener('blur', () => {
+            const valorAtual = inputUsuarioCpf.value.trim();
+
+            if (!/^\d{11}$/.test(valorAtual)) {
+                inputUsuarioCpf.value = "";
+                inputUsuarioCpf.placeholder = "CPF inválido (11 dígitos)";
+                inputUsuarioCpf.style.borderColor = "red";
+            } else {
+                inputUsuarioCpf.style.borderColor = "";
+            }
+        });
+
+        // VERIFICAÇÃO INPUT E-MAIL DO USUÁRIO
+        const inputUsuarioEmail = document.getElementById('usuario_email');
+
+        inputUsuarioEmail.addEventListener('invalid', (evento) => {
+            evento.preventDefault();
+            inputUsuarioEmail.style.borderColor = "red";
+            const container = inputUsuarioEmail.parentElement;
+
+            if (!document.getElementById('erro-usuario-email-msg')) {
+                const mensagemErro = document.createElement('span');
+                mensagemErro.id = 'erro-usuario-email-msg';
+                mensagemErro.style.color = 'red';
+                mensagemErro.style.fontSize = '12px';
+                mensagemErro.textContent = ' ❌ Por favor, insira um e-mail válido com @ e domínio.';
+                container.appendChild(mensagemErro);
+            }
+
+            inputUsuarioEmail.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        inputUsuarioEmail.addEventListener('input', () => {
+            inputUsuarioEmail.style.borderColor = "";
+            const msg = document.getElementById('erro-usuario-email-msg');
+            if (msg) msg.remove();
+        });
+
+        // VERIFICAÇÃO INPUT SENHA DO USUÁRIO
+        const inputUsuarioSenha = document.getElementById('usuario_senha');
+
+        inputUsuarioSenha.addEventListener('blur', () => {
+            const valorAtual = inputUsuarioSenha.value;
+
+            if (valorAtual.length < 8) {
+                inputUsuarioSenha.value = "";
+                inputUsuarioSenha.placeholder = "Mínimo 8 caracteres";
+                inputUsuarioSenha.style.borderColor = "red";
+            } else {
+                inputUsuarioSenha.style.borderColor = "";
+            }
+        });
+
+        // VERIFICAÇÃO INPUT CONFIRMAR SENHA DO USUÁRIO
+        const inputUsuarioConfirmarSenha = document.getElementById('usuario_confirmar_senha');
+
+        inputUsuarioConfirmarSenha.addEventListener('blur', () => {
+            const senhaOriginal = inputUsuarioSenha.value;
+            const senhaConfirmada = inputUsuarioConfirmarSenha.value;
+
+            if (senhaConfirmada !== senhaOriginal) {
+                inputUsuarioConfirmarSenha.value = "";
+                inputUsuarioConfirmarSenha.placeholder = "As senhas não coincidem";
+                inputUsuarioConfirmarSenha.style.borderColor = "red";
+            } else {
+                inputUsuarioConfirmarSenha.style.borderColor = "";
+            }
+        });
+
         formEscola.addEventListener('submit', async (event) => {
 
             event.preventDefault();
@@ -362,13 +481,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     cidade: document.getElementById('cidade').value.trim(),
                     cep: document.getElementById('cep').value.trim(),
 
-                    //Telefone 
+                    // Telefone
                     pais: document.getElementById('telefone_pais').value.trim(),
                     ddd: document.getElementById('telefone_ddd').value.trim(),
                     numeroTel: document.getElementById('telefone_numero').value.trim(),
                     tipo: document.getElementById('telefone_tipo').value.trim(),
-                    principal: document.getElementById('telefone_principal').value.trim(),
-                    ativo: document.getElementById('telefone_ativo').value.trim()
+                    principal: document.getElementById('telefone_principal').checked,
+                    ativo: document.getElementById('telefone_ativo').checked,
+
+                    // Primeiro usuário
+                    usuarioNome: document.getElementById('usuario_nome').value.trim(),
+                    usuarioSobrenome: document.getElementById('usuario_sobrenome').value.trim(),
+                    usuarioCpf: document.getElementById('usuario_cpf').value.trim(),
+                    usuarioEmail: document.getElementById('usuario_email').value.trim(),
+                    usuarioSenha: document.getElementById('usuario_senha').value.trim()
                 };
 
 
@@ -387,7 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     alert('Cadastrado com sucesso!');
                     formEscola.reset();
-                    window.location.href = '/usuarios/liberar-acesso-cadastro-usuario';
+                    window.location.href = '/usuarios/login';
 
 
 

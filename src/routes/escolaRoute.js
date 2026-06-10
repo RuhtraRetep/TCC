@@ -37,18 +37,25 @@ router.post('/cadastro-escola', async (req, res) => {
 
         // ENDEREÇO
         logradouro,
-        numero, // Este é o número do endereço
+        numero,
         bairro,
         cidade,
         cep,
 
-        // TELEFONE (CORRIGIDO: nomes idênticos ao objeto 'dados' do front-end)
+        // TELEFONE
         pais,
         ddd,
-        numeroTel, // Alterado de TelNumero para numeroTel para bater com o front-end
+        numeroTel,
         tipo,
         principal,
-        ativo
+        ativo,
+
+        // PRIMEIRO USUÁRIO
+        usuarioNome,
+        usuarioSobrenome,
+        usuarioCpf,
+        usuarioEmail,
+        usuarioSenha
     } = req.body;
 
     // VALIDAÇÃO
@@ -60,9 +67,13 @@ router.post('/cadastro-escola', async (req, res) => {
         !logradouro ||
         !bairro ||
         !cidade ||
-        !cep
+        !cep ||
+        !usuarioNome ||
+        !usuarioSobrenome ||
+        !usuarioCpf ||
+        !usuarioEmail ||
+        !usuarioSenha
     ) {
-
         return res.status(400).json({
             sucesso: false,
             erro: 'Preencha todos os campos obrigatórios.'
@@ -82,7 +93,7 @@ router.post('/cadastro-escola', async (req, res) => {
 
             endereco: {
                 logradouro,
-                numero, // Número do endereço
+                numero,
                 bairro,
                 cidade,
                 cep
@@ -91,18 +102,24 @@ router.post('/cadastro-escola', async (req, res) => {
             telefone: {
                 pais,
                 ddd,
-                numero: numeroTel, // CORRIGIDO: Passando o número do telefone correto aqui
+                numero: numeroTel,
                 tipo,
                 principal,
                 ativo
+            },
+
+            primeiroUsuario: {
+                nome:      usuarioNome,
+                sobrenome: usuarioSobrenome,
+                cpf:       usuarioCpf,
+                email:     usuarioEmail,
+                senha:     usuarioSenha,
+                funcao:    'Diretor'
             }
         };
 
         // CHAMA O SERVICE
-        const novaEscola =
-            await escolaService.cadastroEscolaCompleto(
-                dadosEscola
-            );
+        const novaEscola = await escolaService.cadastroEscolaCompleto(dadosEscola);
 
         return res.status(201).json({
             sucesso: true,

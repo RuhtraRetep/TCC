@@ -1,39 +1,93 @@
 const express = require('express');
 const path = require('path');
 const router = express.Router();
+const usuarioService = require('../services/usuarioService');
+
+router.post('/cadastro-usuario', async (req, res) => {
+ 
+    const {
+        // DADOS PESSOAIS
+        nome,
+        sobrenome,
+        cpf,
+        telefone,
+ 
+        // VÍNCULO ESCOLAR
+        cargo,
+        modulos,
+ 
+        // CREDENCIAIS
+        email,
+        senha
+    } = req.body;
+ 
+    // VALIDAÇÃO DOS CAMPOS OBRIGATÓRIOS
+    if (!nome || !sobrenome || !email || !senha) {
+        return res.status(400).json({
+            sucesso: false,
+            erro: 'Preencha todos os campos obrigatórios: nome, sobrenome, e-mail e senha.'
+        });
+    }
+ 
+    // OBJETO COMPLETO PARA O SERVICE
+    const dadosUsuario = {
+        nome,
+        sobrenome,
+        cpf:      cpf      || null,
+        telefone: telefone  || null,
+        cargo:    cargo     || null,
+        modulos:  Array.isArray(modulos) ? modulos : [],
+        email,
+        senha
+    };
+ 
+    try {
+ 
+        const novoUsuario = await usuarioService.cadastroUsuario(dadosUsuario);
+ 
+        return res.status(201).json({
+            sucesso: true,
+            mensagem: 'Usuário cadastrado com sucesso.',
+            dados: novoUsuario
+        });
+ 
+    } catch (error) {
+ 
+        return res.status(400).json({
+            sucesso: false,
+            erro: error.message
+        });
+    }
+});
 
 
-// 🛠️ FUNÇÃO DE VERIFICAÇÃO (Adicionada diretamente para corrigir o ReferenceError)
+
+// Não permite qualquer um entrar na tela de Cadastro de usuário
 function verificarAcesso(req, res, next) {
     if (req.session && req.session.podeAcessarCadastro) {
         return next(); // Permite o acesso se a sessão for válida
     }
-    // Se tentar entrar direto sem passar pelo botão, manda para a tela inicial
     res.redirect('/'); 
 }
-
-// Permite entrar no cadastro a partir da página inicial
 router.get('/liberar-acesso-cadastro-usuario', (req, res) => {
     req.session.podeAcessarCadastro = true;
     res.redirect('/usuarios/cadastro-usuario'); 
 });
 
-// Rota para a página de Cadastro de Usuário (HTML)
 router.get('/cadastro-usuario', verificarAcesso, (req, res) => {
     req.session.podeAcessarCadastro = false; // Bloqueia reentradas diretas pela URL
     
     // Caminho ajustado para 'View' (V maiúsculo) e arquivo 'cadastroUsuario.html'
     res.sendFile(path.join(__dirname, '..', 'View', 'cadastroUsuario.html'));
 });
+//---------------------------------------------------------
 
 
 
-// Rota para servir a página de login
+// Logar usuário
 router.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'view', 'loginUsuario.html'));
 });
-
-// Rota POST de autenticação
 router.post('/login', async (req, res) => {
     const { emailEscola, codigoInep, emailUsuario, senha } = req.body;
 
@@ -78,6 +132,8 @@ router.get('/logout', (req, res) => {
         res.redirect('/');
     });
 });
+
+// -----------------------------------------------------------------------------
 
 router.get('/me', (req, res) => {
     if (!req.session.usuario) {

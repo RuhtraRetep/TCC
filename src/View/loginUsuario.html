@@ -1,184 +1,188 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login — SGE Escolar</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
-  <link rel="stylesheet" href="/login.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="/login.css" />
 </head>
+
 <body>
 
-<div style="position:relative;">
-  <nav class="nav">
-    <div class="nav-brand">
-      <span class="nav-logo">SGE <span>Escolar</span></span>
-      <span class="nav-status">Online</span>
-    </div>
-    <div class="nav-links">
-      <a href="/">Início</a>
-      <a href="/escolas/liberar-acesso-cadastro">Cadastre sua Escola</a>
-    </div>
-  </nav>
-
-  <div class="page">
-
-    <!-- Painel Esquerdo -->
-    <div class="left">
-      <div class="tag">Sistema de Gerenciamento Escolar</div>
-      <h2>Gerencie sua escola<br><em>com inteligência</em></h2>
-      <p>Monitore sensores, gerencie ambientes e acompanhe o consumo de água e energia da sua instituição — tudo em um só lugar.</p>
-      <div class="badges">
-        <div class="badge">
-          <div class="badge-ico"><i class="ti ti-building-school"></i></div>
-          <span class="badge-text">Cadastro e gestão de instituições escolares</span>
-        </div>
-        <div class="badge">
-          <div class="badge-ico"><i class="ti ti-activity"></i></div>
-          <span class="badge-text">Monitoramento de sensores em tempo real</span>
-        </div>
-        <div class="badge">
-          <div class="badge-ico"><i class="ti ti-shield-check"></i></div>
-          <span class="badge-text">Controle de acessos e permissões seguro</span>
-        </div>
+  <div style="position:relative;">
+    <nav class="nav">
+      <div class="nav-brand">
+        <span class="nav-logo">SGE <span>Escolar</span></span>
+        <span class="nav-status">Online</span>
       </div>
-    </div>
+      <div class="nav-links">
+        <a href="/">Início</a>
+        <a href="/escolas/liberar-acesso-cadastro">Cadastre sua Escola</a>
+      </div>
+    </nav>
 
-    <!-- Painel Direito -->
-    <div class="right">
-      <div class="form-wrap">
-        <h1>Entrar no sistema</h1>
-        <p class="sub">Informe os dados da sua escola e suas credenciais</p>
+    <div class="page">
 
-        <!-- Divisor: Dados da Escola -->
-        <p style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.35);
-                  text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">
-          Identificação da Escola
-        </p>
-
-        <div class="fg">
-          <label>E-mail da Escola</label>
-          <input type="email" id="emailEscola" placeholder="escola@contato.com.br"/>
-        </div>
-
-        <div class="fg">
-          <label>Código INEP</label>
-          <input type="text" id="codigoInep" placeholder="Ex: 12345678" maxlength="8"/>
-        </div>
-
-        <!-- Divisor: Dados do Usuário -->
-        <p style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.35);
-                  text-transform:uppercase;letter-spacing:1px;margin:18px 0 10px;">
-          Suas Credenciais
-        </p>
-
-        <div class="fg">
-          <label>E-mail do Usuário</label>
-          <input type="email" id="emailUsuario" placeholder="seu@email.com.br"/>
-        </div>
-
-        <div class="fg">
-          <label>Senha</label>
-          <div class="irel">
-            <input type="password" id="senha" placeholder="••••••••"/>
-            <i class="ti ti-eye" id="eyeico" onclick="togglePass()" aria-label="Mostrar senha"></i>
+      <!-- Painel Esquerdo -->
+      <div class="left">
+        <div class="tag">Sistema de Gerenciamento Escolar</div>
+        <h2>Gerencie sua escola<br><em>com inteligência</em></h2>
+        <p>Monitore sensores, gerencie ambientes e acompanhe o consumo de água e energia da sua instituição — tudo em um
+          só lugar.</p>
+        <div class="badges">
+          <div class="badge">
+            <div class="badge-ico"><i class="ti ti-building-school"></i></div>
+            <span class="badge-text">Cadastro e gestão de instituições escolares</span>
+          </div>
+          <div class="badge">
+            <div class="badge-ico"><i class="ti ti-activity"></i></div>
+            <span class="badge-text">Monitoramento de sensores em tempo real</span>
+          </div>
+          <div class="badge">
+            <div class="badge-ico"><i class="ti ti-shield-check"></i></div>
+            <span class="badge-text">Controle de acessos e permissões seguro</span>
           </div>
         </div>
-
-        <div class="row-opts">
-          <label class="remember">
-            <input type="checkbox"/> Lembrar acesso
-          </label>
-          <a class="forgot" href="#">Esqueci minha senha</a>
-        </div>
-
-        <div id="erro-login" class="erro-msg" style="display:none;"></div>
-
-        <button class="btn-login" onclick="doLogin()" id="btnLogin">
-          <i class="ti ti-login"></i>
-          Entrar
-        </button>
-
-        <p class="register">Ainda não tem conta? <a href="cadastroEscola.html">Cadastre sua escola</a></p>
-
-        <p class="footer-note">
-          Ao entrar, você concorda com os<br/>
-          <a href="#">Termos de Uso</a> e <a href="#">Política de Privacidade</a>
-        </p>
       </div>
+
+      <!-- Painel Direito -->
+      <div class="right">
+        <div class="form-wrap">
+          <h1>Entrar no sistema</h1>
+          <p class="sub">Informe os dados da sua escola e suas credenciais</p>
+
+          <!-- Divisor: Dados da Escola -->
+          <p style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.35);
+                  text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">
+            Identificação da Escola
+          </p>
+
+          <div class="fg">
+            <label>E-mail da Escola</label>
+            <input type="email" id="emailEscola" placeholder="escola@contato.com.br" />
+          </div>
+
+          <div class="fg">
+            <label>Código INEP</label>
+            <input type="text" id="codigoInep" placeholder="Ex: 12345678" maxlength="8" />
+          </div>
+
+          <!-- Divisor: Dados do Usuário -->
+          <p style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.35);
+                  text-transform:uppercase;letter-spacing:1px;margin:18px 0 10px;">
+            Suas Credenciais
+          </p>
+
+          <div class="fg">
+            <label>E-mail do Usuário</label>
+            <input type="email" id="emailUsuario" placeholder="seu@email.com.br" />
+          </div>
+
+          <div class="fg">
+            <label>Senha</label>
+            <div class="irel">
+              <input type="password" id="senha" placeholder="••••••••" />
+              <i class="ti ti-eye" id="eyeico" onclick="togglePass()" aria-label="Mostrar senha"></i>
+            </div>
+          </div>
+
+          <div class="row-opts">
+            <label class="remember">
+              <input type="checkbox" /> Lembrar acesso
+            </label>
+            <a class="forgot" href="#">Esqueci minha senha</a>
+          </div>
+
+          <div id="erro-login" class="erro-msg" style="display:none;"></div>
+
+          <button class="btn-login" onclick="doLogin()" id="btnLogin">
+            <i class="ti ti-login"></i>
+            Entrar
+          </button>
+
+          <p class="register">Ainda não tem conta? <a href="/escolas/liberar-acesso-cadastro">Cadastre sua escola</a></p>
+
+          <p class="footer-note">
+            Ao entrar, você concorda com os<br />
+            <a href="#">Termos de Uso</a> e <a href="#">Política de Privacidade</a>
+          </p>
+        </div>
+      </div>
+
     </div>
-
   </div>
-</div>
 
-<script>
-  function togglePass() {
-    const i  = document.getElementById('senha');
-    const ic = document.getElementById('eyeico');
-    i.type = i.type === 'password' ? 'text' : 'password';
-    ic.className = i.type === 'password' ? 'ti ti-eye' : 'ti ti-eye-off';
-  }
-
-  function mostrarErro(msg) {
-    const el = document.getElementById('erro-login');
-    el.textContent = msg;
-    el.style.display = 'block';
-  }
-
-  function esconderErro() {
-    document.getElementById('erro-login').style.display = 'none';
-  }
-
-  async function doLogin() {
-    esconderErro();
-
-    const emailEscola  = document.getElementById('emailEscola').value.trim();
-    const codigoInep   = document.getElementById('codigoInep').value.trim();
-    const emailUsuario = document.getElementById('emailUsuario').value.trim();
-    const senha        = document.getElementById('senha').value;
-    const btn          = document.getElementById('btnLogin');
-
-    // Validação local
-    if (!emailEscola || !codigoInep || !emailUsuario || !senha) {
-      mostrarErro('Preencha todos os campos para continuar.');
-      return;
+  <script>
+    function togglePass() {
+      const i = document.getElementById('senha');
+      const ic = document.getElementById('eyeico');
+      i.type = i.type === 'password' ? 'text' : 'password';
+      ic.className = i.type === 'password' ? 'ti ti-eye' : 'ti ti-eye-off';
     }
 
-    if (codigoInep.length !== 8) {
-      mostrarErro('O código INEP deve ter 8 dígitos.');
-      return;
+    function mostrarErro(msg) {
+      const el = document.getElementById('erro-login');
+      el.textContent = msg;
+      el.style.display = 'block';
     }
 
-    btn.disabled = true;
-    btn.innerHTML = '<i class="ti ti-loader-2"></i> Entrando...';
+    function esconderErro() {
+      document.getElementById('erro-login').style.display = 'none';
+    }
 
-    try {
-      const res = await fetch('/usuarios/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ emailEscola, codigoInep, emailUsuario, senha })
-      });
+    async function doLogin() {
+      esconderErro();
 
-      const data = await res.json();
+      const emailEscola = document.getElementById('emailEscola').value.trim();
+      const codigoInep = document.getElementById('codigoInep').value.trim();
+      const emailUsuario = document.getElementById('emailUsuario').value.trim();
+      const senha = document.getElementById('senha').value;
+      const btn = document.getElementById('btnLogin');
 
-      if (res.ok) {
-        window.location.href = '/painel';
-      } else {
-        mostrarErro(data.erro || 'Dados incorretos. Verifique e tente novamente.');
+      // Validação local
+      if (!emailEscola || !codigoInep || !emailUsuario || !senha) {
+        mostrarErro('Preencha todos os campos para continuar.');
+        return;
       }
-    } catch (err) {
-      mostrarErro('Erro ao conectar com o servidor. Tente novamente.');
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = '<i class="ti ti-login"></i> Entrar';
-    }
-  }
 
-  // Login ao pressionar Enter
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') doLogin();
-  });
-</script>
+      if (codigoInep.length !== 8) {
+        mostrarErro('O código INEP deve ter 8 dígitos.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="ti ti-loader-2"></i> Entrando...';
+
+      try {
+        const res = await fetch('/usuarios/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ emailEscola, codigoInep, emailUsuario, senha })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          window.location.href = '/painel';
+        } else {
+          mostrarErro(data.erro || 'Dados incorretos. Verifique e tente novamente.');
+        }
+      } catch (err) {
+        mostrarErro('Erro ao conectar com o servidor. Tente novamente.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="ti ti-login"></i> Entrar';
+      }
+    }
+
+    // Login ao pressionar Enter
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doLogin();
+    });
+  </script>
 
 </body>
+
 </html>
