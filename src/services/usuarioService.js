@@ -1,6 +1,6 @@
 const db = require('../config/db');
 const bcrypt = require('bcrypt');
- 
+
 const SALT_ROUNDS = 10;
 
 
@@ -9,6 +9,9 @@ class UsuarioService {
 
     async cadastroUsuario(dadosUsuario) {
 
+        console.log("=================================");
+        console.log("Dados recebidos:", dadosUsuario);
+        console.trace("Origem da chamada");
         // Abre conexão
         const connection = await db.getConnection();
 
@@ -24,10 +27,7 @@ class UsuarioService {
             // =========================
             // CADASTRO DO USUÁRIO
             // =========================
-            const queryUsuario = `
-            INSERT INTO Usuarios (nome, sobrenome, cpf, telefone, cargo, email, senha)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        `;
+            const queryUsuario = `INSERT INTO Usuarios (nome_usuario, sobrenome_usuario, cpf, email, funcao, senha, fk_id_escola)VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
             const [resultadoUsuario] = await connection.execute(
                 queryUsuario,
@@ -35,40 +35,20 @@ class UsuarioService {
                     dadosUsuario.nome || null,
                     dadosUsuario.sobrenome || null,
                     dadosUsuario.cpf || null,
-                    dadosUsuario.telefone || null,
-                    dadosUsuario.cargo || null,
                     dadosUsuario.email || null,
-                    senhaHash
+                    dadosUsuario.cargo || null,
+                    senhaHash,
+                    dadosUsuario.fk_id_escola || null
                 ]
             );
 
-            // Pega o ID do usuário criado para usar nos módulos
-            const fk_id_usuario = resultadoUsuario.insertId;
-
-            // =========================
-            // CADASTRO DOS MÓDULOS DE ACESSO
-            // =========================
-            if (dadosUsuario.modulos && dadosUsuario.modulos.length > 0) {
-
-                const queryModulo = `
-                INSERT INTO UsuarioModulos (fk_id_usuario, modulo)
-                VALUES (?, ?)
-            `;
-
-                for (const modulo of dadosUsuario.modulos) {
-                    await connection.execute(queryModulo, [fk_id_usuario, modulo]);
-                }
-            }
-
-            // Salva definitivamente todas as operações se nenhuma falhar
             await connection.commit();
 
             return {
                 sucesso: true,
                 mensagem: 'Usuário cadastrado com sucesso.',
-                idUsuario: fk_id_usuario
+                idUsuario: resultadoUsuario.insertId
             };
-
         } catch (error) {
 
             // Desfaz tudo se der erro
@@ -147,6 +127,8 @@ class UsuarioService {
             connection.release();
         }
     }
+
+
 }
 
 module.exports = new UsuarioService();

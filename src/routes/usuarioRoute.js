@@ -5,8 +5,10 @@ const usuarioService = require('../services/usuarioService');
 
 router.post('/cadastro-usuario', async (req, res) => {
  
+    const fk_id_escola = req.session.usuario.escolaId;
+
     const {
-        // DADOS PESSOAIS
+        // DADOS PESSOAIs
         nome,
         sobrenome,
         cpf,
@@ -36,10 +38,13 @@ router.post('/cadastro-usuario', async (req, res) => {
         cpf:      cpf      || null,
         telefone: telefone  || null,
         cargo:    cargo     || null,
-        modulos:  Array.isArray(modulos) ? modulos : [],
         email,
-        senha
+        senha,
+        fk_id_escola
     };
+
+    console.log("fk_id_escola:", fk_id_escola);
+    console.log("dadosUsuario:", dadosUsuario);
  
     try {
  
@@ -141,5 +146,7 @@ router.get('/me', (req, res) => {
     }
     return res.status(200).json(req.session.usuario);
 });
+
+
 
 module.exports = router;
