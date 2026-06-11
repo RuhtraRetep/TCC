@@ -33,9 +33,6 @@
     <div class="steps-bar">
       <div class="st active"><div class="st-dot">1</div> Dados pessoais</div>
       <div class="st-line"></div>
-      <div class="st"><div class="st-dot">2</div> Acesso</div>
-      <div class="st-line"></div>
-      <div class="st"><div class="st-dot">3</div> Confirmação</div>
     </div>
 
     <div class="sge-card">
@@ -64,8 +61,7 @@
                 <option value="Professor">Professor</option>
                 <option value="Manutencao">Manutenção</option>
                 <option value="Financeiro">Financeiro</option>
-                <option value="Diretor">Diretor</option>
-            </select>'
+            </select>
           </div>
         </div>
         <div class="field">
@@ -108,7 +104,7 @@
         </div>
         <div class="check-row">
           <input type="checkbox" id="terms">
-          <span>Li e concordo com os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a> do SGE-TOC.</span>
+          <span>Li e concordo com os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a> do SGE-Escolar.</span>
         </div>
       </div>
 
@@ -240,8 +236,31 @@
         const json = await res.json();
 
         if (json.sucesso) {
-          alert('Cadastro realizado com sucesso!');
-        } else {
+
+    alert('Cadastro realizado com sucesso!');
+
+    // Limpa os campos
+    document.getElementById('fn').value = '';
+    document.getElementById('ln').value = '';
+    document.getElementById('cpf').value = '';
+    document.getElementById('cargo').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('pwd').value = '';
+    document.getElementById('pwd2').value = '';
+    document.getElementById('terms').checked = false;
+
+    // Limpa módulos selecionados
+    document.querySelectorAll('#modulos .tag').forEach(tag => {
+        tag.classList.remove('on');
+    });
+
+    // Limpa barra de força da senha
+    for (let i = 1; i <= 4; i++) {
+        document.getElementById('s' + i).className = 'seg';
+    }
+
+}
+        else {
           alert('Erro: ' + json.erro);
         }
       } catch (err) {
