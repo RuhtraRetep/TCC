@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro de Usuário — SGE-TOC</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/cadastroUsuario.css">
@@ -33,9 +33,6 @@
     <div class="steps-bar">
       <div class="st active"><div class="st-dot">1</div> Dados pessoais</div>
       <div class="st-line"></div>
-      <div class="st"><div class="st-dot">2</div> Acesso</div>
-      <div class="st-line"></div>
-      <div class="st"><div class="st-dot">3</div> Confirmação</div>
     </div>
 
     <div class="sge-card">
@@ -60,10 +57,10 @@
           <div class="field">
             <label for="cargo">Cargo / Função</label>
             <select id="cargo" name="cargo">
-              <option value="">Selecione</option>
-              <option value="Professor(a)">Professor(a)</option>
-              <option value="Manutenção">Manutenção</option>
-              <option value="Financeiro">Financeiro</option>
+                <option value="">Selecione</option>
+                <option value="Professor">Professor</option>
+                <option value="Manutencao">Manutenção</option>
+                <option value="Financeiro">Financeiro</option>
             </select>
           </div>
         </div>
@@ -107,7 +104,7 @@
         </div>
         <div class="check-row">
           <input type="checkbox" id="terms">
-          <span>Li e concordo com os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a> do SGE-TOC.</span>
+          <span>Li e concordo com os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a> do SGE-Escolar.</span>
         </div>
       </div>
 
@@ -163,11 +160,12 @@
     }
 
     // Módulos permitidos por cargo
-    const modulosPorCargo = {
-      'Professor(a)': ['Monitoramento', 'Relatórios'],
-      'Manutenção':   ['Sensores'],
-      'Financeiro':   ['Monitoramento', 'Sensores', 'Relatórios']
-    };
+  const modulosPorCargo = {
+  'Professor': ['Monitoramento', 'Relatórios'],
+  'Manutencao': ['Sensores'],
+  'Financeiro': ['Monitoramento', 'Sensores', 'Relatórios'],
+  'Diretor': ['Monitoramento', 'Sensores', 'Relatórios']
+  };
 
     function atualizarModulos() {
       const cargo = document.getElementById('cargo').value;
@@ -238,8 +236,31 @@
         const json = await res.json();
 
         if (json.sucesso) {
-          alert('Cadastro realizado com sucesso!');
-        } else {
+
+    alert('Cadastro realizado com sucesso!');
+
+    // Limpa os campos
+    document.getElementById('fn').value = '';
+    document.getElementById('ln').value = '';
+    document.getElementById('cpf').value = '';
+    document.getElementById('cargo').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('pwd').value = '';
+    document.getElementById('pwd2').value = '';
+    document.getElementById('terms').checked = false;
+
+    // Limpa módulos selecionados
+    document.querySelectorAll('#modulos .tag').forEach(tag => {
+        tag.classList.remove('on');
+    });
+
+    // Limpa barra de força da senha
+    for (let i = 1; i <= 4; i++) {
+        document.getElementById('s' + i).className = 'seg';
+    }
+
+}
+        else {
           alert('Erro: ' + json.erro);
         }
       } catch (err) {
