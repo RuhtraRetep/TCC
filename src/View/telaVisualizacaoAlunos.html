@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <!-- QR Code library -->
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -410,37 +410,19 @@
 
 
 <script>
-  /* ── Inicialização Geral ── */
   window.addEventListener('load', () => {
 
     // 1. GERAÇÃO DO QR CODE
     const urlPublica = window.location.origin + '/mobile';
-    document.getElementById('qrImg').src = 'urlPublica';
-
-    setTimeout(() => {
-      QRCode.toCanvas(
-        document.getElementById('qrCanvas'),
-        urlPublica,
-        {
-          width: 176,
-          margin: 1,
-          color: {
-            dark: '#000000',
-            light: '#ffffff'
-          }
-        },
-        (err) => {
-          if (err) console.error('Erro ao gerar QR Code:', err);
-        }
-      );
-    }, 200);
+    const encoded = encodeURIComponent(urlPublica);
+    document.getElementById('qrImg').src =
+      `https://api.qrserver.com/v1/create-qr-code/?size=176x176&data=${encoded}&bgcolor=ffffff&color=000000&margin=10`;
 
     // 2. CARREGAMENTO DOS DADOS ASSÍNCRONOS
     carregarUsuario();
     carregarResumo();
   });
 
-  /* ── Carregar dados resumidos para exibição nos cards ── */
   async function carregarResumo() {
     try {
       const res  = await fetch('/sensores/dashboard?periodo=hoje');
@@ -448,24 +430,21 @@
       if(!data.sucesso) return;
 
       const ambientes = data.ambientes || [];
-      const tA = ambientes.reduce((s,a)=>s+ +a.valor_agua,  0);
-      const tE = ambientes.reduce((s,a)=>s+ +a.valor_energia,0);
+      const tA = ambientes.reduce((s,a) => s + +a.valor_agua,   0);
+      const tE = ambientes.reduce((s,a) => s + +a.valor_energia, 0);
 
-      const fmt = v => Number(v).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+      const fmt = v => Number(v).toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
       document.getElementById('iValAgua').textContent    = fmt(tA);
       document.getElementById('iValEnergia').textContent = fmt(tE);
       document.getElementById('iAmbientes').textContent  = ambientes.length;
 
     } catch (err) {
-      console.warn('Usando fallback do painel de resumo (API offline):', err);
-      // Demo fallback caso a rota ainda não responda
       document.getElementById('iValAgua').textContent    = 'R$ 148,30';
       document.getElementById('iValEnergia').textContent = 'R$ 234,70';
       document.getElementById('iAmbientes').textContent  = '6';
     }
   }
 
-  /* ── Carregar info do usuário na nav ── */
   async function carregarUsuario() {
     try {
       const res = await fetch('/usuarios/me');
@@ -475,9 +454,8 @@
       document.getElementById('navNome').textContent   = nome;
       document.getElementById('navEscola').textContent = data.nomeEscola || '';
       document.getElementById('navAvatar').textContent =
-        nome.split(' ').map(n=>n[0]).slice(0,2).join('').toUpperCase();
+        nome.split(' ').map(n => n[0]).slice(0,2).join('').toUpperCase();
     } catch (err) {
-      console.warn('Usando fallback do usuário (API offline):', err);
       document.getElementById('navNome').textContent = 'Usuário';
     }
   }
