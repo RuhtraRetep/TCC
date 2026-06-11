@@ -124,6 +124,54 @@ router.get('/gastos', autenticado, async (req, res) => {
     }
 });
 
+// DASHBOARD PÚBLICO (sem autenticação) — usado na tela de alunos
+router.get('/dashboard-publico/:escolaId', async (req, res) => {
+    try {
+        const escolaId = req.params.escolaId;
+        const periodo = req.query.periodo || 'hoje';
+
+        let filtroData = '';
+        if (periodo === 'hoje') {
+            filtroData = 'AND DATE(h.data_registro) = CURDATE()';
+        } else if (periodo === '7dias') {
+            filtroData = 'AND h.data_registro >= DATE_SUB(NOW(), INTERVAL 7 DAY)';
+        } else if (periodo === '30dias') {
+            filtroData = 'AND h.data_registro >= DATE_SUB(NOW(), INTERVAL 30 DAY)';
+        } else if (periodo === '90dias') {
+            filtroData = 'AND h.data_registro >= DATE_SUB(NOW(), INTERVAL 90 DAY)';
+        }
+
+        const [ambientes] = await db.execute(`
+            SELECT a.id, a.nome, a.tipo,
+                COALESCE(SUM(h.valor_agua), 0) AS valor_agua,
+                COALESCE(SUM(h.valor_energia), 0) AS valor_energia,
+                COALESCE(SUM(h.total), 0) AS total
+            FROM ambientes a
+            LEFT JOIN historico_gastos h ON h.ambiente_id = a.id ${filtroData}
+            WHERE a.fk_id_escola = ?
+            GROUP BY a.id, a.nome, a.tipo
+            ORDER BY total DESC
+        `, [escolaId]);
+
+        const [historico] = await db.execute(`
+            SELECT DATE(h.data_registro) AS dia,
+                COALESCE(SUM(h.valor_agua), 0) AS valor_agua,
+                COALESCE(SUM(h.valor_energia), 0) AS valor_energia,
+                COALESCE(SUM(h.total), 0) AS total
+            FROM historico_gastos h
+            INNER JOIN ambientes a ON a.id = h.ambiente_id
+            WHERE a.fk_id_escola = ? ${filtroData}
+            GROUP BY DATE(h.data_registro)
+            ORDER BY dia ASC
+        `, [escolaId]);
+
+        return res.status(200).json({ sucesso: true, ambientes, historico });
+
+    } catch (error) {
+        return res.status(500).json({ sucesso: false, erro: error.message });
+    }
+});
+
 // DASHBOARD REAL DO BANCO
 router.get('/dashboard', autenticado, async (req, res) => {
     try {

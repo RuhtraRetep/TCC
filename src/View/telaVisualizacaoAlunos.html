@@ -425,7 +425,8 @@
 
   async function carregarResumo() {
     try {
-      const res  = await fetch('/sensores/dashboard?periodo=hoje');
+      const escolaId = window.location.pathname.split('/').pop();
+      const res  = await fetch(`/sensores/dashboard-publico/${escolaId}?periodo=hoje`);
       const data = await res.json();
       if(!data.sucesso) return;
 
@@ -443,7 +444,7 @@
       document.getElementById('iValEnergia').textContent = 'R$ 234,70';
       document.getElementById('iAmbientes').textContent  = '6';
     }
-  }
+}
 
   async function carregarUsuario() {
     try {

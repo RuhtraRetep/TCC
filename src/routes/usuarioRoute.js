@@ -87,7 +87,13 @@ router.get('/cadastro-usuario', verificarAcesso, (req, res) => {
 });
 //---------------------------------------------------------
 
-router.get('/alunos', (req, res) => {
+router.get('/alunos', autenticado, (req, res) => {
+    const escolaId = req.session.usuario.escolaId;
+    // Redireciona com o ID na URL
+    res.redirect(`/alunos-publico/${escolaId}`);
+});
+
+router.get('/alunos-publico/:escolaId', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'View', 'telaVisualizacaoAlunos.html'));
 });
 
