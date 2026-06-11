@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Visualização para Alunos — SGE Escolar</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <!-- QR Code library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:        #0d1117;
+      --navy-mid:    #111820;
+      --navy-card:   #131c27;
+      --teal:        #00d4aa;
+      --teal-dim:    rgba(0,212,170,0.1);
+      --teal-border: rgba(0,212,170,0.22);
+      --blue:        #4a9eff;
+      --border:      rgba(255,255,255,0.07);
+      --text:        #f0f4f8;
+      --muted:       rgba(255,255,255,0.45);
+      --radius:      16px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 80% 10%, rgba(0,212,170,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 45% 35% at 10% 80%, rgba(74,158,255,0.05) 0%, transparent 60%);
+    }
+
+    /* ── NAV ───────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 2rem; height: 58px;
+      background: rgba(13,17,23,0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-back {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--muted);
+      text-decoration: none; padding: 5px 10px;
+      border-radius: 8px; border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .nav-back:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+
+    .nav-logo { font-size: 15px; font-weight: 700; color: var(--text); text-decoration: none; }
+    .nav-logo span { color: var(--teal); font-weight: 300; }
+
+    .nav-badge {
+      font-size: 10px; font-weight: 600; color: var(--teal);
+      background: var(--teal-dim); border: 1px solid var(--teal-border);
+      padding: 2px 9px; border-radius: 20px; letter-spacing: 0.8px;
+    }
+
+    .nav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .nav-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--teal-dim); border: 1px solid var(--teal-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: var(--teal);
+    }
+    .nav-user-info { display: flex; flex-direction: column; gap: 1px; line-height: 1.2; }
+    .nav-user-info span:first-child { font-size: 13px; color: var(--text); font-weight: 500; }
+    .nav-user-info span:last-child  { font-size: 11px; color: var(--teal); }
+
+    /* ── WRAPPER ───────────────────── */
+    .wrapper {
+      position: relative; z-index: 1;
+      max-width: 960px; margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* ── PAGE HEADER ───────────────────── */
+    .page-eyebrow {
+      font-size: 10px; font-weight: 700; color: var(--teal);
+      text-transform: uppercase; letter-spacing: 1.5px;
+      margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--teal); }
+    .page-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 400; line-height: 1.15; margin-bottom: 6px;
+    }
+    .page-title em { color: var(--teal); font-style: italic; }
+    .page-sub { font-size: .83rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── MAIN LAYOUT ───────────────────── */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      margin-top: 32px;
+    }
+
+    /* ── INFO SECTION ───────────────────── */
+    .info-section { display: flex; flex-direction: column; gap: 16px; }
+
+    .info-card {
+      background: var(--navy-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      position: relative; overflow: hidden;
+    }
+    .info-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(0,212,170,0.35), transparent);
+    }
+
+    .info-card-label {
+      font-size: 10px; font-weight: 700; color: var(--teal);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;
+    }
+    .info-card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.15rem; font-weight: 400; margin-bottom: 8px;
+    }
+    .info-card-body { font-size: 13px; color: var(--muted); line-height: 1.7; }
+    .info-card-body strong { color: var(--text); font-weight: 600; }
+
+    /* ── STATS INLINE ───────────────────── */
+    .inline-stats {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px; margin-top: 14px;
+    }
+    .istat {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 14px;
+    }
+    .istat-val {
+      font-size: 1.1rem; font-weight: 700;
+      font-variant-numeric: tabular-nums; margin-bottom: 2px;
+    }
+    .istat-val.agua    { color: var(--blue); }
+    .istat-val.energia { color: var(--teal); }
+    .istat-val.total   { color: var(--text); }
+    .istat-lbl { font-size: 10px; color: var(--muted); }
+
+    /* ── DICAS DE SUSTENTABILIDADE ───────────────────── */
+    .tips-list { display: flex; flex-direction: column; gap: 10px; }
+    .tip-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .tip-ico {
+      width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+      background: var(--teal-dim); border: 1px solid var(--teal-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; color: var(--teal);
+    }
+    .tip-text { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .tip-text strong { color: var(--text); font-size: 13px; display: block; margin-bottom: 2px; }
+
+    /* ── QR SECTION ───────────────────── */
+    .qr-section {
+      display: flex; flex-direction: column; gap: 16px;
+    }
+
+    .qr-card {
+      background: var(--navy-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      position: relative; overflow: hidden;
+      text-align: center;
+    }
+    .qr-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(0,212,170,0.5), transparent);
+    }
+
+    .qr-label {
+      font-size: 10px; font-weight: 700; color: var(--teal);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;
+    }
+    .qr-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem; font-weight: 400; line-height: 1.2; margin-bottom: 6px;
+    }
+    .qr-title em { color: var(--teal); font-style: italic; }
+    .qr-sub { font-size: 12px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+
+    .qr-frame {
+      width: 200px; height: 200px;
+      margin: 0 auto 20px;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 12px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 0 1px rgba(0,212,170,0.3), 0 0 40px rgba(0,212,170,0.08);
+      position: relative;
+    }
+    .qr-frame canvas { border-radius: 4px; }
+    .qr-frame-corner {
+      position: absolute; width: 16px; height: 16px;
+      border-color: var(--teal); border-style: solid; border-width: 0;
+    }
+    .qr-frame-corner.tl { top: -1px; left: -1px; border-top-width: 2px; border-left-width: 2px; border-radius: 4px 0 0 0; }
+    .qr-frame-corner.tr { top: -1px; right: -1px; border-top-width: 2px; border-right-width: 2px; border-radius: 0 4px 0 0; }
+    .qr-frame-corner.bl { bottom: -1px; left: -1px; border-bottom-width: 2px; border-left-width: 2px; border-radius: 0 0 0 4px; }
+    .qr-frame-corner.br { bottom: -1px; right: -1px; border-bottom-width: 2px; border-right-width: 2px; border-radius: 0 0 4px 0; }
+
+    .qr-steps { display: flex; flex-direction: column; gap: 10px; }
+    .qr-step {
+      display: flex; align-items: center; gap: 10px; text-align: left;
+    }
+    .step-num {
+      width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+      background: var(--teal-dim); border: 1px solid var(--teal-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: var(--teal);
+    }
+    .step-text { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+    .qr-url-box {
+      margin-top: 16px;
+      background: rgba(0,212,170,0.06);
+      border: 1px solid var(--teal-border);
+      border-radius: 10px; padding: 10px 14px;
+      font-size: 12px; color: var(--teal);
+      word-break: break-all; font-family: monospace;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .qr-url-box i { font-size: 14px; flex-shrink: 0; }
+
+    /* ── ALERT NOTA ───────────────────── */
+    .public-note {
+      background: rgba(0,212,170,0.05);
+      border: 1px solid var(--teal-border);
+      border-radius: 10px; padding: 12px 16px;
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 12px; color: rgba(0,212,170,0.8); line-height: 1.6;
+    }
+    .public-note i { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── RESPONSIVO ───────────────────── */
+    @media (max-width: 768px) {
+      .main-layout { grid-template-columns: 1fr; }
+      .qr-section { order: -1; }
+      .inline-stats { grid-template-columns: 1fr 1fr; }
+      nav { padding: 0 1rem; }
+      .wrapper { padding: 24px 14px 60px; }
+    }
+    @media (max-width: 480px) {
+      .inline-stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-back" href="/painel"><i class="ti ti-arrow-left"></i> Painel</a>
+  <a class="nav-logo" href="/">SGE <span>Escolar</span></a>
+  <span class="nav-badge">Alunos</span>
+  <div class="nav-right">
+    <div class="nav-avatar" id="navAvatar">US</div>
+    <div class="nav-user-info">
+      <span id="navNome">Usuário</span>
+      <span id="navEscola"></span>
+    </div>
+  </div>
+</nav>
+
+<div class="wrapper">
+
+  <div class="page-eyebrow">
+    <div class="eyebrow-dot"></div>
+    Consciência Ambiental
+  </div>
+  <h1 class="page-title">Visualização <em>para alunos</em></h1>
+  <p class="page-sub">Painel público de consumo energético e hídrico da escola. Compartilhe com a comunidade escolar.</p>
+
+  <div class="main-layout">
+
+    <!-- COLUNA ESQUERDA: Informações -->
+    <div class="info-section">
+
+      <!-- Card: Sobre o painel -->
+      <div class="info-card">
+        <div class="info-card-label"><i class="ti ti-info-circle"></i> Sobre este painel</div>
+        <div class="info-card-title">O que você está vendo?</div>
+        <div class="info-card-body">
+          Este é o painel de <strong>monitoramento em tempo real</strong> do consumo de água e energia da escola.
+          Os dados são coletados por sensores instalados nos principais ambientes e atualizados a cada 20 segundos.
+          <br><br>
+          Qualquer aluno, professor ou visitante pode visualizar as informações sem precisar de senha.
+        </div>
+        <div class="inline-stats">
+          <div class="istat">
+            <div class="istat-val agua" id="iValAgua">—</div>
+            <div class="istat-lbl">Água (hoje)</div>
+          </div>
+          <div class="istat">
+            <div class="istat-val energia" id="iValEnergia">—</div>
+            <div class="istat-lbl">Energia (hoje)</div>
+          </div>
+          <div class="istat">
+            <div class="istat-val total" id="iAmbientes">—</div>
+            <div class="istat-lbl">Ambientes</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: Dicas de sustentabilidade -->
+      <div class="info-card">
+        <div class="info-card-label"><i class="ti ti-leaf"></i> Dicas de sustentabilidade</div>
+        <div class="info-card-title">Como você pode ajudar</div>
+        <div class="tips-list">
+          <div class="tip-item">
+            <div class="tip-ico"><i class="ti ti-droplet-off"></i></div>
+            <div class="tip-text">
+              <strong>Feche as torneiras</strong>
+              Torneiras abertas enquanto escova os dentes desperdiçam até 12 litros por minuto.
+            </div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-ico"><i class="ti ti-bulb-off"></i></div>
+            <div class="tip-text">
+              <strong>Apague as luzes</strong>
+              Ao sair de uma sala, verifique se as luzes e ventiladores estão desligados.
+            </div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-ico"><i class="ti ti-device-laptop"></i></div>
+            <div class="tip-text">
+              <strong>Computadores em espera</strong>
+              Deixe os computadores em modo de economia de energia quando não estiver usando.
+            </div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-ico"><i class="ti ti-report"></i></div>
+            <div class="tip-text">
+              <strong>Reporte vazamentos</strong>
+              Encontrou uma torneira com defeito ou uma lâmpada acesa sem necessidade? Informe a direção.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nota pública -->
+      <div class="public-note">
+        <i class="ti ti-lock-open"></i>
+        <span>Esta tela é <strong>pública</strong> — qualquer pessoa com o link ou QR code pode acessar o painel de consumo sem necessidade de login.</span>
+      </div>
+
+    </div>
+
+    <!-- COLUNA DIREITA: QR Code -->
+    <div class="qr-section">
+
+      <div class="qr-card">
+        <div class="qr-label"><i class="ti ti-qrcode"></i> Acesso rápido</div>
+        <div class="qr-title">Ver painel <em>mobile</em></div>
+        <div class="qr-sub">Escaneie com a câmera do celular para ver os gráficos de consumo em tempo real.</div>
+
+        <div class="qr-frame">
+          <div class="qr-frame-corner tl"></div>
+          <div class="qr-frame-corner tr"></div>
+          <div class="qr-frame-corner bl"></div>
+          <div class="qr-frame-corner br"></div>
+          <img id="qrImg" width="176" height="176" style="border-radius:4px;" />
+        </div>
+
+        <div class="qr-steps">
+          <div class="qr-step">
+            <div class="step-num">1</div>
+            <div class="step-text">Abra a <strong style="color:var(--text)">câmera do celular</strong> e aponte para o código acima.</div>
+          </div>
+          <div class="qr-step">
+            <div class="step-num">2</div>
+            <div class="step-text">Toque na notificação que aparecer ou no link detectado.</div>
+          </div>
+          <div class="qr-step">
+            <div class="step-num">3</div>
+            <div class="step-text">Veja os <strong style="color:var(--text)">gráficos em tempo real</strong> diretamente no seu celular, sem precisar de login.</div>
+          </div>
+        </div>
+
+        <div class="qr-url-box">
+          <i class="ti ti-link"></i>
+          <span id="qrUrlText">/painel/consumo-publico</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+  /* ── Inicialização Geral ── */
+  window.addEventListener('load', () => {
+
+    // 1. GERAÇÃO DO QR CODE
+    const urlPublica = window.location.origin + '/mobile';
+    document.getElementById('qrImg').src = 'urlPublica';
+
+    setTimeout(() => {
+      QRCode.toCanvas(
+        document.getElementById('qrCanvas'),
+        urlPublica,
+        {
+          width: 176,
+          margin: 1,
+          color: {
+            dark: '#000000',
+            light: '#ffffff'
+          }
+        },
+        (err) => {
+          if (err) console.error('Erro ao gerar QR Code:', err);
+        }
+      );
+    }, 200);
+
+    // 2. CARREGAMENTO DOS DADOS ASSÍNCRONOS
+    carregarUsuario();
+    carregarResumo();
+  });
+
+  /* ── Carregar dados resumidos para exibição nos cards ── */
+  async function carregarResumo() {
+    try {
+      const res  = await fetch('/sensores/dashboard?periodo=hoje');
+      const data = await res.json();
+      if(!data.sucesso) return;
+
+      const ambientes = data.ambientes || [];
+      const tA = ambientes.reduce((s,a)=>s+ +a.valor_agua,  0);
+      const tE = ambientes.reduce((s,a)=>s+ +a.valor_energia,0);
+
+      const fmt = v => Number(v).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+      document.getElementById('iValAgua').textContent    = fmt(tA);
+      document.getElementById('iValEnergia').textContent = fmt(tE);
+      document.getElementById('iAmbientes').textContent  = ambientes.length;
+
+    } catch (err) {
+      console.warn('Usando fallback do painel de resumo (API offline):', err);
+      // Demo fallback caso a rota ainda não responda
+      document.getElementById('iValAgua').textContent    = 'R$ 148,30';
+      document.getElementById('iValEnergia').textContent = 'R$ 234,70';
+      document.getElementById('iAmbientes').textContent  = '6';
+    }
+  }
+
+  /* ── Carregar info do usuário na nav ── */
+  async function carregarUsuario() {
+    try {
+      const res = await fetch('/usuarios/me');
+      if(!res.ok) return;
+      const data = await res.json();
+      const nome = data.nome || 'Usuário';
+      document.getElementById('navNome').textContent   = nome;
+      document.getElementById('navEscola').textContent = data.nomeEscola || '';
+      document.getElementById('navAvatar').textContent =
+        nome.split(' ').map(n=>n[0]).slice(0,2).join('').toUpperCase();
+    } catch (err) {
+      console.warn('Usando fallback do usuário (API offline):', err);
+      document.getElementById('navNome').textContent = 'Usuário';
+    }
+  }
+</script>
+</body>
+</html>

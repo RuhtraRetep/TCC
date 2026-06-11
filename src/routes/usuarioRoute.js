@@ -87,7 +87,9 @@ router.get('/cadastro-usuario', verificarAcesso, (req, res) => {
 });
 //---------------------------------------------------------
 
-
+router.get('/alunos', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'View', 'telaVisualizacaoAlunos.html'));
+});
 
 // Logar usuário
 router.get('/login', (req, res) => {
