@@ -4,6 +4,7 @@ const path    = require('path');
 const app     = express();
 const sessionToken = require('express-session');
 
+
 const escolaRoute  = require('./src/routes/escolaRoute');
 const usuarioRoute = require('./src/routes/usuarioRoute');
 const sensorRoute  = require('./src/routes/sensorRoute');

@@ -215,10 +215,13 @@
       const modulos = [...document.querySelectorAll('#modulos .tag.on')]
         .map(t => t.dataset.modulo);
 
+      // SOLUÇÃO DO PROBLEMA: Captura o valor do input e remove pontos e traços (\D remove tudo o que não for número)
+      const cpfLimpo = document.getElementById('cpf').value.replace(/\D/g, '').trim();
+
       const dados = {
         nome:      document.getElementById('fn').value.trim(),
         sobrenome: document.getElementById('ln').value.trim(),
-        cpf:       document.getElementById('cpf').value.trim(),
+        cpf:       cpfLimpo || null, // Envia apenas os 11 números ou null se estiver vazio
         cargo:     document.getElementById('cargo').value,
         modulos,
         email:     document.getElementById('email').value.trim(),
@@ -226,7 +229,7 @@
       };
 
       try {
-        const res = await fetch('/usuario/cadastro-usuario', {
+        const res = await fetch('/usuarios/cadastro-usuario', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(dados)
