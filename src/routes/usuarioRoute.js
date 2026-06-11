@@ -1,6 +1,13 @@
 const express = require('express');
 const path = require('path');
 const router = express.Router();
+
+function autenticado(req, res, next) {
+    if (req.session.usuario?.escolaId) {
+        return next();
+    }
+    res.redirect('/usuarios/login');
+}
 const usuarioService = require('../services/usuarioService');
 
 router.post('/cadastro-usuario', async (req, res) => {
