@@ -316,6 +316,14 @@
 
   const fmt = v => Number(v || 0).toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
 
+  // Pega escolaId da URL — funciona sem login
+  function getEscolaId() {
+    const partes = window.location.pathname.split('/');
+    const idx = partes.indexOf('mobile');
+    if (idx !== -1 && partes[idx + 1]) return partes[idx + 1];
+    return new URLSearchParams(window.location.search).get('escola');
+  }
+
   function setPeriodo(p, btn) {
     periodo = p;
     document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
@@ -326,14 +334,23 @@
   }
 
   async function carregar() {
+    const escolaId = getEscolaId();
+    if (!escolaId) {
+      renderizarDemo();
+      return;
+    }
+
     try {
-      const res  = await fetch(`/sensores/dashboard?periodo=${periodo}`);
+      const res  = await fetch(`/sensores/dashboard-publico/${escolaId}?periodo=${periodo}`);
       const data = await res.json();
-      if (!data.sucesso) return;
+      if (!data.sucesso) {
+        renderizarDemo();
+        return;
+      }
+      if (data.nomeEscola) document.getElementById('nomeEscola').textContent = data.nomeEscola;
       renderizar(data.ambientes || [], data.historico || []);
     } catch(e) {
       console.error(e);
-      // DEMO: gerar dados fictícios quando não há backend
       renderizarDemo();
     }
   }
@@ -371,9 +388,9 @@
     const tE = ambientes.reduce((s,a) => s + +a.valor_energia, 0);
     const tT = tA + tE;
 
-    document.getElementById('valAgua').textContent   = fmt(tA);
-    document.getElementById('valEnergia').textContent= fmt(tE);
-    document.getElementById('valTotal').textContent  = fmt(tT);
+    document.getElementById('valAgua').textContent    = fmt(tA);
+    document.getElementById('valEnergia').textContent = fmt(tE);
+    document.getElementById('valTotal').textContent   = fmt(tT);
     document.getElementById('numAmbientes').textContent = ambientes.length;
 
     const ts = new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
@@ -456,11 +473,6 @@
   function destroyChart(k) {
     if(charts[k]){ charts[k].destroy(); delete charts[k]; }
   }
-
-  // Tentar carregar nome da escola
-  fetch('/usuarios/me').then(r=>r.json()).then(d=>{
-    if(d.nomeEscola) document.getElementById('nomeEscola').textContent = d.nomeEscola;
-  }).catch(()=>{});
 
   carregar();
   setInterval(carregar, 20000);

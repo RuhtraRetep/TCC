@@ -413,10 +413,12 @@
   window.addEventListener('load', () => {
 
     // 1. GERAÇÃO DO QR CODE
-    const urlPublica = window.location.origin + '/mobile';
-    const encoded = encodeURIComponent(urlPublica);
-    document.getElementById('qrImg').src =
-      `https://api.qrserver.com/v1/create-qr-code/?size=176x176&data=${encoded}&bgcolor=ffffff&color=000000&margin=10`;
+// Pega o escolaId que já está na URL da página de alunos
+const escolaId = window.location.pathname.split('/').pop();
+const urlPublica = window.location.origin + '/usuarios/mobile/' + escolaId;
+const encoded = encodeURIComponent(urlPublica);
+document.getElementById('qrImg').src =
+  `https://api.qrserver.com/v1/create-qr-code/?size=176x176&data=${encoded}&bgcolor=ffffff&color=000000&margin=10`;
 
     // 2. CARREGAMENTO DOS DADOS ASSÍNCRONOS
     carregarUsuario();
