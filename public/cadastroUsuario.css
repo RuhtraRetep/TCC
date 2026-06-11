@@ -90,6 +90,8 @@ a { text-decoration: none; color: inherit; }
   gap: 20px;
 }
 
+
+
 .sge-logo {
   display: flex;
   align-items: center;
@@ -605,4 +607,24 @@ a { text-decoration: none; color: inherit; }
     font-size: .75rem;
     padding: 5px 11px;
   }
+}
+
+.btn-painel {
+  background: transparent;
+  color: var(--teal);
+  border: 1px solid rgba(0, 194, 168, 0.35);
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: .88rem;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.btn-painel:hover {
+  background: rgba(0, 194, 168, 0.10);
+  border-color: var(--teal);
+  color: var(--teal-light);
 }

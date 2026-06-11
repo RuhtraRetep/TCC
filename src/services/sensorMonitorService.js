@@ -1,46 +1,75 @@
 const db = require('../config/db');
 const GastoServices = require('./gastoServices');
 
-async function iniciarMonitoramento() {
+let monitoramentoAtivo = false;
+let intervalId = null;
 
-    setInterval(async () => {
-        try {
-            console.log('Atualizando sensores...');
+const regras = {
+    SALA:        { agua: 0,    energia: 0.20 },
+    LABORATORIO: { agua: 0,    energia: 0.30 },
+    PATIO:       { agua: 0,    energia: 0.08 },
+    BANHEIRO:    { agua: 0.15, energia: 0.10 },
+    COZINHA:     { agua: 0.20, energia: 0.25 },
+    QUADRA:      { agua: 0.05, energia: 0.12 }
+};
 
-            // Busca todos os ambientes cadastrados no banco
-            const [ambientes] = await db.execute('SELECT id, tipo FROM ambientes');
+async function cicloMonitoramento() {
+    try {
+        const [ambientes] = await db.execute(`
+            SELECT id, tipo
+            FROM ambientes
+        `);
 
-            if (ambientes.length === 0) {
-                console.log('Nenhum ambiente cadastrado ainda.');
-                return;
-            }
-
-            const regras = {
-                SALA:        { agua: 0,    energia: 0.20 },
-                LABORATORIO: { agua: 0,    energia: 0.30 },
-                PATIO:       { agua: 0,    energia: 0.08 },
-                BANHEIRO:    { agua: 0.15, energia: 0.10 },
-                COZINHA:     { agua: 0.20, energia: 0.25 },
-                QUADRA:      { agua: 0.05, energia: 0.12 }
-            };
-
-            // Para cada ambiente, simula e salva o histórico individualmente
-            for (const ambiente of ambientes) {
-                const regra = regras[ambiente.tipo] || { agua: 0, energia: 0.10 };
-
-                const consumoAgua    = Math.random() * regra.agua;
-                const consumoEnergia = Math.random() * regra.energia;
-
-                const gastos = GastoServices.calcular(consumoAgua, consumoEnergia);
-
-                GastoServices.salvarHistorico(ambiente.id, gastos);
-            }
-
-        } catch (erro) {
-            console.error('Erro no monitoramento de sensores:', erro.message);
+        if (ambientes.length === 0) {
+            return;
         }
 
-    }, 15000);
+        for (const ambiente of ambientes) {
+            const regra = regras[ambiente.tipo] || { agua: 0, energia: 0.10 };
+
+            const consumoAgua = Number((Math.random() * regra.agua).toFixed(4));
+            const consumoEnergia = Number((Math.random() * regra.energia).toFixed(4));
+
+            const gastos = GastoServices.calcular(consumoAgua, consumoEnergia);
+
+            await GastoServices.salvarHistorico(ambiente.id, gastos);
+        }
+
+    } catch (erro) {
+        console.error('[Monitor] Erro:', erro.message);
+    }
 }
 
-module.exports = iniciarMonitoramento;
+function iniciarMonitoramento() {
+    if (monitoramentoAtivo) return;
+
+    monitoramentoAtivo = true;
+
+    cicloMonitoramento();
+
+    intervalId = setInterval(() => {
+        cicloMonitoramento();
+    }, 15000);
+
+    console.log('[Monitor] Simulador iniciado no backend.');
+}
+
+function pararMonitoramento() {
+    if (!monitoramentoAtivo) return;
+
+    clearInterval(intervalId);
+    intervalId = null;
+    monitoramentoAtivo = false;
+
+    console.log('[Monitor] Simulador parado.');
+}
+
+function estaAtivo() {
+    return monitoramentoAtivo;
+}
+
+module.exports = {
+    iniciarMonitoramento,
+    pararMonitoramento,
+    estaAtivo
+};

@@ -7,22 +7,21 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --navy:        #0d1117;
-      --navy-card:   #111820;
-      --teal:        #00d4aa;
-      --teal-dim:    rgba(0,212,170,0.12);
+      --navy: #0d1117;
+      --navy-card: #111820;
+      --teal: #00d4aa;
+      --teal-dim: rgba(0,212,170,0.12);
       --teal-border: rgba(0,212,170,0.25);
-      --blue:        #4a9eff;
-      --blue-dim:    rgba(74,158,255,0.12);
-      --blue-border: rgba(74,158,255,0.25);
-      --border:      rgba(255,255,255,0.07);
-      --text:        #f0f4f8;
-      --muted:       rgba(255,255,255,0.45);
-      --radius:      14px;
+      --blue: #4a9eff;
+      --border: rgba(255,255,255,0.07);
+      --text: #f0f4f8;
+      --muted: rgba(255,255,255,0.45);
+      --radius: 14px;
     }
 
     body {
@@ -35,275 +34,466 @@
 
     body::before {
       content: '';
-      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
       background:
-        radial-gradient(ellipse 55% 35% at 85% 8%,  rgba(0,212,170,0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 30% at 8%  85%, rgba(74,158,255,0.05) 0%, transparent 60%);
+        radial-gradient(ellipse 55% 35% at 85% 8%, rgba(0,212,170,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 8% 85%, rgba(74,158,255,0.05) 0%, transparent 60%);
     }
 
-    /* ── NAV ── */
     nav {
-      position: sticky; top: 0; z-index: 100;
-      display: flex; align-items: center; gap: 12px;
-      padding: 0 2rem; height: 58px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 2rem;
+      height: 58px;
       background: rgba(13,17,23,0.88);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
     }
-    .nav-back {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 12px; color: var(--muted); text-decoration: none;
-      padding: 5px 10px; border-radius: 8px; border: 1px solid var(--border);
-      transition: all .2s;
-    }
-    .nav-back:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
-    .nav-logo { font-size: 15px; font-weight: 700; color: var(--text); text-decoration: none; }
-    .nav-logo span { color: var(--teal); font-weight: 300; }
-    .nav-badge {
-      font-size: 10px; font-weight: 600; color: var(--teal);
-      background: var(--teal-dim); border: 1px solid var(--teal-border);
-      padding: 2px 9px; border-radius: 20px; letter-spacing: 0.8px;
-    }
-    .nav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-    .nav-avatar {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: var(--teal-dim); border: 1px solid var(--teal-border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 700; color: var(--teal);
-    }
-    .nav-user-info { display: flex; flex-direction: column; gap: 1px; line-height: 1.2; }
-    .nav-user-info span:first-child { font-size: 13px; color: var(--text); font-weight: 500; }
-    .nav-user-info span:last-child  { font-size: 11px; color: var(--teal); }
 
-    /* ── WRAPPER ── */
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 5px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-logo span {
+      color: var(--teal);
+      font-weight: 300;
+    }
+
+    .nav-badge {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--teal);
+      background: var(--teal-dim);
+      border: 1px solid var(--teal-border);
+      padding: 2px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.8px;
+    }
+
+    .nav-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--teal-dim);
+      border: 1px solid var(--teal-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    .nav-user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      line-height: 1.2;
+    }
+
+    .nav-user-info span:first-child {
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .nav-user-info span:last-child {
+      font-size: 11px;
+      color: var(--teal);
+    }
+
     .wrapper {
-      position: relative; z-index: 1;
-      max-width: 1200px; margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
       padding: 40px 24px 80px;
     }
 
-    /* ── HEADER ── */
     .page-header {
-      display: flex; align-items: flex-end; justify-content: space-between;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
       margin-bottom: 36px;
-      animation: fade-up .4s ease both;
-      flex-wrap: wrap; gap: 20px;
+      flex-wrap: wrap;
+      gap: 20px;
     }
-    .header-left {}
+
     .page-eyebrow {
-      font-size: 10px; font-weight: 700; color: var(--teal);
-      text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;
-      display: flex; align-items: center; gap: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
+
     .eyebrow-dot {
-      width: 5px; height: 5px; border-radius: 50%; background: var(--teal);
-      animation: pulse 2s infinite;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--teal);
     }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(.7)} }
+
     .page-title {
       font-family: 'DM Serif Display', serif;
       font-size: clamp(1.6rem, 3vw, 2.2rem);
-      font-weight: 400; line-height: 1.15;
+      font-weight: 400;
+      line-height: 1.15;
     }
-    .page-title em { color: var(--teal); font-style: italic; }
-    .page-sub { font-size: .83rem; color: var(--muted); line-height: 1.6; margin-top: 6px; }
 
-    /* ── FILTRO DE PERÍODO ── */
+    .page-title em {
+      color: var(--teal);
+      font-style: italic;
+    }
+
+    .page-sub {
+      font-size: .83rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-top: 6px;
+    }
+
     .filtro-bar {
-      display: flex; align-items: center; gap: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
       background: var(--navy-card);
       border: 1px solid var(--border);
-      border-radius: 10px; padding: 4px;
+      border-radius: 10px;
+      padding: 4px;
     }
-    .filtro-btn {
-      padding: 6px 14px; border-radius: 7px; border: none;
-      background: transparent; color: var(--muted);
-      font-size: 12px; font-weight: 600; font-family: inherit;
-      cursor: pointer; transition: all .2s; white-space: nowrap;
-    }
-    .filtro-btn.active {
-      background: var(--teal); color: var(--navy);
-    }
-    .filtro-btn:not(.active):hover { color: var(--text); background: rgba(255,255,255,0.05); }
 
-    /* ── STATS BAR ── */
-    .stats-bar {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 1px; background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 12px; overflow: hidden;
-      margin-bottom: 28px;
-      animation: fade-up .4s .08s ease both;
+    .filtro-btn {
+      padding: 6px 14px;
+      border-radius: 7px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
     }
+
+    .filtro-btn.active {
+      background: var(--teal);
+      color: var(--navy);
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
     .stat {
       background: var(--navy-card);
       padding: 18px 22px;
-      display: flex; flex-direction: column; gap: 4px;
-      position: relative; overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
-    .stat::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-      height: 2px; background: var(--teal); opacity: 0;
-      transition: opacity .3s;
-    }
-    .stat:hover::after { opacity: 1; }
+
     .stat-val {
-      font-size: 1.5rem; font-weight: 700;
+      font-size: 1.5rem;
+      font-weight: 700;
       font-variant-numeric: tabular-nums;
     }
-    .stat-val.agua    { color: var(--blue); }
-    .stat-val.energia { color: var(--teal); }
-    .stat-val.gasto   { color: var(--text); }
-    .stat-val.ambientes { color: var(--teal); }
-    .stat-val span { font-size: .85rem; font-weight: 400; opacity: .7; margin-left: 2px; }
-    .stat-label { font-size: .72rem; color: var(--muted); letter-spacing: .3px; }
-    .stat-delta {
-      font-size: .7rem; font-weight: 600;
-      display: flex; align-items: center; gap: 3px; margin-top: 2px;
-    }
-    .stat-delta.up   { color: #4ade80; }
-    .stat-delta.down { color: #f87171; }
 
-    /* ── GRID PRINCIPAL ── */
+    .stat-val.agua { color: var(--blue); }
+    .stat-val.energia { color: var(--teal); }
+    .stat-val.gasto { color: var(--text); }
+    .stat-val.ambientes { color: var(--teal); }
+
+    .stat-label {
+      font-size: .72rem;
+      color: var(--muted);
+      letter-spacing: .3px;
+    }
+
+    .stat-delta {
+      font-size: .7rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      margin-top: 2px;
+    }
+
     .main-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
     }
-    .col-full { grid-column: 1 / -1; }
 
-    /* ── CHART CARD ── */
+    .col-full {
+      grid-column: 1 / -1;
+    }
+
     .chart-card {
       background: var(--navy-card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 24px;
-      animation: fade-up .4s ease both;
     }
-    .chart-card:nth-child(1) { animation-delay: .12s; }
-    .chart-card:nth-child(2) { animation-delay: .18s; }
-    .chart-card:nth-child(3) { animation-delay: .24s; }
-    .chart-card:nth-child(4) { animation-delay: .30s; }
 
     .chart-header {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      margin-bottom: 20px; gap: 12px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 12px;
     }
-    .chart-title-group {}
+
     .chart-label {
-      font-size: .68rem; font-weight: 700; color: var(--teal);
-      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;
+      font-size: .68rem;
+      font-weight: 700;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
     }
+
     .chart-title {
       font-family: 'DM Serif Display', serif;
-      font-size: 1.1rem; font-weight: 400; line-height: 1.2;
+      font-size: 1.1rem;
+      font-weight: 400;
+      line-height: 1.2;
     }
-    .chart-sub { font-size: .75rem; color: var(--muted); margin-top: 3px; }
+
+    .chart-sub {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
 
     .chart-legend {
-      display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-end;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
+
     .legend-item {
-      display: flex; align-items: center; gap: 5px;
-      font-size: .72rem; color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: .72rem;
+      color: var(--muted);
     }
+
     .legend-dot {
-      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
     }
 
     .chart-wrap {
       position: relative;
     }
-    .chart-wrap canvas { width: 100% !important; }
 
-    /* ── RANKING DE AMBIENTES ── */
-    .ranking-list { display: flex; flex-direction: column; gap: 10px; }
+    .chart-wrap canvas {
+      width: 100% !important;
+    }
+
+    .ranking-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
     .ranking-item {
-      display: flex; align-items: center; gap: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
-    .rank-num {
-      width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
-      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 700; color: var(--muted);
-    }
-    .rank-num.top { background: var(--teal-dim); border-color: var(--teal-border); color: var(--teal); }
-    .rank-info { flex: 1; min-width: 0; }
-    .rank-name { font-size: .82rem; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .rank-tipo { font-size: .68rem; font-weight: 700; color: var(--teal); text-transform: uppercase; letter-spacing: .6px; }
-    .rank-bar-wrap { flex: 1; }
-    .rank-bar {
-      height: 5px; border-radius: 99px;
-      background: rgba(255,255,255,0.06); overflow: hidden;
-    }
-    .rank-bar-fill {
-      height: 100%; border-radius: 99px;
-      background: linear-gradient(90deg, var(--teal), var(--blue));
-      transition: width .8s cubic-bezier(0.4,0,0.2,1);
-    }
-    .rank-val { font-size: .8rem; font-weight: 700; color: var(--text); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-    /* ── TABELA HISTÓRICO ── */
-    .table-wrap { overflow-x: auto; }
+    .rank-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .rank-num.top {
+      background: var(--teal-dim);
+      border-color: var(--teal-border);
+      color: var(--teal);
+    }
+
+    .rank-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .rank-name {
+      font-size: .82rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .rank-tipo {
+      font-size: .68rem;
+      font-weight: 700;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+    }
+
+    .rank-bar-wrap {
+      flex: 1;
+    }
+
+    .rank-bar {
+      height: 5px;
+      border-radius: 99px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .rank-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--teal), var(--blue));
+    }
+
+    .rank-val {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
     table {
-      width: 100%; border-collapse: collapse;
+      width: 100%;
+      border-collapse: collapse;
       font-size: .82rem;
     }
+
     thead th {
-      text-align: left; padding: 10px 14px;
-      font-size: .68rem; font-weight: 700; color: var(--muted);
-      text-transform: uppercase; letter-spacing: .8px;
+      text-align: left;
+      padding: 10px 14px;
+      font-size: .68rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .8px;
       border-bottom: 1px solid var(--border);
     }
+
     tbody tr {
       border-bottom: 1px solid rgba(255,255,255,0.04);
-      transition: background .15s;
     }
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: rgba(255,255,255,0.02); }
-    tbody td { padding: 11px 14px; color: var(--text); }
-    .td-agua    { color: var(--blue); font-weight: 600; }
-    .td-energia { color: var(--teal); font-weight: 600; }
-    .td-total   { font-weight: 700; }
-    .td-tipo {
-      font-size: .68rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: .6px;
+
+    tbody td {
+      padding: 11px 14px;
+      color: var(--text);
+    }
+
+    .td-agua {
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    .td-energia {
       color: var(--teal);
-      background: var(--teal-dim); border: 1px solid var(--teal-border);
-      padding: 2px 8px; border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .td-total {
+      font-weight: 700;
+    }
+
+    .td-tipo {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: var(--teal);
+      background: var(--teal-dim);
+      border: 1px solid var(--teal-border);
+      padding: 2px 8px;
+      border-radius: 20px;
       display: inline-block;
     }
 
-    /* ── ANIMAÇÃO ── */
-    @keyframes fade-up {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       .main-grid { grid-template-columns: 1fr; }
-      .col-full  { grid-column: 1; }
+      .col-full { grid-column: 1; }
       .stats-bar { grid-template-columns: 1fr 1fr; }
       .page-header { flex-direction: column; align-items: flex-start; }
       nav { padding: 0 1rem; }
       .wrapper { padding: 28px 16px 60px; }
     }
+
     @media (max-width: 480px) {
       .stats-bar { grid-template-columns: 1fr; }
     }
   </style>
 </head>
+
 <body>
 
 <nav>
   <a class="nav-back" href="/painel"><i class="ti ti-arrow-left"></i> Painel</a>
   <a class="nav-logo" href="/">SGE <span>Escolar</span></a>
   <span class="nav-badge">Dashboard</span>
+
   <div class="nav-right">
-    <div class="nav-avatar" id="navAvatar">--</div>
+    <div class="nav-avatar" id="navAvatar">US</div>
     <div class="nav-user-info">
-      <span id="navNome">Carregando...</span>
+      <span id="navNome">Usuário</span>
       <span id="navEscola"></span>
     </div>
   </div>
@@ -311,141 +501,136 @@
 
 <div class="wrapper">
 
-  <!-- HEADER -->
   <div class="page-header">
     <div class="header-left">
       <div class="page-eyebrow">
         <div class="eyebrow-dot"></div>
         Análise de Consumo
       </div>
+
       <h1 class="page-title">Dashboard <em>da escola</em></h1>
-      <p class="page-sub">Consumo de água e energia simulado por ambiente e período.</p>
+      <p class="page-sub">Consumo de água e energia por ambiente e período.</p>
     </div>
 
-    <!-- FILTRO -->
-    <div class="filtro-bar" id="filtroBar">
-      <button class="filtro-btn" onclick="setPeriodo('hoje', this)">Hoje</button>
-      <button class="filtro-btn active" onclick="setPeriodo('7dias', this)">7 dias</button>
+    <div class="filtro-bar">
+      <button class="filtro-btn active" onclick="setPeriodo('hoje', this)">Hoje</button>
+      <button class="filtro-btn" onclick="setPeriodo('7dias', this)">7 dias</button>
       <button class="filtro-btn" onclick="setPeriodo('30dias', this)">30 dias</button>
       <button class="filtro-btn" onclick="setPeriodo('90dias', this)">90 dias</button>
     </div>
   </div>
 
-  <!-- STATS -->
   <div class="stats-bar">
     <div class="stat">
-      <div class="stat-val agua" id="statAgua">—</div>
+      <div class="stat-val agua" id="statAgua">R$ 0,00</div>
       <div class="stat-label">Total em água</div>
-      <div class="stat-delta up" id="deltaAgua"><i class="ti ti-arrow-up"></i> —</div>
+      <div class="stat-delta" id="deltaAgua"><i class="ti ti-droplet"></i> acumulado</div>
     </div>
+
     <div class="stat">
-      <div class="stat-val energia" id="statEnergia">—</div>
+      <div class="stat-val energia" id="statEnergia">R$ 0,00</div>
       <div class="stat-label">Total em energia</div>
-      <div class="stat-delta up" id="deltaEnergia"><i class="ti ti-arrow-up"></i> —</div>
+      <div class="stat-delta" id="deltaEnergia"><i class="ti ti-bolt"></i> acumulado</div>
     </div>
+
     <div class="stat">
-      <div class="stat-val gasto" id="statTotal">—</div>
+      <div class="stat-val gasto" id="statTotal">R$ 0,00</div>
       <div class="stat-label">Gasto total estimado</div>
-      <div class="stat-delta" id="deltaTotal"></div>
+      <div class="stat-delta" id="deltaTotal">Água + energia</div>
     </div>
+
     <div class="stat">
-      <div class="stat-val ambientes" id="statAmbientes">—</div>
+      <div class="stat-val ambientes" id="statAmbientes">0</div>
       <div class="stat-label">Ambientes monitorados</div>
-      <div class="stat-delta" style="color:var(--muted)" id="deltaAmbientes"></div>
+      <div class="stat-delta" id="deltaAmbientes"><i class="ti ti-building"></i> ativos</div>
     </div>
   </div>
 
-  <!-- GRID DE GRÁFICOS -->
   <div class="main-grid">
 
-    <!-- Gráfico de linha: histórico de gastos -->
     <div class="chart-card col-full">
       <div class="chart-header">
-        <div class="chart-title-group">
+        <div>
           <div class="chart-label">Histórico</div>
           <div class="chart-title">Gastos ao longo do tempo</div>
-          <div class="chart-sub" id="subHistorico">Últimos 7 dias — água e energia</div>
+          <div class="chart-sub" id="subHistorico">Hoje — água e energia</div>
         </div>
+
         <div class="chart-legend">
           <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div> Água</div>
           <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div> Energia</div>
           <div class="legend-item"><div class="legend-dot" style="background:rgba(255,255,255,0.35)"></div> Total</div>
         </div>
       </div>
+
       <div class="chart-wrap" style="height:220px">
         <canvas id="chartHistorico"></canvas>
       </div>
     </div>
 
-    <!-- Gráfico de barras: consumo por ambiente -->
     <div class="chart-card">
       <div class="chart-header">
-        <div class="chart-title-group">
+        <div>
           <div class="chart-label">Por ambiente</div>
           <div class="chart-title">Consumo de água</div>
           <div class="chart-sub">Custo acumulado em R$</div>
         </div>
-        <div class="chart-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div> R$ água</div>
-        </div>
       </div>
+
       <div class="chart-wrap" style="height:200px">
         <canvas id="chartAgua"></canvas>
       </div>
     </div>
 
-    <!-- Gráfico de barras: energia por ambiente -->
     <div class="chart-card">
       <div class="chart-header">
-        <div class="chart-title-group">
+        <div>
           <div class="chart-label">Por ambiente</div>
           <div class="chart-title">Consumo de energia</div>
           <div class="chart-sub">Custo acumulado em R$</div>
         </div>
-        <div class="chart-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div> R$ energia</div>
-        </div>
       </div>
+
       <div class="chart-wrap" style="height:200px">
         <canvas id="chartEnergia"></canvas>
       </div>
     </div>
 
-    <!-- Ranking de ambientes -->
     <div class="chart-card">
       <div class="chart-header">
-        <div class="chart-title-group">
+        <div>
           <div class="chart-label">Ranking</div>
           <div class="chart-title">Maiores consumidores</div>
-          <div class="chart-sub">Total (água + energia)</div>
+          <div class="chart-sub">Total água + energia</div>
         </div>
       </div>
+
       <div class="ranking-list" id="rankingList"></div>
     </div>
 
-    <!-- Gráfico de rosca: distribuição -->
     <div class="chart-card">
       <div class="chart-header">
-        <div class="chart-title-group">
+        <div>
           <div class="chart-label">Distribuição</div>
           <div class="chart-title">Água vs Energia</div>
           <div class="chart-sub">% do gasto total</div>
         </div>
       </div>
+
       <div class="chart-wrap" style="height:200px; display:flex; align-items:center; justify-content:center;">
         <canvas id="chartDona" style="max-width:200px; max-height:200px;"></canvas>
       </div>
     </div>
 
-    <!-- Tabela histórico por ambiente -->
     <div class="chart-card col-full">
       <div class="chart-header">
-        <div class="chart-title-group">
+        <div>
           <div class="chart-label">Detalhe</div>
           <div class="chart-title">Histórico por ambiente</div>
           <div class="chart-sub">Consumo acumulado no período</div>
         </div>
       </div>
+
       <div class="table-wrap">
         <table>
           <thead>
@@ -466,234 +651,229 @@
 </div>
 
 <script>
-// ── DADOS BASE: carregados do banco ──
-let ambientesBase = [];
+let periodo = 'hoje';
+let charts = {};
 
-async function carregarAmbientes() {
-  try {
-    const res  = await fetch('/sensores/ambientes');
-    const data = await res.json();
-    if (data.sucesso && data.ambientes.length > 0) {
-      ambientesBase = data.ambientes.map(a => ({ nome: a.nome, tipo: a.tipo }));
-    } else {
-      // Nenhum ambiente cadastrado ainda — mostra aviso
-      document.getElementById('statAmbientes').textContent = '0';
-      ['statAgua','statEnergia','statTotal'].forEach(id => {
-        document.getElementById(id).innerHTML = 'R$ 0,00';
-      });
-      document.getElementById('rankingList').innerHTML =
-        '<p style="color:var(--muted);font-size:.85rem;padding:8px 0">Nenhum ambiente cadastrado ainda. <a href="/sensores" style="color:var(--teal)">Adicione na tela de sensores.</a></p>';
-      document.getElementById('tabelaHistorico').innerHTML =
-        '<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:20px">Sem dados</td></tr>';
-      return;
-    }
-  } catch (err) {
-    console.error('Erro ao buscar ambientes:', err);
-  }
-  renderizar();
-}
-
-const regras = {
-  SALA:        { agua: 0,    energia: 0.20 },
-  LABORATORIO: { agua: 0,    energia: 0.30 },
-  PATIO:       { agua: 0,    energia: 0.08 },
-  BANHEIRO:    { agua: 0.15, energia: 0.10 },
-  COZINHA:     { agua: 0.20, energia: 0.25 },
-  QUADRA:      { agua: 0.05, energia: 0.12 },
+const fmt = valor => {
+  return Number(valor || 0).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  });
 };
 
-const tarifaAgua    = 5.50;
-const tarifaEnergia = 0.92;
+function setPeriodo(novoPeriodo, btn) {
+  periodo = novoPeriodo;
 
-// Gera dados simulados para N dias
-function gerarDados(dias) {
-  // Por dia
-  const labels = [];
-  const totalAguaDia    = [];
-  const totalEnergiaDia = [];
-
-  const hoje = new Date();
-  for (let d = dias - 1; d >= 0; d--) {
-    const dt = new Date(hoje);
-    dt.setDate(hoje.getDate() - d);
-    labels.push(dias === 1
-      ? dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-      : dt.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
-    );
-
-    let somaAgua = 0, somaEnergia = 0;
-    ambientesBase.forEach(a => {
-      const r = regras[a.tipo] || { agua: 0, energia: 0.10 };
-      somaAgua    += (Math.random() * r.agua    * 8) * tarifaAgua;
-      somaEnergia += (Math.random() * r.energia * 8) * tarifaEnergia;
-    });
-    totalAguaDia.push(+somaAgua.toFixed(2));
-    totalEnergiaDia.push(+somaEnergia.toFixed(2));
-  }
-
-  // Por ambiente (acumulado)
-  const porAmbiente = ambientesBase.map(a => {
-    const r = regras[a.tipo] || { agua: 0, energia: 0.10 };
-    const agua    = +(Array.from({length:dias}, () => Math.random() * r.agua    * 8).reduce((s,v)=>s+v,0) * tarifaAgua).toFixed(2);
-    const energia = +(Array.from({length:dias}, () => Math.random() * r.energia * 8).reduce((s,v)=>s+v,0) * tarifaEnergia).toFixed(2);
-    return { ...a, agua, energia, total: +(agua + energia).toFixed(2) };
+  document.querySelectorAll('.filtro-btn').forEach(b => {
+    b.classList.remove('active');
   });
 
-  return { labels, totalAguaDia, totalEnergiaDia, porAmbiente };
-}
-
-// ── ESTADO ──
-let periodo = '7dias';
-let charts  = {};
-
-function diasDoPeriodo(p) {
-  return { hoje: 1, '7dias': 7, '30dias': 30, '90dias': 90 }[p] || 7;
-}
-
-function setPeriodo(p, btn) {
-  periodo = p;
-  document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  renderizar();
+
+  carregarDashboard();
 }
 
-const fmt = v => 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+async function carregarDashboard() {
+  try {
+    const res = await fetch(`/sensores/dashboard?periodo=${periodo}`);
+    const data = await res.json();
 
-function renderizar() {
-  const dias = diasDoPeriodo(periodo);
-  const { labels, totalAguaDia, totalEnergiaDia, porAmbiente } = gerarDados(dias);
-
-  const totalAgua    = totalAguaDia.reduce((s,v)=>s+v,0);
-  const totalEnergia = totalEnergiaDia.reduce((s,v)=>s+v,0);
-  const totalGeral   = totalAgua + totalEnergia;
-  const totalDiaArr  = totalAguaDia.map((v,i) => +(v + totalEnergiaDia[i]).toFixed(2));
-
-  // Labels descritivos
-  const labelMap = { hoje: 'Hoje', '7dias': 'Últimos 7 dias', '30dias': 'Últimos 30 dias', '90dias': 'Últimos 90 dias' };
-  document.getElementById('subHistorico').textContent = labelMap[periodo] + ' — água e energia';
-
-  // Stats
-  document.getElementById('statAgua').innerHTML    = fmt(totalAgua);
-  document.getElementById('statEnergia').innerHTML = fmt(totalEnergia);
-  document.getElementById('statTotal').innerHTML   = fmt(totalGeral);
-  document.getElementById('statAmbientes').textContent = ambientesBase.length;
-  document.getElementById('deltaAgua').innerHTML    = '<i class="ti ti-droplet"></i> m³ acumulado';
-  document.getElementById('deltaEnergia').innerHTML = '<i class="ti ti-bolt"></i> kWh acumulado';
-  document.getElementById('deltaAmbientes').innerHTML = '<i class="ti ti-building"></i> ativos';
-  document.getElementById('deltaAgua').className    = 'stat-delta';
-  document.getElementById('deltaAgua').style.color  = 'var(--blue)';
-  document.getElementById('deltaEnergia').className = 'stat-delta';
-  document.getElementById('deltaEnergia').style.color = 'var(--teal)';
-
-  const chartDefaults = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false }, tooltip: {
-      backgroundColor: '#1a2535',
-      titleColor: '#f0f4f8',
-      bodyColor: 'rgba(255,255,255,0.6)',
-      borderColor: 'rgba(255,255,255,0.1)',
-      borderWidth: 1,
-      padding: 10,
-      callbacks: { label: ctx => ' R$ ' + ctx.parsed.y?.toFixed(2) ?? ctx.parsed.toFixed(2) }
-    }},
-    scales: {
-      x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 11 } } },
-      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 11 }, callback: v => 'R$'+v } }
+    if (!data.sucesso) {
+      console.error(data.erro);
+      return;
     }
+
+    const ambientes = data.ambientes || [];
+    const historico = data.historico || [];
+
+    renderizarDashboard(ambientes, historico);
+
+  } catch (erro) {
+    console.error('Erro ao carregar dashboard:', erro);
+  }
+}
+
+function renderizarDashboard(ambientes, historico) {
+  const totalAgua = ambientes.reduce((s, a) => s + Number(a.valor_agua || 0), 0);
+  const totalEnergia = ambientes.reduce((s, a) => s + Number(a.valor_energia || 0), 0);
+  const totalGeral = ambientes.reduce((s, a) => s + Number(a.total || 0), 0);
+
+  document.getElementById('statAgua').textContent = fmt(totalAgua);
+  document.getElementById('statEnergia').textContent = fmt(totalEnergia);
+  document.getElementById('statTotal').textContent = fmt(totalGeral);
+  document.getElementById('statAmbientes').textContent = ambientes.length;
+
+  const labelMap = {
+    hoje: 'Hoje',
+    '7dias': 'Últimos 7 dias',
+    '30dias': 'Últimos 30 dias',
+    '90dias': 'Últimos 90 dias'
   };
 
-  // ── Gráfico histórico (linha) ──
-  destroyChart('chartHistorico');
+  document.getElementById('subHistorico').textContent =
+    `${labelMap[periodo]} — água e energia`;
+
+  renderGraficos(ambientes, historico);
+  renderRanking(ambientes);
+  renderTabela(ambientes);
+}
+
+function chartOptions() {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1a2535',
+        titleColor: '#f0f4f8',
+        bodyColor: 'rgba(255,255,255,0.75)',
+        borderColor: 'rgba(255,255,255,0.1)',
+        borderWidth: 1,
+        padding: 10
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(255,255,255,0.04)' },
+        ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 11 } }
+      },
+      y: {
+        grid: { color: 'rgba(255,255,255,0.04)' },
+        ticks: {
+          color: 'rgba(255,255,255,0.4)',
+          font: { size: 11 },
+          callback: v => 'R$ ' + v
+        }
+      }
+    }
+  };
+}
+
+function renderGraficos(ambientes, historico) {
+  const labelsHistorico = historico.length
+    ? historico.map(h => {
+        const data = new Date(h.dia);
+        return data.toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit'
+        });
+      })
+    : ['Sem dados'];
+
+  const aguaHistorico = historico.length
+    ? historico.map(h => Number(h.valor_agua || 0))
+    : [0];
+
+  const energiaHistorico = historico.length
+    ? historico.map(h => Number(h.valor_energia || 0))
+    : [0];
+
+  const totalHistorico = historico.length
+    ? historico.map(h => Number(h.total || 0))
+    : [0];
+
+  destroyChart('historico');
+
   charts.historico = new Chart(document.getElementById('chartHistorico'), {
     type: 'line',
     data: {
-      labels,
+      labels: labelsHistorico,
       datasets: [
         {
-          label: 'Água', data: totalAguaDia,
-          borderColor: 'rgba(74,158,255,0.9)', backgroundColor: 'rgba(74,158,255,0.08)',
-          borderWidth: 2, pointRadius: dias <= 7 ? 4 : 2, pointBackgroundColor: '#4a9eff',
-          tension: 0.4, fill: true,
-        },
-        {
-          label: 'Energia', data: totalEnergiaDia,
-          borderColor: 'rgba(0,212,170,0.9)', backgroundColor: 'rgba(0,212,170,0.08)',
-          borderWidth: 2, pointRadius: dias <= 7 ? 4 : 2, pointBackgroundColor: '#00d4aa',
-          tension: 0.4, fill: true,
-        },
-        {
-          label: 'Total', data: totalDiaArr,
-          borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'transparent',
-          borderWidth: 1.5, borderDash: [4,4], pointRadius: 0,
+          label: 'Água',
+          data: aguaHistorico,
+          borderColor: 'rgba(74,158,255,0.9)',
+          backgroundColor: 'rgba(74,158,255,0.08)',
+          borderWidth: 2,
+          pointRadius: 4,
+          pointBackgroundColor: '#4a9eff',
           tension: 0.4,
+          fill: true
         },
+        {
+          label: 'Energia',
+          data: energiaHistorico,
+          borderColor: 'rgba(0,212,170,0.9)',
+          backgroundColor: 'rgba(0,212,170,0.08)',
+          borderWidth: 2,
+          pointRadius: 4,
+          pointBackgroundColor: '#00d4aa',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'Total',
+          data: totalHistorico,
+          borderColor: 'rgba(255,255,255,0.25)',
+          backgroundColor: 'transparent',
+          borderWidth: 1.5,
+          borderDash: [4,4],
+          pointRadius: 0,
+          tension: 0.4
+        }
       ]
     },
-    options: { ...chartDefaults, maintainAspectRatio: false }
+    options: chartOptions()
   });
 
-  // ── Gráfico água por ambiente (barras horizontais) ──
-  const sorted = [...porAmbiente].sort((a,b) => b.agua - a.agua);
-  destroyChart('chartAgua');
+  const porAgua = [...ambientes].sort((a, b) => Number(b.valor_agua) - Number(a.valor_agua));
+  const porEnergia = [...ambientes].sort((a, b) => Number(b.valor_energia) - Number(a.valor_energia));
+
+  destroyChart('agua');
+
   charts.agua = new Chart(document.getElementById('chartAgua'), {
     type: 'bar',
     data: {
-      labels: sorted.map(a => a.nome),
+      labels: porAgua.map(a => a.nome),
       datasets: [{
-        data: sorted.map(a => a.agua),
+        data: porAgua.map(a => Number(a.valor_agua || 0)),
         backgroundColor: 'rgba(74,158,255,0.7)',
         borderColor: 'rgba(74,158,255,1)',
-        borderWidth: 1, borderRadius: 5,
+        borderWidth: 1,
+        borderRadius: 5
       }]
     },
     options: {
-      ...chartDefaults,
-      indexAxis: 'y',
-      maintainAspectRatio: false,
-      scales: {
-        x: { ...chartDefaults.scales.x, ticks: { ...chartDefaults.scales.x.ticks, callback: v => 'R$'+v } },
-        y: { ...chartDefaults.scales.y, grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 11 } } }
-      }
+      ...chartOptions(),
+      indexAxis: 'y'
     }
   });
 
-  // ── Gráfico energia por ambiente ──
-  const sortedE = [...porAmbiente].sort((a,b) => b.energia - a.energia);
-  destroyChart('chartEnergia');
+  destroyChart('energia');
+
   charts.energia = new Chart(document.getElementById('chartEnergia'), {
     type: 'bar',
     data: {
-      labels: sortedE.map(a => a.nome),
+      labels: porEnergia.map(a => a.nome),
       datasets: [{
-        data: sortedE.map(a => a.energia),
+        data: porEnergia.map(a => Number(a.valor_energia || 0)),
         backgroundColor: 'rgba(0,212,170,0.7)',
         borderColor: 'rgba(0,212,170,1)',
-        borderWidth: 1, borderRadius: 5,
+        borderWidth: 1,
+        borderRadius: 5
       }]
     },
     options: {
-      ...chartDefaults,
-      indexAxis: 'y',
-      maintainAspectRatio: false,
-      scales: {
-        x: { ...chartDefaults.scales.x, ticks: { ...chartDefaults.scales.x.ticks, callback: v => 'R$'+v } },
-        y: { ...chartDefaults.scales.y, grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 11 } } }
-      }
+      ...chartOptions(),
+      indexAxis: 'y'
     }
   });
 
-  // ── Gráfico de rosca ──
-  destroyChart('chartDona');
+  const totalAgua = ambientes.reduce((s, a) => s + Number(a.valor_agua || 0), 0);
+  const totalEnergia = ambientes.reduce((s, a) => s + Number(a.valor_energia || 0), 0);
+
+  destroyChart('dona');
+
   charts.dona = new Chart(document.getElementById('chartDona'), {
     type: 'doughnut',
     data: {
       labels: ['Água', 'Energia'],
       datasets: [{
-        data: [+totalAgua.toFixed(2), +totalEnergia.toFixed(2)],
+        data: [totalAgua, totalEnergia],
         backgroundColor: ['rgba(74,158,255,0.8)', 'rgba(0,212,170,0.8)'],
         borderColor: ['rgba(74,158,255,1)', 'rgba(0,212,170,1)'],
-        borderWidth: 2, hoverOffset: 6,
+        borderWidth: 2
       }]
     },
     options: {
@@ -701,79 +881,100 @@ function renderizar() {
       maintainAspectRatio: false,
       cutout: '68%',
       plugins: {
-        legend: { display: true, position: 'bottom', labels: { color: 'rgba(255,255,255,0.5)', font: { size: 11 }, boxWidth: 10, padding: 14 } },
-        tooltip: {
-          backgroundColor: '#1a2535',
-          titleColor: '#f0f4f8',
-          bodyColor: 'rgba(255,255,255,0.6)',
-          borderColor: 'rgba(255,255,255,0.1)',
-          borderWidth: 1,
-          callbacks: {
-            label: ctx => {
-              const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
-              const pct = ((ctx.parsed / total) * 100).toFixed(1);
-              return ` R$ ${ctx.parsed.toFixed(2)} (${pct}%)`;
-            }
+        legend: {
+          display: true,
+          position: 'bottom',
+          labels: {
+            color: 'rgba(255,255,255,0.5)',
+            font: { size: 11 },
+            boxWidth: 10,
+            padding: 14
           }
         }
       }
     }
   });
+}
 
-  // ── Ranking ──
-  const ranking = [...porAmbiente].sort((a,b) => b.total - a.total);
-  const maxTotal = ranking[0]?.total || 1;
-  document.getElementById('rankingList').innerHTML = ranking.map((a, i) => `
-    <div class="ranking-item">
-      <div class="rank-num ${i < 3 ? 'top' : ''}">${i+1}</div>
-      <div class="rank-info">
-        <div class="rank-name">${a.nome}</div>
-        <div class="rank-tipo">${a.tipo}</div>
-      </div>
-      <div class="rank-bar-wrap">
-        <div class="rank-bar">
-          <div class="rank-bar-fill" style="width:${((a.total/maxTotal)*100).toFixed(1)}%"></div>
+function renderRanking(ambientes) {
+  const ranking = [...ambientes].sort((a, b) => Number(b.total) - Number(a.total));
+  const maxTotal = Number(ranking[0]?.total || 1);
+
+  const html = ranking.length
+    ? ranking.map((a, i) => `
+      <div class="ranking-item">
+        <div class="rank-num ${i < 3 ? 'top' : ''}">${i + 1}</div>
+
+        <div class="rank-info">
+          <div class="rank-name">${a.nome}</div>
+          <div class="rank-tipo">${a.tipo}</div>
         </div>
+
+        <div class="rank-bar-wrap">
+          <div class="rank-bar">
+            <div class="rank-bar-fill" style="width:${((Number(a.total || 0) / maxTotal) * 100).toFixed(1)}%"></div>
+          </div>
+        </div>
+
+        <div class="rank-val">${fmt(a.total)}</div>
       </div>
-      <div class="rank-val">${fmt(a.total)}</div>
-    </div>
-  `).join('');
+    `).join('')
+    : `<p style="color:var(--muted);font-size:.85rem;">Nenhum dado encontrado.</p>`;
 
-  // ── Tabela ──
-  document.getElementById('tabelaHistorico').innerHTML = porAmbiente.map(a => `
-    <tr>
-      <td>${a.nome}</td>
-      <td><span class="td-tipo">${a.tipo}</span></td>
-      <td class="td-agua">${fmt(a.agua)}</td>
-      <td class="td-energia">${fmt(a.energia)}</td>
-      <td class="td-total">${fmt(a.total)}</td>
-    </tr>
-  `).join('');
+  document.getElementById('rankingList').innerHTML = html;
 }
 
-function destroyChart(id) {
-  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+function renderTabela(ambientes) {
+  const html = ambientes.length
+    ? ambientes.map(a => `
+      <tr>
+        <td>${a.nome}</td>
+        <td><span class="td-tipo">${a.tipo}</span></td>
+        <td class="td-agua">${fmt(a.valor_agua)}</td>
+        <td class="td-energia">${fmt(a.valor_energia)}</td>
+        <td class="td-total">${fmt(a.total)}</td>
+      </tr>
+    `).join('')
+    : `<tr>
+        <td colspan="5" style="color:var(--muted);text-align:center;padding:20px;">Sem dados</td>
+      </tr>`;
+
+  document.getElementById('tabelaHistorico').innerHTML = html;
 }
 
-// ── NAV ──
-(async () => {
-  try {
-    const res  = await fetch("/usuarios/me");
-    if (!res.ok) throw new Error();
-    const data = await res.json();
-    const nome = data.nome || "Usuário";
-    document.getElementById("navNome").textContent   = nome;
-    document.getElementById("navEscola").textContent = data.nomeEscola || "";
-    document.getElementById("navAvatar").textContent =
-      nome.split(" ").map(n => n[0]).slice(0,2).join("").toUpperCase();
-  } catch {
-    document.getElementById("navNome").textContent = "Usuário";
-    document.getElementById("navAvatar").textContent = "US";
+function destroyChart(nome) {
+  if (charts[nome]) {
+    charts[nome].destroy();
+    delete charts[nome];
   }
-})();
+}
 
-// ── INICIAR ──
-carregarAmbientes();
+async function carregarUsuario() {
+  try {
+    const res = await fetch('/usuarios/me');
+
+    if (!res.ok) return;
+
+    const data = await res.json();
+    const nome = data.nome || 'Usuário';
+
+    document.getElementById('navNome').textContent = nome;
+    document.getElementById('navEscola').textContent = data.nomeEscola || '';
+    document.getElementById('navAvatar').textContent =
+      nome.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+
+  } catch {
+    document.getElementById('navNome').textContent = 'Usuário';
+    document.getElementById('navAvatar').textContent = 'US';
+  }
+}
+
+carregarUsuario();
+carregarDashboard();
+
+setInterval(() => {
+  carregarDashboard();
+}, 15000);
 </script>
 
 </body>

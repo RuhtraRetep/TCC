@@ -1,72 +1,42 @@
 const db = require('../config/db');
 
 class GastoServices {
-
     static tarifaAgua = 5.50;
     static tarifaEnergia = 0.92;
 
     static calcular(consumoAgua, consumoEnergia) {
+        consumoAgua = Number(consumoAgua) || 0;
+        consumoEnergia = Number(consumoEnergia) || 0;
 
-       consumoAgua = Number(consumoAgua) || 0;
-    consumoEnergia = Number(consumoEnergia) || 0;
+        const valorAgua = consumoAgua * this.tarifaAgua;
+        const valorEnergia = consumoEnergia * this.tarifaEnergia;
+        const total = valorAgua + valorEnergia;
 
-    const valorAgua = consumoAgua * this.tarifaAgua;
-    const valorEnergia = consumoEnergia * this.tarifaEnergia;
-    const total = valorAgua + valorEnergia;
-
-    return {
-        consumoAgua,
-        consumoEnergia,
-        valorAgua,
-        valorEnergia,
-        total
-    };
+        return {
+            consumoAgua,
+            consumoEnergia,
+            valorAgua,
+            valorEnergia,
+            total
+        };
     }
 
-    static salvarHistorico(
-        ambienteId,
-        dados
-    ) {
-
+    static async salvarHistorico(ambienteId, dados) {
         const sql = `
             INSERT INTO historico_gastos
-            (
-                ambiente_id,
-                consumo_agua,
-                consumo_energia,
-                valor_agua,
-                valor_energia,
-                total
-            )
+            (ambiente_id, consumo_agua, consumo_energia, valor_agua, valor_energia, total)
             VALUES (?, ?, ?, ?, ?, ?)
         `;
 
-        db.query(sql, [
-
+        await db.execute(sql, [
             ambienteId,
-
             dados.consumoAgua,
             dados.consumoEnergia,
-
             dados.valorAgua,
             dados.valorEnergia,
-
             dados.total
-
-        ], (erro) => {
-
-            if (erro) {
-
-                console.log(erro);
-                return;
-            }
-
-            console.log(
-                'Histórico salvo'
-            );
-        });
+        ]);
     }
 }
 
-module.exports =
-GastoServices;
+module.exports = GastoServices;
