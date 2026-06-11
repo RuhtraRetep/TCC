@@ -32,6 +32,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'src', 'View', 'index.html'));
 });
 
+
+app.get('/usuarios/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'src', 'View', 'loginUsuario.html'));
+});
+
 app.use('/escolas', escolaRoute);
 app.use('/usuarios', usuarioRoute);
 app.use('/sensores', sensorRoute);

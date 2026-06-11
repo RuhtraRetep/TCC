@@ -91,7 +91,7 @@ router.get('/cadastro-usuario', verificarAcesso, (req, res) => {
 
 // Logar usuário
 router.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'view', 'loginUsuario.html'));
+    res.sendFile(path.join(__dirname, '..', 'View', 'loginUsuario.html'));
 });
 router.post('/login', async (req, res) => {
     const { emailEscola, codigoInep, emailUsuario, senha } = req.body;
