@@ -13,6 +13,15 @@ const regras = {
     QUADRA:      { agua: 0.05, energia: 0.12 }
 };
 
+async function ambienteExiste(ambienteId) {
+    const [rows] = await db.execute(
+        'SELECT id FROM ambientes WHERE id = ? LIMIT 1',
+        [ambienteId]
+    );
+
+    return rows.length > 0;
+}
+
 async function cicloMonitoramento() {
     try {
         const [ambientes] = await db.execute(`
@@ -25,6 +34,12 @@ async function cicloMonitoramento() {
         }
 
         for (const ambiente of ambientes) {
+            const existe = await ambienteExiste(ambiente.id);
+
+            if (!existe) {
+                continue;
+            }
+
             const regra = regras[ambiente.tipo] || { agua: 0, energia: 0.10 };
 
             const consumoAgua = Number((Math.random() * regra.agua).toFixed(4));
@@ -32,10 +47,24 @@ async function cicloMonitoramento() {
 
             const gastos = GastoServices.calcular(consumoAgua, consumoEnergia);
 
-            await GastoServices.salvarHistorico(ambiente.id, gastos);
+            try {
+                await GastoServices.salvarHistorico(ambiente.id, gastos);
+            } catch (erro) {
+                if (erro.errno === 1452) {
+                    console.log('[Monitor] Ambiente removido antes de salvar. Ignorando...');
+                    continue;
+                }
+
+                throw erro;
+            }
         }
 
     } catch (erro) {
+        if (erro.code === 'ETIMEDOUT') {
+            console.error('[Monitor] Banco demorou para responder. Tentando novamente no próximo ciclo.');
+            return;
+        }
+
         console.error('[Monitor] Erro:', erro.message);
     }
 }
