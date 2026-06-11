@@ -415,7 +415,7 @@
     // 1. GERAÇÃO DO QR CODE
 // Pega o escolaId que já está na URL da página de alunos
 const escolaId = window.location.pathname.split('/').pop();
-const urlPublica = window.location.origin + '/usuarios/mobile/' + escolaId;
+const urlPublica = window.location.origin + '/mobile/' + escolaId;
 const encoded = encodeURIComponent(urlPublica);
 document.getElementById('qrImg').src =
   `https://api.qrserver.com/v1/create-qr-code/?size=176x176&data=${encoded}&bgcolor=ffffff&color=000000&margin=10`;
