@@ -21,7 +21,7 @@ router.get('/liberar-acesso-cadastro', (req, res) => {
 // Rota para a página de Cadastro (HTML)
 router.get('/cadastro-escola', verificarAcesso, (req, res) => {
     req.session.podeAcessarCadastro = false; // Bloqueia reentradas diretas pela URL
-    res.sendFile(path.join(__dirname, '..', 'view', 'cadastroEscola.html'));
+    res.sendFile(path.join(__dirname, '..', 'View', 'cadastroEscola.html'));
 });
 
 // CORREÇÃO AQUI: Mudado de '/cadastrar-escola' para '/cadastro-escola' para bater com o fetch do seu script.js
